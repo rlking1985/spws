@@ -9,7 +9,7 @@ export {
 } from "./services/lists/getListCollection";
 
 // Interfaces
-export { List } from "./interfaces";
+export { List, ListCollection } from "./interfaces";
 
 /**
  * The default parameters used that are available in every web request.

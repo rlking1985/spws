@@ -2,7 +2,7 @@
 enum WebServices {
   Alerts = "Alerts",
   Authentication = "Authentication",
-  copy = "Copy",
+  Copy = "Copy",
   Forms = "Forms",
   Lists = "Lists",
   Meetings = "Meetings",
@@ -17,7 +17,7 @@ enum WebServices {
   SocialDataService = "SocialDataService",
   SpellCheck = "SpellCheck",
   TaxonomyClientService = "TaxonomyClientService",
-  usergroup = "usergroup",
+  UserGroup = "UserGroup",
   UserProfileService = "UserProfileService",
   Versions = "Versions",
   Views = "Views",

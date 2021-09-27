@@ -25,7 +25,7 @@ class ResponseError extends Error {
           if (!name || name.startsWith("soap")) return object;
 
           // Assign prop to object
-          object[name] = (element.textContent || "")
+          object[name] = element.textContent
             .split("\n")
             .map((line: string) => line.trim())
             .filter((line: string) => line)

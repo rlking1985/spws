@@ -14,7 +14,7 @@ class Request {
 
   constructor({ webURL, webService }: RequestOptions) {
     this.webService = webService;
-    this.webURL = webURL || defaults.webURL;
+    this.webURL = webURL;
 
     // Create XHR
     let xhr = new XMLHttpRequest();

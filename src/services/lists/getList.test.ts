@@ -2,7 +2,7 @@ import { defaults } from "../..";
 import getList from "./getList";
 
 describe("Get List", () => {
-  // Set list name
+  // Set list namew
   const listName = "Get List";
 
   it("Response should be XML only (unparsed)", async () => {
