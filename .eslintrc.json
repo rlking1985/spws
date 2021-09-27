@@ -1,0 +1,16 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {},
+  "ignorePatterns": ["lib/**/*", "coverage/**/*", "jest.setup.js"],
+  "globals": { "spws": "readonly" },
+  "plugins": ["eslint-plugin-tsdoc"]
+}

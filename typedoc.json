@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "watch": true,
+  "entryPointStrategy": "resolve",
+  "out": "docs",
+  "categorizeByGroup": true,
+  "cleanOutputDir": true,
+  "hideGenerator": true,
+  "excludeInternal": true
+}

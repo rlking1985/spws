@@ -1,0 +1,12 @@
+.eslintrc.json
+.gitignore
+babel.config.js
+coverage/
+fiddle/
+jest.config.ts
+jest.setup.js
+package-lock.json
+src/
+tsconfig.json
+typedoc.json
+yarn.lock
