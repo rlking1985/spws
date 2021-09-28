@@ -10,3 +10,4 @@ src/
 tsconfig.json
 typedoc.json
 yarn.lock
+prettier.config

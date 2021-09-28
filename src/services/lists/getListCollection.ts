@@ -5,8 +5,8 @@ import { defaults, DefaultParameters, Response } from "../..";
 import WebServices from "../../enum/webServices";
 
 // Interfaces
-import ListCollection from "../../interfaces/ListCollection";
-import List from "../../interfaces/List";
+import ListCollection from "../../types/listCollection";
+import List from "../../types/list";
 
 // Classes
 import Request from "../../classes/request";

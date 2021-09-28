@@ -8,6 +8,7 @@ describe("Get List", () => {
   it("Response should be XML only (unparsed)", async () => {
     const res = await getList({
       listName,
+      attributes: ["Title", "Version", "Fields"],
       webURL: defaults.webURL,
     });
 
@@ -15,7 +16,7 @@ describe("Get List", () => {
     expect(res.status).toBe(200);
     expect(res.data?.Title).toBeTruthy();
   });
-
+  return;
   it("Response should be XML only (unparsed)", async () => {
     const res = await getList({
       listName,

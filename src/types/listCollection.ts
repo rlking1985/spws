@@ -1,7 +1,7 @@
-import List from "./List";
+import List from "./list";
 
-interface ListCollection {
+type ListCollection = {
   [index: number]: List;
-}
+};
 
 export default ListCollection;
