@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[services/lists/getList.ts:30](https://github.com/rlking1985/spws/blob/2f4647b/src/services/lists/getList.ts#L30)
+[services/lists/getList.ts:30](https://github.com/rlking1985/spws/blob/bc2d5f7/src/services/lists/getList.ts#L30)
 
 ___
 
@@ -41,7 +41,7 @@ A string that contains either the title (not static name) or the GUID for the li
 
 #### Defined in
 
-[services/lists/getList.ts:24](https://github.com/rlking1985/spws/blob/2f4647b/src/services/lists/getList.ts#L24)
+[services/lists/getList.ts:24](https://github.com/rlking1985/spws/blob/bc2d5f7/src/services/lists/getList.ts#L24)
 
 ___
 
@@ -59,7 +59,7 @@ DefaultParameters.parse
 
 #### Defined in
 
-[index.ts:22](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L22)
+[index.ts:22](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L22)
 
 ___
 
@@ -77,4 +77,4 @@ DefaultParameters.webURL
 
 #### Defined in
 
-[index.ts:27](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L27)
+[index.ts:27](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L27)

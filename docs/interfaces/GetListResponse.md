@@ -28,7 +28,7 @@ The data object is available for any requests where parsed is true or an error o
 
 #### Defined in
 
-[services/lists/getList.ts:37](https://github.com/rlking1985/spws/blob/2f4647b/src/services/lists/getList.ts#L37)
+[services/lists/getList.ts:37](https://github.com/rlking1985/spws/blob/bc2d5f7/src/services/lists/getList.ts#L37)
 
 ___
 
@@ -42,7 +42,7 @@ Response.responseText
 
 #### Defined in
 
-[index.ts:59](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L59)
+[index.ts:59](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L59)
 
 ___
 
@@ -56,7 +56,7 @@ Response.responseXML
 
 #### Defined in
 
-[index.ts:60](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L60)
+[index.ts:60](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L60)
 
 ___
 
@@ -70,7 +70,7 @@ Response.status
 
 #### Defined in
 
-[index.ts:61](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L61)
+[index.ts:61](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L61)
 
 ___
 
@@ -84,4 +84,4 @@ Response.statusText
 
 #### Defined in
 
-[index.ts:62](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L62)
+[index.ts:62](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L62)

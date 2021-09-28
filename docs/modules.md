@@ -45,7 +45,7 @@ The default parameters used that are available in every web request.
 
 #### Defined in
 
-[index.ts:17](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L17)
+[index.ts:17](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L17)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[types/field.ts:1](https://github.com/rlking1985/spws/blob/2f4647b/src/types/field.ts#L1)
+[types/field.ts:1](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/field.ts#L1)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[types/list.ts:4](https://github.com/rlking1985/spws/blob/2f4647b/src/types/list.ts#L4)
+[types/list.ts:4](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/list.ts#L4)
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[types/listAttributes.ts:3](https://github.com/rlking1985/spws/blob/2f4647b/src/types/listAttributes.ts#L3)
+[types/listAttributes.ts:3](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/listAttributes.ts#L3)
 
 ___
 
@@ -188,7 +188,7 @@ ___
 
 #### Defined in
 
-[types/listCollection.ts:3](https://github.com/rlking1985/spws/blob/2f4647b/src/types/listCollection.ts#L3)
+[types/listCollection.ts:3](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/listCollection.ts#L3)
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 #### Defined in
 
-[index.ts:58](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L58)
+[index.ts:58](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L58)
 
 ## Variables
 
@@ -233,7 +233,7 @@ defaults.webURL = "/sites/my-site"
 
 #### Defined in
 
-[index.ts:39](https://github.com/rlking1985/spws/blob/2f4647b/src/index.ts#L39)
+[index.ts:39](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L39)
 
 ## Functions
 
@@ -267,7 +267,7 @@ const list = await getList({ listName: "Title", attributes: ["Title", "Fields"] 
 
 #### Defined in
 
-[services/lists/getList.ts:53](https://github.com/rlking1985/spws/blob/2f4647b/src/services/lists/getList.ts#L53)
+[services/lists/getList.ts:53](https://github.com/rlking1985/spws/blob/bc2d5f7/src/services/lists/getList.ts#L53)
 
 ___
 
@@ -291,4 +291,4 @@ Returns the names and GUIDs for all lists in the site.
 
 #### Defined in
 
-[services/lists/getListCollection.ts:26](https://github.com/rlking1985/spws/blob/2f4647b/src/services/lists/getListCollection.ts#L26)
+[services/lists/getListCollection.ts:26](https://github.com/rlking1985/spws/blob/bc2d5f7/src/services/lists/getListCollection.ts#L26)
