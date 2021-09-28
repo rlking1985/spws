@@ -5,18 +5,47 @@ describe("Get List", () => {
   // Set list namew
   const listName = "Get List";
 
-  it("Response should be XML only (unparsed)", async () => {
+  it("Response should be parsed with all attributes", async () => {
     const res = await getList({
       listName,
-      attributes: ["Title", "Version", "Fields"],
       webURL: defaults.webURL,
     });
 
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
-    expect(res.data?.Title).toBeTruthy();
+    expect(Object.keys(res.data).length).toBeGreaterThan(50);
+    expect(res.data.Fields.length).toBeGreaterThan(0);
+    expect(typeof res.data.Fields[0]).toBe("object");
   });
-  return;
+
+  it("Response should be parsed with all only Title and Fields", async () => {
+    const res = await getList({
+      listName,
+      webURL: defaults.webURL,
+      attributes: ["Title", "Fields"],
+    });
+
+    expect(res.responseXML).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(Object.keys(res.data).length).toBe(2);
+    expect(res.data.Fields.length).toBeGreaterThan(0);
+    expect(typeof res.data.Fields[0]).toBe("object");
+  });
+
+  it("Response should be parsed with all only Titles", async () => {
+    const res = await getList({
+      listName,
+      webURL: defaults.webURL,
+      attributes: ["Title"],
+    });
+
+    expect(res.responseXML).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(Object.keys(res.data).length).toBe(1);
+    expect(res.data.Title).toBe(listName);
+    expect(res.data.Fields).toBeUndefined();
+  });
+
   it("Response should be XML only (unparsed)", async () => {
     const res = await getList({
       listName,

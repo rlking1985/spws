@@ -2,25 +2,31 @@
 import { defaults, DefaultParameters, Response } from "../..";
 
 // Enum
+import ListAttributesEnum from "../../enum/listAttributes";
 import FieldEnum from "../../enum/field";
 import WebServices from "../../enum/webServices";
 
 // Types
+import FieldType from "../../types/field";
 import List from "../../types/list";
 import ListAttributes from "../../types/listAttributes";
-import FieldType from "../../types/field";
 
 // Classes
 import Request from "../../classes/request";
+
+// Utils
 import escapeXml from "../../utils/escapeXml";
-export { default as ResponseError } from "../../classes/responseError";
 
 export interface GetListParameters extends DefaultParameters {
   /**
    * A string that contains either the title (not static name) or the GUID for the list.
    */
   listName: string;
-  /** An array of attributes that are returned in the data object. Only available when parsing is true. */
+  /**
+   *  An array of attributes that are returned in the data object.
+   *  Only available when parsing is true.
+   *  If no attributes are supplied, all list attributes will be returned
+   * */
   attributes?: ListAttributes[];
 }
 
@@ -40,6 +46,8 @@ export interface GetListResponse extends Response {
  * const list = await getList({ listName: "Announcements" });
  * // Get list on another site without parsing XML
  * const list = await getList({ listName: "Announcements", webURL: "/sites/hr", parse: false });
+ * // Get list with only the Title and Fields parsed
+ * const list = await getList({ listName: "Title", attributes: ["Title", "Fields"] })
  * ```
  */
 const getList = ({
@@ -47,8 +55,8 @@ const getList = ({
   parse = defaults.parse,
   webURL = defaults.webURL,
   attributes = [],
-}: GetListParameters): Promise<GetListResponse> =>
-  new Promise(async (resolve, reject) => {
+}: GetListParameters): Promise<GetListResponse> => {
+  return new Promise(async (resolve, reject) => {
     {
       // Create request object
       const req = new Request({ webService: WebServices.Lists, webURL });
@@ -64,69 +72,68 @@ const getList = ({
         // Return request
         let res: GetListResponse = await req.send();
 
+        // If parse is true
         if (parse) {
           // Get list from the responseXML
           const list: Element = res.responseXML.querySelector("List")!;
 
-          // If attributes are provided
-          if (attributes.length > 0) {
-            // Create data object with only specified attributes
-            res.data = attributes.reduce((object: List, attribute) => {
-              // Get value
-              const value = list.getAttribute(attribute) || "";
-              console.log(`list`, list);
+          // Create array of attributes either from params or all of the list attributes
+          let attributesArray =
+            attributes.length > 0
+              ? attributes
+              : Array.from(list.attributes).map((el) => el.name);
+
+          // Create data object with only specified attributes
+          res.data = attributesArray.reduce((object: List, attribute) => {
+            object[attribute] = list.getAttribute(attribute) || "";
+            return object;
+          }, {});
+
+          // If the attributes param is empty, or it included fields
+          if (
+            attributes.length === 0 ||
+            attributes.includes(ListAttributesEnum.Fields)
+          )
+            // Add fields to data
+            res.data[ListAttributesEnum.Fields] = Array.from(
               // Field attributes must be an array
-              if (attribute === "Fields") {
-                const Fields = Array.from(
-                  list.querySelectorAll("Fields > Field")
-                ).map((field) => {
-                  return Array.from(field.attributes).reduce(
-                    (object: FieldType, field) => {
-                      const name = field.nodeName;
-                      object[name] = field.textContent;
-                      console.log(`name`, name);
-                      return object;
-                    },
-                    {}
-                  );
-                });
+              list.querySelectorAll(`${ListAttributesEnum.Fields} > Field`)
+            ).map((fieldElement) => {
+              // Create field object
+              let field: FieldType = {};
 
-                console.log(`fields`, Fields);
-
-                // <Field
-                //   ID="{43bdd51b-3c5b-4e78-90a8-fb2087f71e70}"
-                //   ColName="tp_Level"
-                //   RowOrdinal="0"
-                //   ReadOnly="TRUE"
-                //   Type="Integer"
-                //   Name="_Level"
-                //   DisplaceOnUpgrade="TRUE"
-                //   DisplayName="Level"
-                //   Hidden="TRUE"
-                //   Required="FALSE"
-                //   SourceID="http://schemas.microsoft.com/sharepoint/v3"
-                //   StaticName="_Level"
-                //   FromBaseType="TRUE"
-                // />;
-
-                return object;
+              // If the field type is a choice field
+              if (fieldElement.getAttribute(FieldEnum.Type) === "Choice") {
+                // Add choicess to the field
+                field.Choices = Array.from(
+                  fieldElement.querySelectorAll("CHOICE")
+                )
+                  // Return text content
+                  .map(({ textContent }) => textContent!)
+                  // Remove empty choices
+                  .filter((choice) => choice);
               }
 
-              // Add attribute
-              object[attribute] = value;
-              return object;
-            }, {});
-          }
-          // Get all list attributes
-          else {
-            res.data = Array.from(list.attributes).reduce(
-              (object: List, { name, value }) => {
-                object[name] = value;
-                return object;
-              },
-              {}
-            );
-          }
+              // Reduce field from available attributes
+              return Array.from(fieldElement.attributes).reduce(
+                (object: FieldType, element) => {
+                  // Get field name and value
+                  const key = element.nodeName;
+                  let value: string | boolean = element.textContent || "";
+
+                  // If the value is true or false
+                  if (["TRUE", "FALSE"].includes(value)) {
+                    // Cast to boolean
+                    value = value === "TRUE";
+                  }
+
+                  // Assign key and prop
+                  object[key] = value;
+                  return object;
+                },
+                field
+              );
+            });
         }
 
         resolve(res);
@@ -135,5 +142,6 @@ const getList = ({
       }
     }
   });
+};
 
 export default getList;

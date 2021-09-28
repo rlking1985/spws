@@ -12,6 +12,10 @@ enum Field {
   SourceID = "SourceID", // "http= //schemas.microsoft.com/sharepoint/v3",
   StaticName = "StaticName", // "ContentTypeId",
   Type = "Type", // "ContentTypeId",
+  ShowInFileDlg = "ShowInFileDlg",
+  Filterable = "Filterable",
+  Sortable = "Sortable",
+  Choices = "Choices",
 }
 
 export default Field;
