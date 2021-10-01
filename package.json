@@ -1,8 +1,9 @@
 {
   "name": "spws",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "SharePoint Web Services Wrapper",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "docs": "npx typedoc",
     "test": "jest --watch",
