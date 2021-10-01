@@ -1,9 +1,11 @@
-import { defaults, Response } from "..";
+import { Response } from "..";
+
 import ResponseError from "./responseError";
 
 interface RequestOptions {
   webService: string;
   webURL?: string;
+  soapAction?: string;
 }
 
 class Request {
@@ -12,7 +14,7 @@ class Request {
   private webURL?: string;
   xhr: XMLHttpRequest;
 
-  constructor({ webURL, webService }: RequestOptions) {
+  constructor({ webURL, webService, soapAction }: RequestOptions) {
     this.webService = webService;
     this.webURL = webURL;
 
@@ -20,6 +22,8 @@ class Request {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", `${this.webURL}/_vti_bin/${this.webService}.asmx`);
     xhr.setRequestHeader("Content-Type", `text/xml; charset="utf-8"`);
+    // If soap action needed, set header
+    if (soapAction) xhr.setRequestHeader("SOAPAction", soapAction);
     this.xhr = xhr;
   }
 

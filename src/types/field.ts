@@ -1,22 +1,121 @@
+/**
+ * Defines the internal data types used in the list infrastructure of a SharePoint Web site.
+ * A field is a column or attribute of information that a user can add to a list.
+ *
+ * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms437580(v=office.12)
+ */
 type Field = {
-  [key: string]: any;
-  colName?: string;
+  [key: string]: string | boolean | number | unknown;
+  Choices?: string[];
+  Aggregation?:
+    | "sum"
+    | "count"
+    | "average"
+    | "min"
+    | "max"
+    | "merge"
+    | "plaintext"
+    | "first"
+    | "last";
+  AllowDeletion?: boolean;
+  AllowHyperlink?: boolean;
+  AllowMultiVote?: boolean;
+  AppendOnly?: boolean;
+  AuthoringInfo?: string;
+  BaseType?: number | string;
+  CalType?: number;
+  CanToggleHidden?: boolean;
+  ClassInfo?: string;
+  ColName?: string;
+  Commas?: boolean;
+  Decimals?: number;
+  Description?: string;
+  Dir?: string;
   DisplaceOnUpgrade?: boolean;
+  DisplayImage?: string;
   DisplayName?: string;
+  DisplayNameSrcField?: string;
+  Div?: number;
+  EnableLookup?: boolean;
+  ExceptionImage?: string;
+  FieldRef?: string;
+  FillInChoice?: boolean;
+  Filterable?: boolean;
+  FilterableNoRecurrence?: boolean;
+  ForcedDisplay?: string;
+  Format?: string;
   FromBaseType?: boolean;
-  Hidden?: string;
+  Group?: string;
+  HeaderImage?: string;
+  Height?: number;
+  Hidden?: boolean;
+  HTMLEncode?: boolean;
   ID?: string;
+  IMEMode?: string;
+  Indexed?: boolean;
+  IsolateStyles?: boolean;
+  JoinColName?: string;
+  JoinRowOrdinal?: number;
+  JoinType?: "INNER" | "LEFT OUTER" | "RIGHT OUTER";
+  LCID?: number;
+  List?: string;
+  Max?: number;
+  MaxLength?: number;
+  Min?: number;
+  Mult?: boolean;
   Name?: string;
+  NegativeFormat?: "MinusSign" | "Parens";
+  Node?: string;
+  NoEditFormBreak?: boolean;
+  NumLines?: number;
+  Percentage?: boolean;
+  PIAttribute?: string;
+  PITarget?: string;
+  PrependId?: boolean;
+  Presence?: boolean;
+  PrimaryKey?: boolean;
+  PrimaryPIAttribute?: string;
+  PrimaryPITarget?: string;
   ReadOnly?: boolean;
-  RowOrdinal?: string;
+  ReadOnlyEnforced?: boolean;
+  RenderXMLUsingPattern?: boolean;
+  Required?: boolean;
+  RestrictedMode?: boolean;
+  ResultType?: string;
+  RichText?: boolean;
+  RichTextMode?: string;
+  RowOrdinal?: number;
   Sealed?: boolean;
+  SeparateLine?: boolean;
+  SetAs?: string;
+  ShowAddressBookButton?: boolean;
+  ShowField?: string;
+  ShowInDisplayForm?: boolean;
+  ShowInEditForm?: boolean;
+  ShowInFileDlg?: boolean;
+  ShowInListSettings?: boolean;
+  ShowInNewForm?: boolean;
+  ShowInVersionHistory?: boolean;
+  ShowInViewForms?: boolean;
+  Sortable?: boolean;
   SourceID?: string;
   StaticName?: string;
+  StorageTZ?: boolean;
+  StripWS?: boolean;
+  SuppressNameDisplay?: boolean;
+  TextOnly?: boolean;
+  Title?: string;
   Type?: string;
-  ShowInFileDlg?: boolean;
-  Filterable?: boolean;
-  Sortable?: boolean;
-  Choices?: string[];
+  UniqueId?: string;
+  UnlimitedLengthInDocumentLibrary?: boolean;
+  URLEncode?: boolean;
+  URLEncodeAsUrl?: boolean;
+  UserSelectionMode?: string;
+  UserSelectionScope?: number;
+  Viewable?: boolean;
+  Width?: number;
+  WikiLinking?: boolean;
+  XName?: string;
 };
 
 export default Field;

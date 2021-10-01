@@ -42,17 +42,17 @@ const getListCollection = ({
         let res: GetListCollectionResponse = await req.send();
 
         if (parse) {
-          // TODO: Figure out how to use the proper type declaration
-          const responseXML: any = res.responseXML;
-          res.data = [...responseXML.querySelectorAll("List")].map((list) => {
-            return [...list.attributes].reduce(
-              (object: List, { name, value }) => {
-                object[name] = value;
-                return object;
-              },
-              {}
-            );
-          });
+          res.data = Array.from(res.responseXML.querySelectorAll("List")).map(
+            (list) => {
+              return Array.from(list.attributes).reduce(
+                (object: List, { name, value }) => {
+                  object[name] = value;
+                  return object;
+                },
+                {}
+              );
+            }
+          );
         }
 
         resolve(res);
