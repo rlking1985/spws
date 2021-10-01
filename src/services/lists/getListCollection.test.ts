@@ -1,5 +1,4 @@
-import { ResponseError } from "./getList";
-import getListCollection from "./getListCollection";
+import getListCollection, { ResponseError } from "./getListCollection";
 
 describe("Get List Collection", () => {
   it("Response should be XML only (unparsed)", async () => {

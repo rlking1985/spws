@@ -1,4 +1,14 @@
+// SPWS Defaults
 import { defaults } from "./src/index";
 
-// Get global web URL for testing
-defaults.webURL = process.env.WEB_URL;
+// Import config
+import config from "./spws.proxy.config";
+
+// Libraries
+import dotenv from "dotenv";
+
+// Access environment variables
+dotenv.config();
+
+// Set default web URL (see .env)
+defaults.webURL = `//${config.host}:${config.port}/${process.env.TEST_URL}/operations`;

@@ -13,6 +13,7 @@ import ListAttributes from "../../types/listAttributes";
 
 // Classes
 import Request from "../../classes/request";
+export { default as ResponseError } from "../../classes/responseError";
 
 // Utils
 import escapeXml from "../../utils/escapeXml";

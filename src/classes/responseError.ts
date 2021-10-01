@@ -3,7 +3,10 @@ class ResponseError extends Error {
   responseXML: Document;
   status: number;
   statusText: string;
-  data?: object;
+  data?: {
+    [key: string]: string;
+    detail: string;
+  };
 
   constructor(xhr: XMLHttpRequest) {
     super(xhr.responseText);

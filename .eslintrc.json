@@ -10,7 +10,12 @@
     "sourceType": "module"
   },
   "rules": {},
-  "ignorePatterns": ["lib/**/*", "coverage/**/*", "jest.setup.js"],
+  "ignorePatterns": [
+    "lib/**/*",
+    "coverage/**/*",
+    "jest.setup.js",
+    "spws.proxy.config.js"
+  ],
   "globals": { "spws": "readonly" },
   "plugins": ["eslint-plugin-tsdoc"]
 }
