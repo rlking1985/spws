@@ -19,7 +19,7 @@ type Batch = {
   /**
    * Specifies the GUID for the view.
    */
-  ViewName: string;
+  ViewName?: string;
 };
 
 export default Batch;

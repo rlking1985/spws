@@ -5,7 +5,7 @@ import { defaults, DefaultParameters, Response } from "../../..";
 import WebServices from "../../../enum/webServices";
 
 // Types
-import { Item, Method, Cmd } from "../../../types";
+import { Item, Method, Cmd, NonEmptyArray } from "../../../types";
 
 // Classes
 import Request from "../../../classes/request";
@@ -15,9 +15,10 @@ export { default as ResponseError } from "../../../classes/responseError";
  * The update list items result
  */
 type result = {
-  method: Method;
-  item: Item;
   errorCode: string;
+  item: Item;
+  method: Method;
+  status: "success" | "error";
 };
 
 export interface UpdateListItemParameters extends DefaultParameters {
@@ -26,9 +27,24 @@ export interface UpdateListItemParameters extends DefaultParameters {
    */
   listName: string;
   /**
-   *  A Batch element that contains one or more methods for adding, modifying, or deleting items
-   * */
-  updates: string;
+   * Return — Stops execution of any more methods after the first error is encountered. This is the default.
+   * Continue — After an error is encountered, continues executing subsequent methods.
+   */
+  onError?: "Return" | "Continue";
+  /**
+   * A Batch element that contains one or more methods for adding, modifying, or deleting items
+   * Used in batch processing to specify commands within the Batch element.
+   */
+  methods: NonEmptyArray<{
+    /**  Used in Web services to specify the command to post to the server for updating list items. */
+    cmd: Cmd;
+    values: {
+      /** Any field name and string value */
+      [key: string]: string | undefined;
+      /** If the cmd is "Update" or "Delete" the ID is required */
+      ID?: string;
+    };
+  }>;
 }
 
 export interface UpdateListItemsResponse extends Response {
@@ -55,7 +71,8 @@ const updateListItems = ({
   listName,
   parse = defaults.parse,
   webURL = defaults.webURL,
-  updates,
+  onError = "Continue",
+  methods,
 }: UpdateListItemParameters): Promise<UpdateListItemsResponse> => {
   return new Promise(async (resolve, reject) => {
     {
@@ -67,21 +84,33 @@ const updateListItems = ({
           "http://schemas.microsoft.com/sharepoint/soap/UpdateListItems",
       });
 
-      // Create envelope
-      req.createEnvelope(
-        `<UpdateListItems xmlns="http://schemas.microsoft.com/sharepoint/soap/">
-          <listName>${listName}</listName>
+      try {
+        // Create envelope
+        req.createEnvelope(
+          `<UpdateListItems xmlns="http://schemas.microsoft.com/sharepoint/soap/">
+          <listName>${req.escapeXml(listName)}</listName>
           <updates>
-            <Batch OnError="Continue">
-              <Method ID="1" Cmd="New">
-                  <Field Name="Title">Demo</Field>
-              </Method>
+            <Batch OnError="${onError}">
+              ${methods
+                .map(
+                  (method, index) => `
+                  <Method ID="${index + 1}" Cmd="${method.cmd}">
+                    ${Object.entries(method.values)
+                      .map(
+                        ([field, value = ""]) =>
+                          `<Field Name="${field}">${req.escapeXml(
+                            value
+                          )}</Field>`
+                      )
+                      .join("")}
+                  </Method>`
+                )
+                .join("")}
             </Batch>
           </updates>
         </UpdateListItems>`
-      );
+        );
 
-      try {
         // Return request
         const res: UpdateListItemsResponse = await req.send();
         // If parse is true
@@ -106,6 +135,8 @@ const updateListItems = ({
                   Cmd = "Delete";
                   break;
               }
+
+              // Create method
               const method: Method = {
                 ID,
                 Cmd,
@@ -129,10 +160,15 @@ const updateListItems = ({
                 );
               }
 
+              // Create errorCode
+              const errorCode =
+                el.querySelector("ErrorCode")?.textContent || "";
+
               // Create data object
               let result: result = {
                 method,
-                errorCode: el.querySelector("ErrorCode")?.textContent || "",
+                status: errorCode === "0x00000000" ? "success" : "error",
+                errorCode,
                 item,
               };
 
@@ -141,6 +177,7 @@ const updateListItems = ({
           );
         }
 
+        // Resolve
         resolve(res);
       } catch (error: unknown) {
         reject(error);

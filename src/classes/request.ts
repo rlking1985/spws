@@ -1,6 +1,11 @@
+// Types
 import { Response } from "..";
 
+// Classes
 import ResponseError from "./responseError";
+
+// Utils
+import escapeXml from "../utils/escapeXml";
 
 interface RequestOptions {
   webService: string;
@@ -9,6 +14,7 @@ interface RequestOptions {
 }
 
 class Request {
+  escapeXml = escapeXml;
   private envelope = ``;
   private webService: string;
   private webURL?: string;
