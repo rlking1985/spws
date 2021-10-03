@@ -1,19 +1,27 @@
 // Constants
-import { defaults, DefaultParameters, Response } from "../..";
+import { defaults, DefaultParameters, Response } from "../../..";
 
 // Enum
-import WebServices from "../../enum/webServices";
+import WebServices from "../../../enum/webServices";
 
 // Interfaces
-import ListCollection from "../../types/listCollection";
-import List from "../../types/list";
+import ListCollection from "../../../types/listCollection";
+import List from "../../../types/list";
 
 // Classes
-import Request from "../../classes/request";
-export { default as ResponseError } from "../../classes/responseError";
+import Request from "../../../classes/request";
+export { default as ResponseError } from "../../../classes/responseError";
 
-export interface GetListCollectionResponse extends Response {
+/**
+ * Gets all list items for multiple lists
+ */
+export interface GetListItemsResponse extends Response {
   data?: ListCollection;
+}
+
+export interface GetListItemsParameters extends DefaultParameters {
+  /** An array of list display names or GUIDS */
+  listNames: string[];
 }
 
 /**
@@ -23,7 +31,7 @@ export interface GetListCollectionResponse extends Response {
 const getListCollection = ({
   parse = defaults.parse,
   webURL = defaults.webURL,
-}: DefaultParameters = {}): Promise<GetListCollectionResponse> =>
+}: DefaultParameters = {}): Promise<GetListItemsResponse> =>
   new Promise(async (resolve, reject) => {
     {
       // Create request object
@@ -36,7 +44,7 @@ const getListCollection = ({
 
       try {
         // Return request
-        let res: GetListCollectionResponse = await req.send();
+        let res: GetListItemsResponse = await req.send();
 
         if (parse) {
           res.data = Array.from(res.responseXML.querySelectorAll("List")).map(

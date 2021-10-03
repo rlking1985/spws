@@ -62,5 +62,7 @@ type Response = {
   statusText: string;
 };
 
+type BatchResponse = Response[];
+
 // Export Interfaces
-export { defaults, DefaultParameters, Response };
+export { defaults, DefaultParameters, Response, BatchResponse };
