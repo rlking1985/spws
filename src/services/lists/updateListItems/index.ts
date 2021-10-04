@@ -1,15 +1,17 @@
-// Constants
-import { defaults, DefaultParameters, Response, ResponseError } from "../../..";
-
-// Types
-import { Item, Command } from "../../../types";
+import {
+  defaults,
+  DefaultParameters,
+  Response,
+  ResponseError,
+  Item,
+  Command,
+} from "../../..";
 
 // Utils
-import asyncForEach from "../../../utils/asyncForEach";
-import sendBatchRequest from "./sendBatchRequest";
+import { asyncForEach } from "../../../utils";
 
-// Exports
-export { Item, Command };
+// Local
+import sendBatchRequest from "./sendBatchRequest";
 
 /**
  * Contains the specifics for the create update or delete operation.

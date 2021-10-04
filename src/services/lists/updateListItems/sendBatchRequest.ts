@@ -1,28 +1,21 @@
-// Constants
+import { Item, Command, Request, ResponseError } from "../../..";
 import { Methods, UpdateListItemsResponse, Result } from ".";
 
 // Enum
-import WebServices from "../../../enum/webServices";
-
-// Types
-import { Item, Command } from "../../../types";
-
-// Classes
-import Request from "../../../classes/request";
-import { ResponseError } from "../../..";
+import { WebServices } from "../../../enum";
 
 const sendBatchRequest = ({
   listName,
   methods,
+  onError,
   parse,
   webURL,
-  onError,
 }: {
   listName: string;
   methods: Methods;
+  onError: "Continue" | "Return";
   parse: boolean;
   webURL: string;
-  onError: "Continue" | "Return";
 }): Promise<UpdateListItemsResponse> => {
   // Create Promise
   return new Promise(async (resolve, reject) => {
