@@ -2,20 +2,20 @@
 import { defaults, DefaultParameters, Response, ResponseError } from "../..";
 
 // Enum
-import ListAttributesEnum from "../../enum/listAttributes";
-import FieldEnum from "../../enum/field";
-import WebServices from "../../enum/webServices";
+import {
+  ListAttributes as ListAttributesEnum,
+  Field as FieldEnum,
+  WebServices,
+} from "../../enum";
 
 // Types
-import FieldType from "../../types/field";
-import List from "../../types/list";
-import ListAttributes from "../../types/listAttributes";
+import { Field as FieldType, List, ListAttributes } from "../../types";
 
 // Classes
-import Request from "../../classes/request";
+import { Request } from "../../classes";
 
 // Utils
-import escapeXml from "../../utils/escapeXml";
+import { escapeXml } from "../../utils";
 
 export interface GetListParameters extends DefaultParameters {
   /**
