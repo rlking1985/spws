@@ -18,11 +18,11 @@ type CurrentUser = {
   Name: string;
   Office: string;
   Picture: string;
-  SIPAddress: string;
+  SipAddress: string;
   Title: string;
   UserName: string;
   WebSite: string;
-  WorkEMail: string;
+  WorkEmail: string;
   WorkPhone: string;
 };
 
