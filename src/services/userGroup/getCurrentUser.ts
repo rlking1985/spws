@@ -68,7 +68,13 @@ interface Operation extends SpwsResponse {
 }
 
 /**
- * Gets the current logged in user
+ * Gets the current authenticated user.
+ *
+ * @remark Authentication can be changed using a proxy server and supplying a username and password. This is not recommended and should be used for testing purposes only.
+ * @param {object} options
+ * @param {string} [option.webURL=defaults.webURL] The SharePoint web URL
+ * @param {string} [options.username] A username if authenticating as another user (spws-proxy package needed)
+ * @param {string} [options.password] A password if authenticating as another user (spws-proxy package needed)
  */
 const getCurrentUser = ({
   webURL = defaults.webURL,

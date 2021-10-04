@@ -43,7 +43,7 @@ defaults.webURL = "/sites/my-site"
 
 #### Defined in
 
-[index.ts:16](https://github.com/rlking1985/spws/blob/30aeab6/src/index.ts#L16)
+[index.ts:16](https://github.com/rlking1985/spws/blob/e48fb8e/src/index.ts#L16)
 
 ## Functions
 
@@ -51,7 +51,9 @@ defaults.webURL = "/sites/my-site"
 
 ▸ `Const` **getCurrentUser**(`__namedParameters?`): `Promise`<`Operation`\>
 
-Gets the current logged in user
+Gets the current authenticated user.
+
+**`remark`** Authentication can be changed using a proxy server and supplying a username and password. This is not recommended and should be used for testing purposes only.
 
 #### Parameters
 
@@ -68,7 +70,7 @@ Gets the current logged in user
 
 #### Defined in
 
-[services/userGroup/getCurrentUser.ts:73](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getCurrentUser.ts#L73)
+[services/userGroup/getCurrentUser.ts:79](https://github.com/rlking1985/spws/blob/e48fb8e/src/services/userGroup/getCurrentUser.ts#L79)
 
 ___
 
@@ -92,7 +94,7 @@ Gets the current user's ID
 
 #### Defined in
 
-[services/userGroup/getCurrentUser.ts:23](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getCurrentUser.ts#L23)
+[services/userGroup/getCurrentUser.ts:23](https://github.com/rlking1985/spws/blob/e48fb8e/src/services/userGroup/getCurrentUser.ts#L23)
 
 ___
 
@@ -117,7 +119,7 @@ Gets the group collection for the user
 
 #### Defined in
 
-[services/userGroup/getGroupCollectionFromUser.ts:24](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getGroupCollectionFromUser.ts#L24)
+[services/userGroup/getGroupCollectionFromUser.ts:24](https://github.com/rlking1985/spws/blob/e48fb8e/src/services/userGroup/getGroupCollectionFromUser.ts#L24)
 
 ___
 
@@ -155,7 +157,7 @@ const list = await getList({ listName: "Title", attributes: ["Title", "Fields"] 
 
 #### Defined in
 
-[services/lists/getList.ts:44](https://github.com/rlking1985/spws/blob/30aeab6/src/services/lists/getList.ts#L44)
+[services/lists/getList.ts:44](https://github.com/rlking1985/spws/blob/e48fb8e/src/services/lists/getList.ts#L44)
 
 ___
 
@@ -181,7 +183,7 @@ Returns the names and GUIDs for all lists in the site.
 
 #### Defined in
 
-[services/lists/getListCollection.ts:25](https://github.com/rlking1985/spws/blob/30aeab6/src/services/lists/getListCollection.ts#L25)
+[services/lists/getListCollection.ts:25](https://github.com/rlking1985/spws/blob/e48fb8e/src/services/lists/getListCollection.ts#L25)
 
 ___
 
@@ -204,7 +206,7 @@ Get the user's information from the User InformationList
 
 #### Defined in
 
-[services/userGroup/getUserInformation.ts:24](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getUserInformation.ts#L24)
+[services/userGroup/getUserInformation.ts:24](https://github.com/rlking1985/spws/blob/e48fb8e/src/services/userGroup/getUserInformation.ts#L24)
 
 ___
 
@@ -230,4 +232,4 @@ ___
 
 #### Defined in
 
-[services/lists/updateListItems/index.ts:57](https://github.com/rlking1985/spws/blob/30aeab6/src/services/lists/updateListItems/index.ts#L57)
+[services/lists/updateListItems/index.ts:57](https://github.com/rlking1985/spws/blob/e48fb8e/src/services/lists/updateListItems/index.ts#L57)
