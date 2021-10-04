@@ -1,6 +1,7 @@
 import Chance from "chance";
 import updateListItems, { ResponseError, Methods } from ".";
 
+// TODO: Add "Update" and "Delete" Commands. This needs to be done after get list items
 describe("Update List Items: New Items", () => {
   const chance = new Chance();
 
@@ -19,6 +20,21 @@ describe("Update List Items: New Items", () => {
     expect(res[0].data.methods).toHaveLength(0);
     expect(res[0].data.success).toBe(null);
     expect(res[0].responseXML).toBeTruthy();
+  });
+
+  it("Continues on failed method", async () => {
+    const res = await updateListItems({
+      listName,
+      methods: [
+        ...methods,
+        { command: "Update", ID: "0", values: { Title } },
+        { command: "Delete", ID: "1" },
+      ],
+    });
+    // Expect the first batch to have a failed method
+    expect(res[0].data.success).toBe(false);
+    // Expect the overall status to be 200
+    expect(res[0].status).toBe(200);
   });
 
   it("No parsing, returns empty methods and null success", async () => {
@@ -66,5 +82,36 @@ describe("Update List Items: New Items", () => {
     });
     // Expect this pass as the field name is trimmed
     expect(res[0].data.success).toBe(true);
+  });
+
+  it("Errors with invalid methods", async () => {
+    try {
+      await updateListItems({
+        listName,
+        methods: [
+          // @ts-expect-error
+          "New",
+        ],
+      });
+    } catch (error) {
+      expect(error.message).toMatch(
+        /Expected methods to be an array of objects/i
+      );
+    }
+  });
+
+  it("Errors with invalid onError string", async () => {
+    try {
+      await updateListItems({
+        listName,
+        methods,
+        // @ts-expect-error
+        onError: "Stop",
+      });
+    } catch (error) {
+      expect(error.message).toMatch(
+        /Expected onError to be "Continue" or "Return"/i
+      );
+    }
   });
 });

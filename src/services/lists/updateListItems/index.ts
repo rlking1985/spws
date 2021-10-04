@@ -67,13 +67,19 @@ const updateListItems = ({
   return new Promise(async (resolve, reject) => {
     try {
       // Validate methods
-      if (!Array.isArray(methods) || methods.length === 0)
-        throw new Error(`Expected methods to be an array of objects`);
+      if (
+        !Array.isArray(methods) ||
+        methods.length === 0 ||
+        methods.some((method) => typeof method !== "object")
+      )
+        return reject(new Error(`Expected methods to be an array of objects`));
 
       // Validate onError
       if (!["Continue", "Return"].includes(onError))
-        throw new Error(
-          `Expected onError to be "Continue" or "Return" but received ${onError}`
+        return reject(
+          new Error(
+            `Expected onError to be "Continue" or "Return" but received ${onError}`
+          )
         );
 
       // Create array of batches

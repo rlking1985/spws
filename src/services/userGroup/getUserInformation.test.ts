@@ -18,4 +18,20 @@ describe("Get User Information", () => {
     expect(user.ContentType).toBe("DomainGroup");
     expect(user.ID).toBe("12");
   });
+
+  it("Returns SharePoint Group ID 4", async () => {
+    const user = await getUserInformation("4");
+    expect(user.ContentType).toBe("SharePointGroup");
+    expect(user.ID).toBe("4");
+  });
+
+  it("Invalid user throws error", async () => {
+    try {
+      await getUserInformation("0");
+    } catch (error) {
+      expect(error.message).toMatch(
+        /No user properties found, unable to get current user/i
+      );
+    }
+  });
 });

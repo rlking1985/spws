@@ -31,7 +31,7 @@ const getUserInformation = (
           // If no properties, reject
           if (!properties) {
             return reject(
-              "No user properties found, unable to get current user"
+              new Error("No user properties found, unable to get current user")
             );
           }
 
@@ -100,8 +100,7 @@ const getUserInformation = (
           resolve(user);
         } else {
           // Create response error
-          const error = new Error("Unable to get user information list data");
-          reject(error);
+          reject(new Error("Unable to get user information list data"));
         }
       }
     };

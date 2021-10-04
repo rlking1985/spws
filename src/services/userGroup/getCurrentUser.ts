@@ -1,7 +1,7 @@
 import { defaults, CurrentUser } from "../..";
 import getUserInformation from "./getUserInformation";
 
-const getCurrentUserID = async (
+export const getCurrentUserID = async (
   webURL: string,
   username?: string,
   password?: string
@@ -25,15 +25,16 @@ const getCurrentUserID = async (
           // If not found, reject with error
           if (!spUserId)
             return reject(
-              "Page does not contain the _spUserId, unable to getCurrentUser"
+              new Error(
+                "Page does not contain the _spUserId, unable to getCurrentUser"
+              )
             );
 
           // Return the ID from the matched string
           return resolve(spUserId[0].split("=")[1]);
         } else {
           // Create response error
-          const error = new Error("Unable to get SharePoint User ID");
-          reject(error);
+          reject(new Error("Unable to get SharePoint User ID"));
         }
       }
     };
@@ -43,17 +44,18 @@ const getCurrentUserID = async (
 /**
  * Gets the current logged in user
  */
-const getCurrentUser = async (
-  {
-    webURL = defaults.webURL,
-    username,
-    password,
-  }: { webURL?: string; username?: string; password?: string } = {
-    webURL: defaults.webURL,
-  }
-): Promise<CurrentUser> => {
+const getCurrentUser = async ({
+  webURL = defaults.webURL,
+  username,
+  password,
+}: {
+  webURL?: string;
+  username?: string;
+  password?: string;
+} = {}): Promise<CurrentUser> => {
   // If current user has already been set, return current user
-  if (defaults.currentUser) return defaults.currentUser;
+  if (defaults.currentUser && !username && !password)
+    return defaults.currentUser;
 
   // Get User ID
   const ID = await getCurrentUserID(webURL, username, password);
@@ -61,8 +63,14 @@ const getCurrentUser = async (
   // Get current user
   const currentUser = await getUserInformation(ID, webURL);
 
-  // Update defaults of currentUser
-  defaults.currentUser = currentUser;
+  // If a username or password was supplied
+  if (username || password) {
+    // Clear the cached current user
+    defaults.currentUser = null;
+  } else {
+    // Update defaults of currentUser
+    defaults.currentUser = currentUser;
+  }
 
   // Return the current user
   return currentUser;
