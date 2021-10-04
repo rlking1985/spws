@@ -2,7 +2,7 @@
 import { defaults } from "../..";
 
 // Classes
-import { Request, SpwsError } from "../../classes";
+import { SpwsRequest, SpwsError } from "../../classes";
 
 // Enum
 import {
@@ -55,7 +55,7 @@ const getList = ({
   return new Promise(async (resolve, reject) => {
     {
       // Create request object
-      const req = new Request({ webService: WebServices.Lists, webURL });
+      const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
       // Create envelope
       req.createEnvelope(

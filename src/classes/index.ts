@@ -1,3 +1,3 @@
-import Request from "./request";
+import SpwsRequest from "./spwsRequest";
 import SpwsError from "./spwsError";
-export { Request, SpwsError };
+export { SpwsRequest, SpwsError };

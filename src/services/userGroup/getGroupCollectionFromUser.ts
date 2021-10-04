@@ -2,7 +2,7 @@
 import { defaults } from "../..";
 
 // Classes
-import { Request, SpwsError } from "../../classes";
+import { SpwsRequest, SpwsError } from "../../classes";
 
 // Enum
 import { WebServices } from "../../enum";
@@ -38,7 +38,7 @@ const getGroupCollectionFromUser = (
       }
 
       // Create Request
-      const req = new Request({
+      const req = new SpwsRequest({
         webURL,
         webService: WebServices.UserGroup,
       });

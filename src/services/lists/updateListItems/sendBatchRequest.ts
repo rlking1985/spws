@@ -1,7 +1,7 @@
 // SPWS Library
 
 // Classes
-import { SpwsError, Request } from "../../../classes";
+import { SpwsError, SpwsRequest } from "../../../classes";
 
 // Enum
 import { WebServices } from "../../../enum";
@@ -33,7 +33,7 @@ const sendBatchRequest = ({
   return new Promise(async (resolve, reject) => {
     try {
       // Create request object
-      const req = new Request({
+      const req = new SpwsRequest({
         webService: WebServices.Lists,
         webURL,
         soapAction:

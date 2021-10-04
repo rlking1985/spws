@@ -4,210 +4,19 @@
 
 ## Table of contents
 
-### Interfaces
-
-- [GetListCollectionResponse](interfaces/GetListCollectionResponse.md)
-- [GetListParameters](interfaces/GetListParameters.md)
-- [GetListResponse](interfaces/GetListResponse.md)
-
-### Type aliases
-
-- [DefaultParameters](modules.md#defaultparameters)
-- [Field](modules.md#field)
-- [List](modules.md#list)
-- [ListAttributes](modules.md#listattributes)
-- [ListCollection](modules.md#listcollection)
-- [Response](modules.md#response)
-
 ### Variables
 
 - [defaults](modules.md#defaults)
 
 ### Functions
 
+- [getCurrentUser](modules.md#getcurrentuser)
+- [getCurrentUserID](modules.md#getcurrentuserid)
+- [getGroupCollectionFromUser](modules.md#getgroupcollectionfromuser)
 - [getList](modules.md#getlist)
 - [getListCollection](modules.md#getlistcollection)
-
-## Type aliases
-
-### DefaultParameters
-
-Ƭ **DefaultParameters**: `Object`
-
-The default parameters used that are available in every web request.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `parse?` | `boolean` | If false, the data object will be empty. The responseXML will need to be used  **`default`** true |
-| `webURL?` | `string` | The absolute or relative webURL.  **`default`** "" |
-
-#### Defined in
-
-[index.ts:17](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L17)
-
-___
-
-### Field
-
-Ƭ **Field**: `Object`
-
-#### Index signature
-
-▪ [key: `string`]: `any`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `Choices?` | `string`[] |
-| `DisplaceOnUpgrade?` | `boolean` |
-| `DisplayName?` | `string` |
-| `Filterable?` | `boolean` |
-| `FromBaseType?` | `boolean` |
-| `Hidden?` | `string` |
-| `ID?` | `string` |
-| `Name?` | `string` |
-| `ReadOnly?` | `boolean` |
-| `RowOrdinal?` | `string` |
-| `Sealed?` | `boolean` |
-| `ShowInFileDlg?` | `boolean` |
-| `Sortable?` | `boolean` |
-| `SourceID?` | `string` |
-| `StaticName?` | `string` |
-| `Type?` | `string` |
-| `colName?` | `string` |
-
-#### Defined in
-
-[types/field.ts:1](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/field.ts#L1)
-
-___
-
-### List
-
-Ƭ **List**: `Object`
-
-#### Index signature
-
-▪ [key: `string`]: `string` \| `object` \| `undefined`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `AllowDeletion?` | `string` |
-| `AllowMultiResponses?` | `string` |
-| `AnonymousPermMask?` | `string` |
-| `Author?` | `string` |
-| `BaseType?` | `string` |
-| `Created?` | `string` |
-| `DefaultViewUrl?` | `string` |
-| `Description?` | `string` |
-| `Direction?` | `string` |
-| `DocTemplateUrl?` | `string` |
-| `EmailAlias?` | `string` |
-| `EnableAttachments?` | `string` |
-| `EnableFolderCreation?` | `string` |
-| `EnableMinorVersion?` | `string` |
-| `EnableModeration?` | `string` |
-| `EnablePeopleSelector?` | `string` |
-| `EnableResourceSelector?` | `string` |
-| `EnableVersioning?` | `string` |
-| `EnforceDataValidation?` | `string` |
-| `EventSinkAssembly?` | `string` |
-| `EventSinkClass?` | `string` |
-| `EventSinkData?` | `string` |
-| `ExcludeFromOfflineClient?` | `string` |
-| `FeatureId?` | `string` |
-| `Fields?` | [`Field`](modules.md#field)[] |
-| `Flags?` | `string` |
-| `HasExternalDataSource?` | `string` |
-| `HasRelatedLists?` | `string` |
-| `HasUniqueScopes?` | `string` |
-| `Hidden?` | `string` |
-| `ID?` | `string` |
-| `ImageUrl?` | `string` |
-| `IrmEnabled?` | `string` |
-| `IsApplicationList?` | `string` |
-| `ItemCount?` | `string` |
-| `LastDeleted?` | `string` |
-| `MajorVersionLimit?` | `string` |
-| `MajorWithMinorVersionsLimit?` | `string` |
-| `MaxItemsPerThrottledOperation?` | `string` |
-| `MobileDefaultViewUrl?` | `string` |
-| `Modified?` | `string` |
-| `MultipleDataList?` | `string` |
-| `Name?` | `string` |
-| `NoThrottleListOperations?` | `string` |
-| `Ordered?` | `string` |
-| `PreserveEmptyValues?` | `string` |
-| `ReadSecurity?` | `string` |
-| `RequireCheckout?` | `string` |
-| `RootFolder?` | `string` |
-| `ScopeId?` | `string` |
-| `SendToLocation?` | `string` |
-| `ServerTemplate?` | `string` |
-| `ShowUser?` | `string` |
-| `StrictTypeCoercion?` | `string` |
-| `ThrottleListOperations?` | `string` |
-| `ThumbnailSize?` | `string` |
-| `Title?` | `string` |
-| `Version?` | `string` |
-| `WebFullUrl?` | `string` |
-| `WebId?` | `string` |
-| `WebImageHeight?` | `string` |
-| `WebImageWidth?` | `string` |
-| `WorkFlowId?` | `string` |
-| `WriteSecurity?` | `string` |
-
-#### Defined in
-
-[types/list.ts:4](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/list.ts#L4)
-
-___
-
-### ListAttributes
-
-Ƭ **ListAttributes**: \`${Attributes}\`
-
-#### Defined in
-
-[types/listAttributes.ts:3](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/listAttributes.ts#L3)
-
-___
-
-### ListCollection
-
-Ƭ **ListCollection**: `Object`
-
-#### Index signature
-
-▪ [index: `number`]: [`List`](modules.md#list)
-
-#### Defined in
-
-[types/listCollection.ts:3](https://github.com/rlking1985/spws/blob/bc2d5f7/src/types/listCollection.ts#L3)
-
-___
-
-### Response
-
-Ƭ **Response**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `responseText` | `string` |
-| `responseXML` | `Document` |
-| `status` | `number` |
-| `statusText` | `string` |
-
-#### Defined in
-
-[index.ts:58](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L58)
+- [getUserInformation](modules.md#getuserinformation)
+- [updateListItems](modules.md#updatelistitems)
 
 ## Variables
 
@@ -228,18 +37,93 @@ defaults.webURL = "/sites/my-site"
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
+| `currentUser` | `CurrentUser` \| ``null`` | The current user, this is updated anytime the getCurrentUser function is invoked. |
 | `parse` | `boolean` | If false, the data object will be empty. The responseXML will need to be used  **`default`** true |
 | `webURL` | `string` | The absolute or relative webURL.  **`default`** "" |
 
 #### Defined in
 
-[index.ts:39](https://github.com/rlking1985/spws/blob/bc2d5f7/src/index.ts#L39)
+[index.ts:16](https://github.com/rlking1985/spws/blob/30aeab6/src/index.ts#L16)
 
 ## Functions
 
+### getCurrentUser
+
+▸ `Const` **getCurrentUser**(`__namedParameters?`): `Promise`<`Operation`\>
+
+Gets the current logged in user
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | `Object` |
+| `__namedParameters.password?` | `string` |
+| `__namedParameters.username?` | `string` |
+| `__namedParameters.webURL?` | `string` |
+
+#### Returns
+
+`Promise`<`Operation`\>
+
+#### Defined in
+
+[services/userGroup/getCurrentUser.ts:73](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getCurrentUser.ts#L73)
+
+___
+
+### getCurrentUserID
+
+▸ `Const` **getCurrentUserID**(`webURL`, `username?`, `password?`): `Promise`<`string`\>
+
+Gets the current user's ID
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `webURL` | `string` | The SharePoint web URL |
+| `username?` | `string` | The username if authenticating as another user (testing only) |
+| `password?` | `string` | The password if authenticating as another user (testing only) |
+
+#### Returns
+
+`Promise`<`string`\>
+
+#### Defined in
+
+[services/userGroup/getCurrentUser.ts:23](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getCurrentUser.ts#L23)
+
+___
+
+### getGroupCollectionFromUser
+
+▸ `Const` **getGroupCollectionFromUser**(`userLoginName`, `__namedParameters?`): `Promise`<`Operation`\>
+
+Gets the group collection for the user
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `userLoginName` | `string` |
+| `__namedParameters` | `Object` |
+| `__namedParameters.parse?` | `boolean` |
+| `__namedParameters.webURL?` | `string` |
+
+#### Returns
+
+`Promise`<`Operation`\>
+
+#### Defined in
+
+[services/userGroup/getGroupCollectionFromUser.ts:24](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getGroupCollectionFromUser.ts#L24)
+
+___
+
 ### getList
 
-▸ `Const` **getList**(`__namedParameters`): `Promise`<[`GetListResponse`](interfaces/GetListResponse.md)\>
+▸ `Const` **getList**(`__namedParameters`): `Promise`<`Operation`\>
 
 Returns a schema for the specified list.
 
@@ -259,21 +143,25 @@ const list = await getList({ listName: "Title", attributes: ["Title", "Fields"] 
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | [`GetListParameters`](interfaces/GetListParameters.md) |
+| `__namedParameters` | `Object` |
+| `__namedParameters.attributes` | (``"AllowDeletion"`` \| ``"AllowMultiResponses"`` \| ``"AnonymousPermMask"`` \| ``"Author"`` \| ``"BaseType"`` \| ``"Created"`` \| ``"DefaultViewUrl"`` \| ``"Description"`` \| ``"Direction"`` \| ``"DocTemplateUrl"`` \| ``"EmailAlias"`` \| ``"EnableAttachments"`` \| ``"EnableFolderCreation"`` \| ``"EnableMinorVersion"`` \| ``"EnableModeration"`` \| ``"EnablePeopleSelector"`` \| ``"EnableResourceSelector"`` \| ``"EnableVersioning"`` \| ``"EnforceDataValidation"`` \| ``"EventSinkAssembly"`` \| ``"EventSinkClass"`` \| ``"EventSinkData"`` \| ``"ExcludeFromOfflineClient"`` \| ``"FeatureId"`` \| ``"Fields"`` \| ``"Flags"`` \| ``"HasExternalDataSource"`` \| ``"HasRelatedLists"`` \| ``"HasUniqueScopes"`` \| ``"Hidden"`` \| ``"ID"`` \| ``"ImageUrl"`` \| ``"IrmEnabled"`` \| ``"IsApplicationList"`` \| ``"ItemCount"`` \| ``"LastDeleted"`` \| ``"MajorVersionLimit"`` \| ``"MajorWithMinorVersionsLimit"`` \| ``"MaxItemsPerThrottledOperation"`` \| ``"MobileDefaultViewUrl"`` \| ``"Modified"`` \| ``"MultipleDataList"`` \| ``"Name"`` \| ``"NoThrottleListOperations"`` \| ``"Ordered"`` \| ``"PreserveEmptyValues"`` \| ``"ReadSecurity"`` \| ``"RequireCheckout"`` \| ``"RootFolder"`` \| ``"ScopeId"`` \| ``"SendToLocation"`` \| ``"ServerTemplate"`` \| ``"ShowUser"`` \| ``"StrictTypeCoercion"`` \| ``"ThrottleListOperations"`` \| ``"ThumbnailSize"`` \| ``"Title"`` \| ``"Version"`` \| ``"WebFullUrl"`` \| ``"WebId"`` \| ``"WebImageHeight"`` \| ``"WebImageWidth"`` \| ``"WorkFlowId"`` \| ``"WriteSecurity"``)[] |
+| `__namedParameters.listName` | `string` |
+| `__namedParameters.parse?` | `boolean` |
+| `__namedParameters.webURL?` | `string` |
 
 #### Returns
 
-`Promise`<[`GetListResponse`](interfaces/GetListResponse.md)\>
+`Promise`<`Operation`\>
 
 #### Defined in
 
-[services/lists/getList.ts:53](https://github.com/rlking1985/spws/blob/bc2d5f7/src/services/lists/getList.ts#L53)
+[services/lists/getList.ts:44](https://github.com/rlking1985/spws/blob/30aeab6/src/services/lists/getList.ts#L44)
 
 ___
 
 ### getListCollection
 
-▸ `Const` **getListCollection**(`__namedParameters?`): `Promise`<[`GetListCollectionResponse`](interfaces/GetListCollectionResponse.md)\>
+▸ `Const` **getListCollection**(`__namedParameters?`): `Promise`<`Operation`\>
 
 Returns the names and GUIDs for all lists in the site.
 
@@ -283,12 +171,63 @@ Returns the names and GUIDs for all lists in the site.
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | [`DefaultParameters`](modules.md#defaultparameters) |
+| `__namedParameters` | `Object` |
+| `__namedParameters.parse?` | `boolean` |
+| `__namedParameters.webURL?` | `string` |
 
 #### Returns
 
-`Promise`<[`GetListCollectionResponse`](interfaces/GetListCollectionResponse.md)\>
+`Promise`<`Operation`\>
 
 #### Defined in
 
-[services/lists/getListCollection.ts:26](https://github.com/rlking1985/spws/blob/bc2d5f7/src/services/lists/getListCollection.ts#L26)
+[services/lists/getListCollection.ts:25](https://github.com/rlking1985/spws/blob/30aeab6/src/services/lists/getListCollection.ts#L25)
+
+___
+
+### getUserInformation
+
+▸ `Const` **getUserInformation**(`ID`, `webURL?`): `Promise`<`GetUserInformationResponse`\>
+
+Get the user's information from the User InformationList
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `ID` | `string` | The user's ID |
+| `webURL` | `string` | The SharePoint webURL |
+
+#### Returns
+
+`Promise`<`GetUserInformationResponse`\>
+
+#### Defined in
+
+[services/userGroup/getUserInformation.ts:24](https://github.com/rlking1985/spws/blob/30aeab6/src/services/userGroup/getUserInformation.ts#L24)
+
+___
+
+### updateListItems
+
+▸ `Const` **updateListItems**(`__namedParameters`): `Promise`<`Operation`[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | `Object` |
+| `__namedParameters.batchSize?` | `number` |
+| `__namedParameters.listName` | `string` |
+| `__namedParameters.methods` | `Methods` |
+| `__namedParameters.onError?` | ``"Return"`` \| ``"Continue"`` |
+| `__namedParameters.parse?` | `boolean` |
+| `__namedParameters.webURL?` | `string` |
+
+#### Returns
+
+`Promise`<`Operation`[]\>
+
+#### Defined in
+
+[services/lists/updateListItems/index.ts:57](https://github.com/rlking1985/spws/blob/30aeab6/src/services/lists/updateListItems/index.ts#L57)

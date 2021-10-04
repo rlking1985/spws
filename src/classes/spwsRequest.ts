@@ -1,5 +1,5 @@
 // Types
-import { SpwsResponse } from "..";
+import { SpwsResponse } from "../types";
 
 // Classes
 import SpwsError from "./spwsError";
@@ -7,20 +7,22 @@ import SpwsError from "./spwsError";
 // Utils
 import escapeXml from "../utils/escapeXml";
 
-interface RequestOptions {
-  webService: string;
-  webURL?: string;
-  soapAction?: string;
-}
-
-class Request {
+class SpwsRequest {
   escapeXml = escapeXml;
   private envelope = ``;
   private webService: string;
   private webURL?: string;
   xhr: XMLHttpRequest;
 
-  constructor({ webURL, webService, soapAction }: RequestOptions) {
+  constructor({
+    webURL,
+    webService,
+    soapAction,
+  }: {
+    webService: string;
+    webURL?: string;
+    soapAction?: string;
+  }) {
     this.webService = webService;
     this.webURL = webURL;
 
@@ -84,4 +86,4 @@ class Request {
     });
 }
 
-export default Request;
+export default SpwsRequest;

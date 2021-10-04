@@ -1,3 +1,6 @@
+export * from "./services/lists";
+export * from "./services/userGroup";
+
 // Types
 import { CurrentUser } from "./types";
 
@@ -10,7 +13,7 @@ import { CurrentUser } from "./types";
  * defaults.webURL = "/sites/my-site"
  * ```
  */
-const defaults: {
+export const defaults: {
   /**
    * If false, the data object will be empty. The responseXML will need to be used
    * @default true
@@ -21,14 +24,10 @@ const defaults: {
    * @default ""
    */
   webURL: string;
+  /** The current user, this is updated anytime the getCurrentUser function is invoked. */
   currentUser: CurrentUser | null;
 } = {
   parse: true,
   webURL: "",
   currentUser: null,
 };
-
-export * from "./services/lists";
-export * from "./services/userGroup";
-
-export { defaults };
