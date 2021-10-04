@@ -1,13 +1,13 @@
 import { defaults } from "../..";
-import getList, { SpwsError } from "./getList";
+import getList from "./getList";
+import { SpwsError } from "../../classes";
 
 describe("Get List", () => {
   // Set list namew
   const listName = "Get List";
 
   it("Response should be parsed with all attributes", async () => {
-    const res = await getList({
-      listName,
+    const res = await getList(listName, {
       webURL: defaults.webURL,
     });
     //
@@ -19,8 +19,7 @@ describe("Get List", () => {
   });
 
   it("Response should be parsed with all only Title and Fields", async () => {
-    const res = await getList({
-      listName,
+    const res = await getList(listName, {
       webURL: defaults.webURL,
       attributes: ["Title", "Fields"],
     });
@@ -33,8 +32,7 @@ describe("Get List", () => {
   });
 
   it("Response should be parsed with all only Titles", async () => {
-    const res = await getList({
-      listName,
+    const res = await getList(listName, {
       webURL: defaults.webURL,
       attributes: ["Title"],
     });
@@ -46,26 +44,15 @@ describe("Get List", () => {
     expect(res.data.Fields).toBeUndefined();
   });
 
-  it("Response should be XML only (unparsed)", async () => {
-    const res = await getList({
-      listName,
-      parse: false,
-    });
-
-    expect(res.responseXML).toBeTruthy();
-    expect(res.status).toBe(200);
-    expect(res.data?.Title).toBeUndefined();
-  });
-
-  it("Response should be parsed", async () => {
-    const res = await getList({ listName, parse: true });
+  it("Request with no options", async () => {
+    const res = await getList(listName);
 
     expect(res.data!.Title).toBe(listName);
   });
 
   it("List does not exist and should error", async () => {
     try {
-      await getList({ listName: "Lorem Ipsum List", parse: false });
+      await getList("Lorem Ipsum List");
     } catch (error: any) {
       const err: SpwsError = error;
       expect(err.data.detail).toMatch(/list does not exist/i);
@@ -74,7 +61,7 @@ describe("Get List", () => {
 
   it("Get list that contains XML in Title", async () => {
     try {
-      const res = await getList({ listName: "Get List <XML>" });
+      const res = await getList("Get List <XML>");
       expect(res.status).toBe(200);
     } catch (error: any) {
       expect(error).toBeFalsy();

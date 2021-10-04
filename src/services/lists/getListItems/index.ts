@@ -18,55 +18,48 @@ import { SpwsResponse, ListCollection, List } from "../../../types";
  * Gets all list items for multiple lists
  */
 export interface Operation extends SpwsResponse {
-  data?: ListCollection;
+  data: ListCollection;
 }
 
 /**
  * Returns the names and GUIDs for all lists in the site.
  * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774663(v=office.12)?redirectedfrom=MSDN
  */
-const getListCollection = ({
+const getListCollection = async ({
   listNames,
-  parse = defaults.parse,
   webURL = defaults.webURL,
 }: {
-  parse?: boolean;
   webURL?: string;
   listNames: string[];
-}): Promise<Operation> =>
-  new Promise(async (resolve, reject) => {
-    {
-      // Create request object
-      const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
+}): Promise<Operation> => {
+  try {
+    // Create request object
+    const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
-      // Create envelope
-      req.createEnvelope(
-        `<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`
-      );
+    // Create envelope
+    req.createEnvelope(
+      `<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`
+    );
 
-      try {
-        // Return request
-        let res: Operation = await req.send();
+    // Return request
+    const res = await req.send();
 
-        if (parse) {
-          res.data = Array.from(res.responseXML.querySelectorAll("List")).map(
-            (list) => {
-              return Array.from(list.attributes).reduce(
-                (object: List, { name, value }) => {
-                  object[name] = value;
-                  return object;
-                },
-                {}
-              );
-            }
-          );
-        }
-
-        resolve(res);
-      } catch (error: any) {
-        reject(new SpwsError(error));
+    const data = Array.from(res.responseXML.querySelectorAll("List")).map(
+      (list) => {
+        return Array.from(list.attributes).reduce(
+          (object: List, { name, value }) => {
+            object[name] = value;
+            return object;
+          },
+          {}
+        );
       }
-    }
-  });
+    );
+
+    return { ...res, data };
+  } catch (error: any) {
+    throw new SpwsError(error);
+  }
+};
 
 export default getListCollection;

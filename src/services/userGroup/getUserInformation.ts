@@ -13,18 +13,19 @@ import { CurrentUser, SpwsResponse } from "../../types";
 
 // Utils
 
-interface GetUserInformationResponse extends SpwsResponse {
-  data?: CurrentUser;
+interface Operation extends SpwsResponse {
+  data: CurrentUser;
 }
 /**
  * Get the user's information from the User InformationList
- * @param webURL The SharePoint webURL
  * @param ID The user's ID
+ * @param {object} [options]
+ * @param {string} [options.webURL] The SharePoint webURL
  */
 const getUserInformation = (
   ID: string,
-  webURL: string = defaults.webURL
-): Promise<GetUserInformationResponse> =>
+  { webURL = defaults.webURL }: { webURL?: string } = {}
+): Promise<Operation> =>
   new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
     xhr.open(
@@ -116,7 +117,7 @@ const getUserInformation = (
           }
 
           // Create response object
-          const response: GetUserInformationResponse = {
+          const response: Operation = {
             responseXML: xhr.responseXML || new Document(),
             responseText: xhr.responseText,
             status: xhr.status,

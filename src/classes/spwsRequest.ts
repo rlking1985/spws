@@ -10,8 +10,6 @@ import escapeXml from "../utils/escapeXml";
 class SpwsRequest {
   escapeXml = escapeXml;
   private envelope = ``;
-  private webService: string;
-  private webURL?: string;
   xhr: XMLHttpRequest;
 
   constructor({
@@ -23,15 +21,15 @@ class SpwsRequest {
     webURL?: string;
     soapAction?: string;
   }) {
-    this.webService = webService;
-    this.webURL = webURL;
-
     // Create XHR
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", `${this.webURL}/_vti_bin/${this.webService}.asmx`);
+    xhr.open("POST", `${webURL}/_vti_bin/${webService}.asmx`);
     xhr.setRequestHeader("Content-Type", `text/xml; charset="utf-8"`);
+
     // If soap action needed, set header
     if (soapAction) xhr.setRequestHeader("SOAPAction", soapAction);
+
+    // Assign XHR to class
     this.xhr = xhr;
   }
 

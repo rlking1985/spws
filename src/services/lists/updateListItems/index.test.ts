@@ -15,11 +15,10 @@ describe("Update List Items: New Items", () => {
     const res = await updateListItems({
       listName,
       methods: [{ command: "New", values: { Title: `<Welcome> & 'Hello"` } }],
-      parse: false,
     });
 
-    expect(res[0].data.methods).toHaveLength(0);
-    expect(res[0].data.success).toBe(null);
+    expect(res[0].data.methods).toHaveLength(1);
+    expect(res[0].data.success).toBe(true);
     expect(res[0].responseXML).toBeTruthy();
   });
 
@@ -36,18 +35,6 @@ describe("Update List Items: New Items", () => {
     expect(res[0].data.success).toBe(false);
     // Expect the overall status to be 200
     expect(res[0].status).toBe(200);
-  });
-
-  it("No parsing, returns empty methods and null success", async () => {
-    const res = await updateListItems({
-      listName,
-      methods,
-      parse: false,
-    });
-
-    expect(res[0].data.methods).toHaveLength(0);
-    expect(res[0].data.success).toBe(null);
-    expect(res[0].responseXML).toBeTruthy();
   });
 
   it("Requests are batched", async () => {

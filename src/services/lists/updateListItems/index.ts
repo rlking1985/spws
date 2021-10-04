@@ -48,90 +48,81 @@ export interface Operation extends SpwsResponse {
   /**
    * The data object is available for any requests where parsed is true or an error occurs
    */
-  data?: {
+  data: {
     methods: Result[];
     success: boolean | null;
   };
 }
 
-const updateListItems = ({
+const updateListItems = async ({
   batchSize = 0,
   listName,
   methods,
   onError = "Continue",
-  parse = defaults.parse,
   webURL = defaults.webURL,
 }: {
   batchSize?: number;
   listName: string;
   methods: Methods;
   onError?: "Return" | "Continue";
-  parse?: boolean;
   webURL?: string;
 }): Promise<Operation[]> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // Validate methods
-      if (
-        !Array.isArray(methods) ||
-        methods.length === 0 ||
-        methods.some((method) => typeof method !== "object")
-      )
-        return reject(
-          new SpwsError({
-            message: `Expected methods to be an array of objects`,
-          })
-        );
-
-      // Validate onError
-      if (!["Continue", "Return"].includes(onError))
-        return reject(
-          new SpwsError({
-            message: `Expected onError to be "Continue" or "Return" but received ${onError}`,
-          })
-        );
-
-      // Create array of batches
-      const batches: Methods[] =
-        !isNaN(batchSize) && +batchSize > 0
-          ? methods.reduce((batches: [][], method, index) => {
-              // If first batch or batch limit reached, push new batch
-              if (index % batchSize === 0) batches.push([]);
-
-              // Get current batch
-              let batch: Methods = batches[batches.length - 1];
-
-              // Push method to batch
-              batch.push(method);
-
-              // Return accumulator
-              return batches;
-            }, [])
-          : [methods];
-
-      // Create results array
-      const results: Operation[] = [];
-
-      // Iterate through all batches
-      await asyncForEach(batches, async (methods) => {
-        const batchResult = await sendBatchRequest({
-          listName,
-          methods,
-          parse,
-          webURL,
-          onError,
-        });
-
-        // Push batch result to results array
-        results.push(batchResult);
+  try {
+    // Validate methods
+    if (
+      !Array.isArray(methods) ||
+      methods.length === 0 ||
+      methods.some((method) => typeof method !== "object")
+    )
+      throw new SpwsError({
+        message: `Expected methods to be an array of objects`,
       });
 
-      // Resolve results
-      resolve(results);
-    } catch (error: any) {
-      reject(new SpwsError(error));
-    }
-  });
+    // Validate onError
+    if (!["Continue", "Return"].includes(onError))
+      throw new SpwsError({
+        message: `Expected onError to be "Continue" or "Return" but received ${onError}`,
+      });
+
+    // Create array of batches
+    const batches: Methods[] =
+      !isNaN(batchSize) && +batchSize > 0
+        ? methods.reduce((batches: [][], method, index) => {
+            // If first batch or batch limit reached, push new batch
+            if (index % batchSize === 0) batches.push([]);
+
+            // Get current batch
+            let batch: Methods = batches[batches.length - 1];
+
+            // Push method to batch
+            batch.push(method);
+
+            // Return accumulator
+            return batches;
+          }, [])
+        : [methods];
+
+    // Create results array
+    const results: Operation[] = [];
+
+    // Iterate through all batches
+    await asyncForEach(batches, async (methods) => {
+      const batchResult = await sendBatchRequest({
+        listName,
+        methods,
+        webURL,
+        onError,
+      });
+
+      // Push batch result to results array
+      results.push(batchResult);
+    });
+
+    // Resolve results
+    return results;
+  } catch (error: any) {
+    throw new SpwsError(error);
+  }
 };
 
 export default updateListItems;

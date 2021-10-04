@@ -9,7 +9,7 @@ describe("Response Error", () => {
 
   it("Parses XML to get error data", async () => {
     try {
-      await getList({ listName: "This lit does not exist" });
+      await getList("This list does not exist");
     } catch (e) {
       const error: SpwsError = e;
       expect(error.data.detail).toMatch(/List does not exist/i);

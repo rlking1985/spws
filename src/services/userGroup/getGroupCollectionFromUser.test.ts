@@ -8,15 +8,6 @@ describe("getGroupCollectionFromUser", () => {
     expect(Array.isArray(res.data)).toBe(true);
   });
 
-  it("Gets unparsed groups", async () => {
-    const res = await getGroupCollectionFromUser("drn\\ross.king3", {
-      parse: false,
-    });
-    expect(res.status).toBe(200);
-    expect(res.responseXML).toBeTruthy();
-    expect(res.data).toBeUndefined();
-  });
-
   it("Error when no user is defined", async () => {
     try {
       // @ts-expect-error

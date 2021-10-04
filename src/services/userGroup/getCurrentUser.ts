@@ -16,14 +16,14 @@ import { CurrentUser, SpwsResponse } from "../../types";
 
 /**
  * Gets the current user's ID
- * @param webURL The SharePoint web URL
- * @param username The username if authenticating as another user (testing only)
- * @param password The password if authenticating as another user (testing only)
+ * @param {string} webURL The SharePoint web URL
+ * @param {object} [options] Options object
+ * @param {string} [options.username] The username if authenticating as another user (testing only)
+ * @param {string} [options.password] The password if authenticating as another user (testing only)
  */
 export const getCurrentUserID = (
   webURL: string,
-  username?: string,
-  password?: string
+  { username, password }: { username?: string; password?: string } = {}
 ): Promise<string> =>
   new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
@@ -64,7 +64,7 @@ export const getCurrentUserID = (
   });
 
 interface Operation extends SpwsResponse {
-  data?: CurrentUser;
+  data: CurrentUser;
 }
 
 /**
@@ -98,10 +98,10 @@ const getCurrentUser = ({
         });
 
       // Get User ID
-      const ID = await getCurrentUserID(webURL, username, password);
+      const ID = await getCurrentUserID(webURL, { username, password });
 
       // Get current user
-      const res = await getUserInformation(ID, webURL);
+      const res = await getUserInformation(ID, { webURL });
 
       // If a username or password was supplied
       if (username || password) {

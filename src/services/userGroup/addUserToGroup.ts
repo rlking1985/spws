@@ -8,14 +8,16 @@ import { SpwsRequest, SpwsError } from "../../classes";
 import { WebServices } from "../../enum";
 
 // Services
+// import {  } from "../lists";
 
 // Types
-import { List, ListCollection, SpwsResponse } from "../../types";
+import { SpwsResponse } from "../../types";
 
 // Utils
+// import {  } from "../../utils";
 
 interface Operation extends SpwsResponse {
-  data: ListCollection;
+  data?: object;
 }
 
 /**
@@ -25,30 +27,25 @@ interface Operation extends SpwsResponse {
 const getListCollection = async (
   webURL = defaults.webURL
 ): Promise<Operation> => {
-  // Create request object
-  const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
-
-  // Create envelope
-  req.createEnvelope(
-    `<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`
-  );
-
   try {
-    // Return request
-    const res = await req.send();
+    // Create request object
+    const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
-    // Create data object
-    const data = Array.from(res.responseXML.querySelectorAll("List")).map(
-      (list) => {
-        return Array.from(list.attributes).reduce(
-          (object: List, { name, value }) => {
-            object[name] = value;
-            return object;
-          },
-          {}
-        );
-      }
+    // Create envelope
+    req.createEnvelope(
+      `<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`
     );
+
+    // Return request
+    let res = await req.send();
+
+    const data = Array.from(
+      res.responseXML.querySelectorAll("Some Element")
+    ).map((element) => {
+      return {
+        key: "value",
+      };
+    });
 
     return { ...res, data };
   } catch (error: any) {
