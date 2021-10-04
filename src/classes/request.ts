@@ -68,8 +68,12 @@ class Request {
             });
           } else {
             // Create response error
-            const error = new ResponseError(this.xhr);
-
+            const error = new ResponseError({
+              responseText: this.xhr.responseText,
+              responseXML: this.xhr.responseXML!,
+              status: this.xhr.status,
+              statusText: this.xhr.statusText,
+            });
             reject(error);
           }
         }

@@ -1,6 +1,6 @@
 class ResponseError extends Error {
   responseText: string;
-  responseXML: Document;
+  responseXML: Document | null;
   status: number;
   statusText: string;
   data?: {
@@ -8,12 +8,25 @@ class ResponseError extends Error {
     detail: string;
   };
 
-  constructor(xhr: XMLHttpRequest) {
-    super(xhr.responseText);
-    this.responseText = xhr.responseText;
-    this.responseXML = xhr.responseXML!;
-    this.status = xhr.status;
-    this.statusText = xhr.statusText;
+  constructor({
+    responseText,
+    responseXML,
+    status,
+    statusText,
+    message,
+  }: {
+    message?: string;
+    responseText?: string;
+    responseXML?: Document;
+    status?: number;
+    statusText?: string;
+  }) {
+    super(responseText || message);
+    this.responseText = responseText || "";
+    this.responseXML = responseXML || null;
+    this.status = status || 0;
+    this.statusText = statusText || "";
+    this.message = message || "";
 
     // Iterate through all xml to find error data
     let xml: any = this.responseXML;

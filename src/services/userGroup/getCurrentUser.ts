@@ -1,7 +1,10 @@
-import { defaults, CurrentUser } from "../..";
+import { defaults, CurrentUser, Response, ResponseError } from "../..";
 import getUserInformation from "./getUserInformation";
 
-export const getCurrentUserID = async (
+interface GetCurrentUserResponse extends Response {
+  data?: CurrentUser;
+}
+export const getCurrentUserID = (
   webURL: string,
   username?: string,
   password?: string
@@ -25,16 +28,19 @@ export const getCurrentUserID = async (
           // If not found, reject with error
           if (!spUserId)
             return reject(
-              new Error(
-                "Page does not contain the _spUserId, unable to getCurrentUser"
-              )
+              new ResponseError({
+                message:
+                  "Page does not contain the _spUserId, unable to getCurrentUser",
+              })
             );
 
           // Return the ID from the matched string
           return resolve(spUserId[0].split("=")[1]);
         } else {
           // Create response error
-          reject(new Error("Unable to get SharePoint User ID"));
+          reject(
+            new ResponseError({ message: "Unable to get SharePoint User ID" })
+          );
         }
       }
     };
@@ -44,7 +50,7 @@ export const getCurrentUserID = async (
 /**
  * Gets the current logged in user
  */
-const getCurrentUser = async ({
+const getCurrentUser = ({
   webURL = defaults.webURL,
   username,
   password,
@@ -52,28 +58,39 @@ const getCurrentUser = async ({
   webURL?: string;
   username?: string;
   password?: string;
-} = {}): Promise<CurrentUser> => {
-  // If current user has already been set, return current user
-  if (defaults.currentUser && !username && !password)
-    return defaults.currentUser;
+} = {}): Promise<GetCurrentUserResponse> =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // If current user has already been set, return current user
+      if (defaults.currentUser && !username && !password)
+        return resolve({
+          responseText: "",
+          responseXML: new Document(),
+          status: 200,
+          statusText: "OK",
+          data: defaults.currentUser,
+        });
 
-  // Get User ID
-  const ID = await getCurrentUserID(webURL, username, password);
+      // Get User ID
+      const ID = await getCurrentUserID(webURL, username, password);
 
-  // Get current user
-  const currentUser = await getUserInformation(ID, webURL);
+      // Get current user
+      const res = await getUserInformation(ID, webURL);
 
-  // If a username or password was supplied
-  if (username || password) {
-    // Clear the cached current user
-    defaults.currentUser = null;
-  } else {
-    // Update defaults of currentUser
-    defaults.currentUser = currentUser;
-  }
+      // If a username or password was supplied
+      if (username || password) {
+        // Clear the cached current user
+        defaults.currentUser = null;
+      } else {
+        // Update defaults of currentUser
+        defaults.currentUser = res.data!;
+      }
 
-  // Return the current user
-  return currentUser;
-};
+      // Return the current user
+      resolve(res);
+    } catch (error: any) {
+      reject(new ResponseError(error));
+    }
+  });
 
 export default getCurrentUser;

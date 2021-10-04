@@ -1,5 +1,5 @@
 // Constants
-import { defaults, DefaultParameters, Response } from "../..";
+import { defaults, DefaultParameters, Response, ResponseError } from "../..";
 
 // Enum
 import WebServices from "../../enum/webServices";
@@ -10,7 +10,6 @@ import List from "../../types/list";
 
 // Classes
 import Request from "../../classes/request";
-export { default as ResponseError } from "../../classes/responseError";
 
 export interface GetListCollectionResponse extends Response {
   data?: ListCollection;
@@ -53,8 +52,8 @@ const getListCollection = ({
         }
 
         resolve(res);
-      } catch (error: unknown) {
-        reject(error);
+      } catch (error: any) {
+        reject(new ResponseError(error));
       }
     }
   });

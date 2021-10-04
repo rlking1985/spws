@@ -1,4 +1,5 @@
-import getListCollection, { ResponseError } from "./getListCollection";
+import { ResponseError } from "../..";
+import getListCollection from "./getListCollection";
 
 describe("Get List Collection", () => {
   it("Response should be XML only (unparsed)", async () => {
@@ -30,21 +31,4 @@ describe("Get List Collection", () => {
       expect(err.statusText).toMatch(/Bad Request/i);
     }
   });
-
-  // it("List does not exist and should error", async () => {
-  //   try {
-  //     await getListCollection({ listName: "Lorem Ipsum List", parse: false });
-  //   } catch (error: any) {
-  //     expect(error.data.detail).toMatch(/list does not exist/i);
-  //   }
-  // });
-
-  // it("Get list that contains XML in Title", async () => {
-  //   try {
-  //     const res = await getListCollection({ listName: "Get List <XML>" });
-  //     expect(res.status).toBe(200);
-  //   } catch (error: any) {
-  //     console.log(`error`, error);
-  //   }
-  // });
 });

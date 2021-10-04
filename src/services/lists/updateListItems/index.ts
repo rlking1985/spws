@@ -1,5 +1,5 @@
 // Constants
-import { defaults, DefaultParameters, Response } from "../../..";
+import { defaults, DefaultParameters, Response, ResponseError } from "../../..";
 
 // Types
 import { Item, Command } from "../../../types";
@@ -9,7 +9,6 @@ import asyncForEach from "../../../utils/asyncForEach";
 import sendBatchRequest from "./sendBatchRequest";
 
 // Exports
-export { default as ResponseError } from "../../../classes/responseError";
 export { Item, Command };
 
 /**
@@ -72,14 +71,18 @@ const updateListItems = ({
         methods.length === 0 ||
         methods.some((method) => typeof method !== "object")
       )
-        return reject(new Error(`Expected methods to be an array of objects`));
+        return reject(
+          new ResponseError({
+            message: `Expected methods to be an array of objects`,
+          })
+        );
 
       // Validate onError
       if (!["Continue", "Return"].includes(onError))
         return reject(
-          new Error(
-            `Expected onError to be "Continue" or "Return" but received ${onError}`
-          )
+          new ResponseError({
+            message: `Expected onError to be "Continue" or "Return" but received ${onError}`,
+          })
         );
 
       // Create array of batches
@@ -119,8 +122,8 @@ const updateListItems = ({
 
       // Resolve results
       resolve(results);
-    } catch (error) {
-      reject(error);
+    } catch (error: any) {
+      reject(new ResponseError(error));
     }
   });
 };

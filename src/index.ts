@@ -8,6 +8,7 @@ export {
   GetListCollectionResponse,
 } from "./services/lists/getListCollection";
 
+export { default as ResponseError } from "./classes/responseError";
 // Types
 import { CurrentUser } from "./types";
 export * from "./types";

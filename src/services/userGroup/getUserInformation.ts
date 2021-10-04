@@ -1,5 +1,8 @@
-import { CurrentUser, defaults } from "../..";
+import { CurrentUser, defaults, Response, ResponseError } from "../..";
 
+interface GetUserInformationResponse extends Response {
+  data?: CurrentUser;
+}
 /**
  * Get the user's information from the User InformationList
  * @param webURL The SharePoint webURL
@@ -8,7 +11,7 @@ import { CurrentUser, defaults } from "../..";
 const getUserInformation = (
   ID: string,
   webURL: string = defaults.webURL
-): Promise<CurrentUser> =>
+): Promise<GetUserInformationResponse> =>
   new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
     xhr.open(
@@ -31,7 +34,9 @@ const getUserInformation = (
           // If no properties, reject
           if (!properties) {
             return reject(
-              new Error("No user properties found, unable to get current user")
+              new ResponseError({
+                message: "No user properties found, unable to get current user",
+              })
             );
           }
 
@@ -97,10 +102,21 @@ const getUserInformation = (
               break;
           }
 
-          resolve(user);
+          // Create response object
+          const response: GetUserInformationResponse = {
+            responseXML: xhr.responseXML || new Document(),
+            responseText: xhr.responseText,
+            status: xhr.status,
+            statusText: xhr.statusText,
+            data: user,
+          };
+
+          // Resolve response
+          resolve(response);
         } else {
-          // Create response error
-          reject(new Error("Unable to get user information list data"));
+          new ResponseError({
+            message: "Unable to get user information list data",
+          });
         }
       }
     };

@@ -1,5 +1,5 @@
 // Constants
-import { defaults, DefaultParameters, Response } from "../..";
+import { defaults, DefaultParameters, Response, ResponseError } from "../..";
 
 // Enum
 import ListAttributesEnum from "../../enum/listAttributes";
@@ -13,7 +13,6 @@ import ListAttributes from "../../types/listAttributes";
 
 // Classes
 import Request from "../../classes/request";
-export { default as ResponseError } from "../../classes/responseError";
 
 // Utils
 import escapeXml from "../../utils/escapeXml";
@@ -73,11 +72,17 @@ const getList = ({
         // Return request
         let res: GetListResponse = await req.send();
 
+        // Check that list exists
+        const list = res.responseXML.querySelector("List");
+
+        // If the list cannot be found
+        if (!list) {
+          const error = new ResponseError(res);
+          return reject(error);
+        }
+
         // If parse is true
         if (parse) {
-          // Get list from the responseXML
-          const list: Element = res.responseXML.querySelector("List")!;
-
           // Create array of attributes either from params or all of the list attributes
           let attributesArray =
             attributes.length > 0
@@ -138,8 +143,8 @@ const getList = ({
         }
 
         resolve(res);
-      } catch (error: unknown) {
-        reject(error);
+      } catch (error: any) {
+        reject(new ResponseError(error));
       }
     }
   });

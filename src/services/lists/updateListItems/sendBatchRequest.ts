@@ -9,6 +9,7 @@ import { Item, Command } from "../../../types";
 
 // Classes
 import Request from "../../../classes/request";
+import { ResponseError } from "../../..";
 
 const sendBatchRequest = ({
   listName,
@@ -145,8 +146,8 @@ const sendBatchRequest = ({
 
       // Resolve request
       resolve(res);
-    } catch (error) {
-      reject(error);
+    } catch (error: any) {
+      reject(new ResponseError(error));
     }
   });
 };
