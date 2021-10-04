@@ -42,7 +42,6 @@ describe("Get Current User", () => {
         password: process.env.TEST_USER_PASSWORD,
       });
     } catch (error) {
-      console.log(`error`, error);
       expect(error.message).toMatch(/Page does not contain the _spUserId/i);
     }
   });

@@ -1,5 +1,5 @@
-import { getList } from "..";
 import ResponseError from "./responseError";
+import { getList } from "../";
 
 describe("Response Error", () => {
   it("Handles generic errors", () => {

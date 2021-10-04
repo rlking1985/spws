@@ -1,17 +1,5 @@
-export {
-  default as getList,
-  GetListParameters,
-  GetListResponse,
-} from "./services/lists/getList";
-export {
-  default as getListCollection,
-  GetListCollectionResponse,
-} from "./services/lists/getListCollection";
-
-export { default as ResponseError } from "./classes/responseError";
 // Types
 import { CurrentUser } from "./types";
-export * from "./types";
 
 /**
  * The default parameters used that are available in every web request.
@@ -57,7 +45,7 @@ const defaults: {
 };
 
 /**
- *
+ * The default Response
  */
 type Response = {
   responseText: string;
@@ -66,7 +54,11 @@ type Response = {
   statusText: string;
 };
 
+// Default batch response
 type BatchResponse = Response[];
 
-// Export Interfaces
+export * from "./types";
+export * from "./services/lists";
+export * from "./services/userGroup";
+export * from "./classes";
 export { defaults, DefaultParameters, Response, BatchResponse };

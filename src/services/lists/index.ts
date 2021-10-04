@@ -1,7 +1,5 @@
 import getList from "./getList";
+import getListCollection from "./getListCollection";
+import updateListItems from "./updateListItems";
 
-const lists = {
-  getList,
-};
-
-export default lists;
+export { getList, getListCollection, updateListItems };
