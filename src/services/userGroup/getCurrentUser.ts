@@ -66,18 +66,17 @@ const getUserInfo = (webURL: string, ID: string): Promise<CurrentUser> =>
             if (!el) return "";
 
             // Get the text content
-            const value = el.textContent;
+            const value = el.textContent || "";
 
             // Return the value or an empty string
-            return value || "";
+            return value;
           };
 
           // Create user
-          const user: CurrentUser = {
+          let user: CurrentUser = {
             AboutMe: getValue("AboutMe"),
             Account: getValue("Account"),
             AskMeAbout: getValue("AskMeAbout"),
-            ContentType: getValue("ContentType"),
             ContentTypeID: getValue("ContentTypeID"),
             Created: new Date(getValue("Created")),
             CreatedById: getValue("CreatedById"),
@@ -99,7 +98,24 @@ const getUserInfo = (webURL: string, ID: string): Promise<CurrentUser> =>
             WebSite: getValue("WebSite"),
             WorkEMail: getValue("WorkEMail"),
             WorkPhone: getValue("WorkPhone"),
+            ContentType: "Person",
           };
+
+          // Get Content Type
+          const contentType = getValue("ContentType");
+
+          // Switch by content type
+          switch (contentType) {
+            case "DomainGroup":
+              user.ContentType = "DomainGroup";
+
+              break;
+            case "SharePointGroup":
+              user.ContentType = "SharePointGroup";
+              break;
+            default:
+              break;
+          }
 
           resolve(user);
         } else {

@@ -2,7 +2,7 @@ type CurrentUser = {
   AboutMe: string;
   Account: string;
   AskMeAbout: string;
-  ContentType: string;
+  ContentType: "Person" | "SharePointGroup" | "DomainGroup";
   ContentTypeID: string;
   Created: Date;
   CreatedById: string;
