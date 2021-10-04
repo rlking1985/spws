@@ -1,8 +1,8 @@
 // Types
-import { Response } from "..";
+import { SpwsResponse } from "..";
 
 // Classes
-import ResponseError from "./responseError";
+import SpwsError from "./spwsError";
 
 // Utils
 import escapeXml from "../utils/escapeXml";
@@ -55,7 +55,7 @@ class Request {
     return this;
   };
 
-  send = (): Promise<Response> =>
+  send = (): Promise<SpwsResponse> =>
     new Promise((resolve, reject) => {
       this.xhr.onreadystatechange = () => {
         if (this.xhr.readyState === 4) {
@@ -68,7 +68,7 @@ class Request {
             });
           } else {
             // Create response error
-            const error = new ResponseError({
+            const error = new SpwsError({
               responseText: this.xhr.responseText,
               responseXML: this.xhr.responseXML!,
               status: this.xhr.status,

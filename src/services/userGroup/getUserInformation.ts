@@ -1,6 +1,19 @@
-import { CurrentUser, defaults, Response, ResponseError } from "../..";
+// SPWS Library
+import { defaults } from "../..";
 
-interface GetUserInformationResponse extends Response {
+// Classes
+import { SpwsError } from "../../classes";
+
+// Enum
+
+// Services
+
+// Types
+import { CurrentUser, SpwsResponse } from "../../types";
+
+// Utils
+
+interface GetUserInformationResponse extends SpwsResponse {
   data?: CurrentUser;
 }
 /**
@@ -34,7 +47,7 @@ const getUserInformation = (
           // If no properties, reject
           if (!properties) {
             return reject(
-              new ResponseError({
+              new SpwsError({
                 message: "No user properties found, unable to get current user",
               })
             );
@@ -114,7 +127,7 @@ const getUserInformation = (
           // Resolve response
           resolve(response);
         } else {
-          new ResponseError({
+          new SpwsError({
             message: "Unable to get user information list data",
           });
         }

@@ -1,4 +1,4 @@
-import { ResponseError } from "../..";
+import { SpwsError } from "../..";
 import getListCollection from "./getListCollection";
 
 describe("Get List Collection", () => {
@@ -27,7 +27,7 @@ describe("Get List Collection", () => {
     try {
       res = await getListCollection({ webURL: new Date().toISOString() });
     } catch (error: any) {
-      let err: ResponseError = error;
+      let err: SpwsError = error;
       expect(err.statusText).toMatch(/Bad Request/i);
     }
   });

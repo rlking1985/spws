@@ -1,5 +1,6 @@
 import Chance from "chance";
-import updateListItems, { ResponseError, Methods } from ".";
+import updateListItems, { Methods } from ".";
+import { SpwsError } from "../../../classes";
 
 // TODO: Add "Update" and "Delete" Commands. This needs to be done after get list items
 describe("Update List Items: New Items", () => {

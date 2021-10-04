@@ -1,17 +1,20 @@
-// Constants
-import { defaults, DefaultParameters, Response, ResponseError } from "../..";
-
-// Enum
-import WebServices from "../../enum/webServices";
-
-// Interfaces
-import ListCollection from "../../types/listCollection";
-import List from "../../types/list";
+// SPWS Library
+import { defaults } from "../..";
 
 // Classes
-import Request from "../../classes/request";
+import { Request, SpwsError } from "../../classes";
 
-export interface GetListCollectionResponse extends Response {
+// Enum
+import { WebServices } from "../../enum";
+
+// Services
+
+// Types
+import { List, ListCollection, SpwsResponse } from "../../types";
+
+// Utils
+
+interface Operation extends SpwsResponse {
   data?: ListCollection;
 }
 
@@ -22,7 +25,10 @@ export interface GetListCollectionResponse extends Response {
 const getListCollection = ({
   parse = defaults.parse,
   webURL = defaults.webURL,
-}: DefaultParameters = {}): Promise<GetListCollectionResponse> =>
+}: {
+  parse?: boolean;
+  webURL?: string;
+} = {}): Promise<Operation> =>
   new Promise(async (resolve, reject) => {
     {
       // Create request object
@@ -35,7 +41,7 @@ const getListCollection = ({
 
       try {
         // Return request
-        let res: GetListCollectionResponse = await req.send();
+        let res: Operation = await req.send();
 
         if (parse) {
           res.data = Array.from(res.responseXML.querySelectorAll("List")).map(
@@ -53,7 +59,7 @@ const getListCollection = ({
 
         resolve(res);
       } catch (error: any) {
-        reject(new ResponseError(error));
+        reject(new SpwsError(error));
       }
     }
   });

@@ -1,8 +1,20 @@
-import { Item, Command, Request, ResponseError } from "../../..";
-import { Methods, UpdateListItemsResponse, Result } from ".";
+// SPWS Library
+
+// Classes
+import { SpwsError, Request } from "../../../classes";
 
 // Enum
 import { WebServices } from "../../../enum";
+
+// Services
+
+// Types
+import { Item, Command } from "../../../types";
+
+// Utils
+
+// Local
+import { Methods, Operation, Result } from ".";
 
 const sendBatchRequest = ({
   listName,
@@ -16,7 +28,7 @@ const sendBatchRequest = ({
   onError: "Continue" | "Return";
   parse: boolean;
   webURL: string;
-}): Promise<UpdateListItemsResponse> => {
+}): Promise<Operation> => {
   // Create Promise
   return new Promise(async (resolve, reject) => {
     try {
@@ -60,7 +72,7 @@ const sendBatchRequest = ({
       );
 
       // Send Request
-      const res: UpdateListItemsResponse = await req.send();
+      const res: Operation = await req.send();
 
       // Create object for data
       res.data = { methods: [], success: null };
@@ -140,7 +152,7 @@ const sendBatchRequest = ({
       // Resolve request
       resolve(res);
     } catch (error: any) {
-      reject(new ResponseError(error));
+      reject(new SpwsError(error));
     }
   });
 };

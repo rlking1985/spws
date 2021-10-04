@@ -1,8 +1,20 @@
-import { defaults, Response, Group, ResponseError } from "../..";
-import Request from "../../classes/request";
-import WebServices from "../../enum/webServices";
+// SPWS Library
+import { defaults } from "../..";
 
-interface GetGroupCollectionFromUserResponse extends Response {
+// Classes
+import { Request, SpwsError } from "../../classes";
+
+// Enum
+import { WebServices } from "../../enum";
+
+// Services
+
+// Types
+import { Group, SpwsResponse } from "../../types";
+
+// Utils
+
+interface Operation extends SpwsResponse {
   data?: Group[];
 }
 
@@ -15,12 +27,12 @@ const getGroupCollectionFromUser = (
     webURL = defaults.webURL,
     parse = defaults.parse,
   }: { webURL?: string; parse?: boolean } = {}
-): Promise<GetGroupCollectionFromUserResponse> =>
+): Promise<Operation> =>
   new Promise(async (resolve, reject) => {
     try {
       // If userLoginName is not provided and default user is not null
       if (!userLoginName || typeof userLoginName !== "string") {
-        throw new ResponseError({
+        throw new SpwsError({
           message: "Unable to get current user as loginName was not provided",
         });
       }
@@ -38,7 +50,7 @@ const getGroupCollectionFromUser = (
   </GetGroupCollectionFromUser>`);
 
       // Send request
-      const res: GetGroupCollectionFromUserResponse = await req.send();
+      const res: Operation = await req.send();
 
       if (parse && res.responseXML) {
         res.data = Array.from(res.responseXML.querySelectorAll("Group")).map(
@@ -55,7 +67,7 @@ const getGroupCollectionFromUser = (
       // Return response
       resolve(res);
     } catch (error: any) {
-      reject(new ResponseError(error));
+      reject(new SpwsError(error));
     }
   });
 

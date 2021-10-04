@@ -1,9 +1,9 @@
-import ResponseError from "./responseError";
-import { getList } from "../";
+import SpwsError from "./spwsError";
+import { getList } from "..";
 
 describe("Response Error", () => {
   it("Handles generic errors", () => {
-    const error = new ResponseError({ message: "Custom error" });
+    const error = new SpwsError({ message: "Custom error" });
     expect(error.message).toMatch(/custom error/i);
   });
 
@@ -11,7 +11,7 @@ describe("Response Error", () => {
     try {
       await getList({ listName: "This lit does not exist" });
     } catch (e) {
-      const error: ResponseError = e;
+      const error: SpwsError = e;
       expect(error.data.detail).toMatch(/List does not exist/i);
     }
   });

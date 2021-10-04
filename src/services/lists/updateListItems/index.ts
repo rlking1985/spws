@@ -1,11 +1,15 @@
-import {
-  defaults,
-  DefaultParameters,
-  Response,
-  ResponseError,
-  Item,
-  Command,
-} from "../../..";
+// SPWS Library
+import { defaults } from "../../..";
+
+// Classes
+import { SpwsError } from "../../../classes";
+
+// Enum
+
+// Services
+
+// Types
+import { SpwsResponse, Item, Command } from "../../../types";
 
 // Utils
 import { asyncForEach } from "../../../utils";
@@ -40,14 +44,7 @@ export type Result = {
   status: "success" | "error";
 };
 
-export interface UpdateListItemParameters extends DefaultParameters {
-  batchSize?: number;
-  listName: string;
-  methods: Methods;
-  onError?: "Return" | "Continue";
-}
-
-export interface UpdateListItemsResponse extends Response {
+export interface Operation extends SpwsResponse {
   /**
    * The data object is available for any requests where parsed is true or an error occurs
    */
@@ -58,13 +55,20 @@ export interface UpdateListItemsResponse extends Response {
 }
 
 const updateListItems = ({
+  batchSize = 0,
   listName,
+  methods,
+  onError = "Continue",
   parse = defaults.parse,
   webURL = defaults.webURL,
-  onError = "Continue",
-  batchSize = 0,
-  methods,
-}: UpdateListItemParameters): Promise<UpdateListItemsResponse[]> => {
+}: {
+  batchSize?: number;
+  listName: string;
+  methods: Methods;
+  onError?: "Return" | "Continue";
+  parse?: boolean;
+  webURL?: string;
+}): Promise<Operation[]> => {
   return new Promise(async (resolve, reject) => {
     try {
       // Validate methods
@@ -74,7 +78,7 @@ const updateListItems = ({
         methods.some((method) => typeof method !== "object")
       )
         return reject(
-          new ResponseError({
+          new SpwsError({
             message: `Expected methods to be an array of objects`,
           })
         );
@@ -82,7 +86,7 @@ const updateListItems = ({
       // Validate onError
       if (!["Continue", "Return"].includes(onError))
         return reject(
-          new ResponseError({
+          new SpwsError({
             message: `Expected onError to be "Continue" or "Return" but received ${onError}`,
           })
         );
@@ -106,7 +110,7 @@ const updateListItems = ({
           : [methods];
 
       // Create results array
-      const results: UpdateListItemsResponse[] = [];
+      const results: Operation[] = [];
 
       // Iterate through all batches
       await asyncForEach(batches, async (methods) => {
@@ -125,7 +129,7 @@ const updateListItems = ({
       // Resolve results
       resolve(results);
     } catch (error: any) {
-      reject(new ResponseError(error));
+      reject(new SpwsError(error));
     }
   });
 };

@@ -1,5 +1,5 @@
 import { defaults } from "../..";
-import getList, { ResponseError } from "./getList";
+import getList, { SpwsError } from "./getList";
 
 describe("Get List", () => {
   // Set list namew
@@ -67,7 +67,7 @@ describe("Get List", () => {
     try {
       await getList({ listName: "Lorem Ipsum List", parse: false });
     } catch (error: any) {
-      const err: ResponseError = error;
+      const err: SpwsError = error;
       expect(err.data.detail).toMatch(/list does not exist/i);
     }
   });

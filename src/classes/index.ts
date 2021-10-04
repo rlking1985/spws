@@ -1,4 +1,3 @@
-import ResponseError from "./responseError";
 import Request from "./request";
-
-export { Request, ResponseError };
+import SpwsError from "./spwsError";
+export { Request, SpwsError };

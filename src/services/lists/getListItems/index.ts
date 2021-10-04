@@ -1,5 +1,5 @@
 // Constants
-import { defaults, DefaultParameters, Response, ResponseError } from "../../..";
+import { defaults, DefaultParameters, SpwsResponse, SpwsError } from "../../..";
 
 // Enum
 import WebServices from "../../../enum/webServices";
@@ -14,7 +14,7 @@ import Request from "../../../classes/request";
 /**
  * Gets all list items for multiple lists
  */
-export interface GetListItemsResponse extends Response {
+export interface GetListItemsResponse extends SpwsResponse {
   data?: ListCollection;
 }
 
@@ -61,7 +61,7 @@ const getListCollection = ({
 
         resolve(res);
       } catch (error: any) {
-        reject(new ResponseError(error));
+        reject(new SpwsError(error));
       }
     }
   });

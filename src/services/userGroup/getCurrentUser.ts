@@ -1,9 +1,25 @@
-import { defaults, CurrentUser, Response, ResponseError } from "../..";
-import getUserInformation from "./getUserInformation";
+// SPWS Library
+import { defaults } from "../..";
 
-interface GetCurrentUserResponse extends Response {
-  data?: CurrentUser;
-}
+// Classes
+import { SpwsError } from "../../classes";
+
+// Enum
+
+// Services
+import { getUserInformation } from "../../";
+
+// Types
+import { CurrentUser, SpwsResponse } from "../../types";
+
+// Utils
+
+/**
+ * Gets the current user's ID
+ * @param webURL The SharePoint web URL
+ * @param username The username if authenticating as another user (testing only)
+ * @param password The password if authenticating as another user (testing only)
+ */
 export const getCurrentUserID = (
   webURL: string,
   username?: string,
@@ -28,7 +44,7 @@ export const getCurrentUserID = (
           // If not found, reject with error
           if (!spUserId)
             return reject(
-              new ResponseError({
+              new SpwsError({
                 message:
                   "Page does not contain the _spUserId, unable to getCurrentUser",
               })
@@ -39,13 +55,17 @@ export const getCurrentUserID = (
         } else {
           // Create response error
           reject(
-            new ResponseError({ message: "Unable to get SharePoint User ID" })
+            new SpwsError({ message: "Unable to get SharePoint User ID" })
           );
         }
       }
     };
     xhr.send();
   });
+
+interface Operation extends SpwsResponse {
+  data?: CurrentUser;
+}
 
 /**
  * Gets the current logged in user
@@ -58,7 +78,7 @@ const getCurrentUser = ({
   webURL?: string;
   username?: string;
   password?: string;
-} = {}): Promise<GetCurrentUserResponse> =>
+} = {}): Promise<Operation> =>
   new Promise(async (resolve, reject) => {
     try {
       // If current user has already been set, return current user
@@ -89,7 +109,7 @@ const getCurrentUser = ({
       // Return the current user
       resolve(res);
     } catch (error: any) {
-      reject(new ResponseError(error));
+      reject(new SpwsError(error));
     }
   });
 

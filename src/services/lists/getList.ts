@@ -1,39 +1,30 @@
-// Constants
-import { defaults, DefaultParameters, Response, ResponseError } from "../..";
+// SPWS Library
+import { defaults } from "../..";
+
+// Classes
+import { Request, SpwsError } from "../../classes";
 
 // Enum
 import {
-  ListAttributes as ListAttributesEnum,
   Field as FieldEnum,
+  ListAttributes as ListAttributesEnum,
   WebServices,
 } from "../../enum";
 
-// Types
-import { Field as FieldType, List, ListAttributes } from "../../types";
+// Services
 
-// Classes
-import { Request } from "../../classes";
+// Types
+import {
+  Field as FieldType,
+  List,
+  ListAttributes,
+  SpwsResponse,
+} from "../../types";
 
 // Utils
 import { escapeXml } from "../../utils";
 
-export interface GetListParameters extends DefaultParameters {
-  /**
-   * A string that contains either the title (not static name) or the GUID for the list.
-   */
-  listName: string;
-  /**
-   *  An array of attributes that are returned in the data object.
-   *  Only available when parsing is true.
-   *  If no attributes are supplied, all list attributes will be returned
-   * */
-  attributes?: ListAttributes[];
-}
-
-export interface GetListResponse extends Response {
-  /**
-   * The data object is available for any requests where parsed is true or an error occurs
-   */
+interface Operation extends SpwsResponse {
   data?: List;
 }
 
@@ -55,7 +46,12 @@ const getList = ({
   parse = defaults.parse,
   webURL = defaults.webURL,
   attributes = [],
-}: GetListParameters): Promise<GetListResponse> => {
+}: {
+  listName: string;
+  parse?: boolean;
+  webURL?: string;
+  attributes: ListAttributes[];
+}): Promise<Operation> => {
   return new Promise(async (resolve, reject) => {
     {
       // Create request object
@@ -70,14 +66,14 @@ const getList = ({
 
       try {
         // Return request
-        let res: GetListResponse = await req.send();
+        let res: Operation = await req.send();
 
         // Check that list exists
         const list = res.responseXML.querySelector("List");
 
         // If the list cannot be found
         if (!list) {
-          const error = new ResponseError(res);
+          const error = new SpwsError(res);
           return reject(error);
         }
 
@@ -144,7 +140,7 @@ const getList = ({
 
         resolve(res);
       } catch (error: any) {
-        reject(new ResponseError(error));
+        reject(new SpwsError(error));
       }
     }
   });

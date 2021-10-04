@@ -1,4 +1,4 @@
-class ResponseError extends Error {
+class SpwsError extends Error {
   responseText: string;
   responseXML: Document | null;
   status: number;
@@ -53,4 +53,4 @@ class ResponseError extends Error {
   }
 }
 
-export default ResponseError;
+export default SpwsError;
