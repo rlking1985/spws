@@ -8,7 +8,8 @@ export {
   GetListCollectionResponse,
 } from "./services/lists/getListCollection";
 
-// Interfaces
+// Types
+import { CurrentUser } from "./types";
 export * from "./types";
 
 /**
@@ -47,9 +48,11 @@ const defaults: {
    * @default ""
    */
   webURL: string;
+  currentUser: CurrentUser | null;
 } = {
   parse: true,
   webURL: "",
+  currentUser: null,
 };
 
 /**

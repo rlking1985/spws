@@ -57,7 +57,6 @@ class Request {
 
   send = (): Promise<Response> =>
     new Promise((resolve, reject) => {
-      // TODO: Add Error Handling
       this.xhr.onreadystatechange = () => {
         if (this.xhr.readyState === 4) {
           if (this.xhr.status === 200) {
