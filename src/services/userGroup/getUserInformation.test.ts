@@ -30,7 +30,7 @@ describe("Get User Information", () => {
       await getUserInformation("0");
     } catch (error) {
       expect(error.message).toMatch(
-        /No user properties found, unable to get current user/i
+        /Resource not found for the segment 'UserInformationList'/i
       );
     }
   });

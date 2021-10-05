@@ -15,7 +15,7 @@ describe("Get Current User", () => {
       expect(res).toBeFalsy();
     } catch (e) {
       const error: SpwsError = e;
-      expect(error.message).toMatch(/No user properties found/i);
+      expect(error.message).toMatch(/Bad Request - Error in query syntax/i);
     }
   });
 
