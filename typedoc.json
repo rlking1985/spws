@@ -6,5 +6,7 @@
   "categorizeByGroup": true,
   "cleanOutputDir": true,
   "hideGenerator": true,
-  "excludeInternal": true
+  "excludeInternal": true,
+  // "plugin": "typedoc-plugin-markdown"
+  "plugin": "none"
 }

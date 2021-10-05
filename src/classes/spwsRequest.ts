@@ -57,28 +57,37 @@ class SpwsRequest {
 
   send = (): Promise<SpwsResponse> =>
     new Promise((resolve, reject) => {
+      // Create  callback
       this.xhr.onreadystatechange = () => {
-        if (this.xhr.readyState === 4) {
+        if (this.xhr.readyState === XMLHttpRequest.DONE) {
+          const xData = {
+            responseText: this.xhr.responseText,
+            responseXML: this.xhr.responseXML!,
+            status: this.xhr.status,
+            statusText: this.xhr.statusText,
+            message: "",
+          };
           if (this.xhr.status === 200) {
-            resolve({
-              responseText: this.xhr.responseText,
-              responseXML: this.xhr.responseXML!,
-              status: this.xhr.status,
-              statusText: this.xhr.statusText,
-            });
+            resolve(xData);
           } else {
+            switch (this.xhr.status) {
+              case 0:
+                xData.responseText =
+                  "Cross origin http://objectpoint forbidden";
+
+                break;
+
+              default:
+                break;
+            }
+            // Create message string
+            xData.message = xData.statusText || xData.responseText;
+
             // Create response error
-            const error = new SpwsError({
-              responseText: this.xhr.responseText,
-              responseXML: this.xhr.responseXML!,
-              status: this.xhr.status,
-              statusText: this.xhr.statusText,
-            });
-            reject(error);
+            reject(new SpwsError(xData));
           }
         }
       };
-
       // Send Request
       this.xhr.send(this.envelope);
     });

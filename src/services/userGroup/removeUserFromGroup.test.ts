@@ -1,20 +1,20 @@
 import { SpwsError } from "../../classes";
 import { asyncForEach } from "../../utils";
-import addUserToGroup from "./addUserToGroup";
+import removeUserFromGroup from "./removeUserFromGroup";
 
-describe("addUserToGroup", () => {
+describe("removeUserFromGroup", () => {
   const domain = process.env.TEST_DOMAIN;
   const userLoginName = `${domain}\\${process.env.TEST_USER_VISITOR}`;
   const groupName = "Add User To Group Test";
 
   it("Passes", async () => {
-    const res = await addUserToGroup(userLoginName, groupName);
+    const res = await removeUserFromGroup(userLoginName, groupName);
     expect(res.data.success).toBe(true);
   });
 
   it("Error when user does not exist", async () => {
     try {
-      const res = await addUserToGroup(
+      const res = await removeUserFromGroup(
         "dev\\Username does not exist",
         groupName
       );
@@ -32,7 +32,7 @@ describe("addUserToGroup", () => {
       ["", false, { userLoginName }],
       async (userLoginName) => {
         try {
-          const res = await addUserToGroup(userLoginName, groupName);
+          const res = await removeUserFromGroup(userLoginName, groupName);
           expect(res.data.success).toBe(false);
         } catch (e: any) {
           const error: SpwsError = e;
@@ -46,7 +46,7 @@ describe("addUserToGroup", () => {
 
   it("Error when groupName does not exist", async () => {
     try {
-      const res = await addUserToGroup(userLoginName, "Does Not Exist");
+      const res = await removeUserFromGroup(userLoginName, "Does Not Exist");
       expect(res.data.success).toBe(false);
     } catch (e: any) {
       const error: SpwsError = e;
@@ -57,7 +57,7 @@ describe("addUserToGroup", () => {
   it("Error when groupName is not valid", async () => {
     await asyncForEach(["", false, { groupName }], async (groupName) => {
       try {
-        const res = await addUserToGroup(userLoginName, groupName);
+        const res = await removeUserFromGroup(userLoginName, groupName);
         expect(res.data.success).toBe(false);
       } catch (e: any) {
         const error: SpwsError = e;

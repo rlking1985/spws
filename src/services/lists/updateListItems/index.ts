@@ -45,28 +45,43 @@ export type Result = {
 };
 
 export interface Operation extends SpwsResponse {
-  /**
-   * The data object is available for any requests where parsed is true or an error occurs
-   */
   data: {
     methods: Result[];
     success: boolean | null;
   };
 }
 
-const updateListItems = async ({
-  batchSize = 0,
-  listName,
-  methods,
-  onError = "Continue",
-  webURL = defaults.webURL,
-}: {
-  batchSize?: number;
-  listName: string;
-  methods: Methods;
-  onError?: "Return" | "Continue";
-  webURL?: string;
-}): Promise<Operation[]> => {
+/**
+ * Adds, deletes, or updates the specified items in a list on the current site.
+ * @param listName A string that contains the name of the list. It is recommended that you use the list GUID
+ * @param methods An array that contains one or more methods for adding, modifying, or deleting items
+ * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772668(v=office.12)
+ * @example
+ * ```
+ * // Create, update and delete
+ * const res = await updateListItems("Announcements", [
+ *   { command: "New", values: { Title: "Hello World" } },
+ *   { command: "Update", ID: "2", values: { Title: "Hello World" } },
+ *   { command: "Delete", ID: "3" },
+ * ]);
+ * ```
+ */
+const updateListItems = async (
+  listName: string,
+  methods: Methods,
+  {
+    batchSize = 0,
+    onError = "Continue",
+    webURL = defaults.webURL,
+  }: {
+    /** The maximum amount of updates that can be sent per web request */
+    batchSize?: number;
+    /** Return (stop) or continue execution of the scripts if an error occurs */
+    onError?: "Return" | "Continue";
+    /** The SharePoint webURL */
+    webURL?: string;
+  } = {}
+): Promise<Operation[]> => {
   try {
     // Validate methods
     if (

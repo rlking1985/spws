@@ -12,28 +12,44 @@ import { SpwsError } from "../../classes";
 import { CurrentUser, SpwsResponse } from "../../types";
 
 // Utils
-
 interface Operation extends SpwsResponse {
   data: CurrentUser;
 }
+
 /**
- * Get the user's information from the User InformationList
- * @param ID The user's ID
- * @param {object} [options]
- * @param {string} [options.webURL] The SharePoint webURL
+ * Returns information about the specified user from the User Information List
+ * @param ID The user ID
+ * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ff521587(v=office.14)
+ * @example
+ * ```
+ * // Get user from the current site
+ * const res = await getUserInformation("1");
+ *
+ * // Get user from another site
+ * const res = await getUserInformation("1", { webURL: "/sites/other" });
+ * ```
  */
 const getUserInformation = (
   ID: string,
-  { webURL = defaults.webURL }: { webURL?: string } = {}
+  {
+    webURL = defaults.webURL,
+  }: {
+    /** The SharePoint webURL */
+    webURL?: string;
+  } = {}
 ): Promise<Operation> =>
   new Promise((resolve, reject) => {
+    // Create XHR
     let xhr = new XMLHttpRequest();
+
+    // Open the request
     xhr.open(
       "GET",
       `${webURL}/_vti_bin/ListData.svc/UserInformationList(${ID})`,
       false
     );
 
+    // onChange
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
@@ -43,7 +59,7 @@ const getUserInformation = (
           const xml = parser.parseFromString(xhr.responseText, "text/xml");
 
           // Get properties element
-          const properties = xml.getElementsByTagName("m:properties")[0];
+          const properties = xml.querySelector("m\\:properties");
 
           // If no properties, reject
           if (!properties) {
@@ -57,9 +73,7 @@ const getUserInformation = (
           // Get the value of the properties element
           const getValue = (tagName: string) => {
             // Get the d: element
-            const el: Element = properties.getElementsByTagName(
-              `d:${tagName}`
-            )[0];
+            const el: Element = properties.querySelector(`d\\:${tagName}`)!;
 
             // If element is not found, return empty string
             if (!el) return "";

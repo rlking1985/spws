@@ -14,17 +14,31 @@ import { CurrentUser, SpwsResponse } from "../../types";
 
 // Utils
 
+interface CurrentUserID extends SpwsResponse {
+  data: string;
+}
+
 /**
  * Gets the current user's ID
- * @param {string} webURL The SharePoint web URL
- * @param {object} [options] Options object
- * @param {string} [options.username] The username if authenticating as another user (testing only)
- * @param {string} [options.password] The password if authenticating as another user (testing only)
+ * @param webURL The SharePoint web URL
+ * @example
+ * ```
+ * // Get the current user ID
+ * const res = await getCurrentUserID();
+ * ```
  */
-export const getCurrentUserID = (
-  webURL: string,
-  { username, password }: { username?: string; password?: string } = {}
-): Promise<string> =>
+export const getCurrentUserID = ({
+  webURL = defaults.webURL,
+  username,
+  password,
+}: {
+  /** The SharePoint web URL */
+  webURL?: string;
+  /** The username if authenticating as another user (testing only) */
+  username?: string;
+  /** The password if authenticating as another user (testing only) */
+  password?: string;
+} = {}): Promise<CurrentUserID> =>
   new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", `${webURL}/_layouts/viewlsts.aspx`, false);
@@ -51,7 +65,22 @@ export const getCurrentUserID = (
             );
 
           // Return the ID from the matched string
-          return resolve(spUserId[0].split("=")[1]);
+          return resolve({
+            data: spUserId[0].split("=")[1],
+            responseText: xhr.responseText,
+            responseXML: xhr.responseXML!,
+            status: xhr.status,
+            statusText: xhr.statusText,
+          });
+        } else if (xhr.status === 404) {
+          // Create response error
+          reject(
+            new SpwsError({
+              status: xhr.status,
+              statusText: xhr.statusText,
+              message: "Site not found",
+            })
+          );
         } else {
           // Create response error
           reject(
@@ -69,20 +98,18 @@ interface Operation extends SpwsResponse {
 
 /**
  * Gets the current authenticated user.
- *
  * @remark Authentication can be changed using a proxy server and supplying a username and password. This is not recommended and should be used for testing purposes only.
- * @param {object} options
- * @param {string} [option.webURL=defaults.webURL] The SharePoint web URL
- * @param {string} [options.username] A username if authenticating as another user (spws-proxy package needed)
- * @param {string} [options.password] A password if authenticating as another user (spws-proxy package needed)
  */
 const getCurrentUser = ({
   webURL = defaults.webURL,
   username,
   password,
 }: {
+  /** The SharePoint web URL */
   webURL?: string;
+  /** A username if authenticating as another user (spws-proxy package needed) */
   username?: string;
+  /** A password if authenticating as another user (spws-proxy package needed) */
   password?: string;
 } = {}): Promise<Operation> =>
   new Promise(async (resolve, reject) => {
@@ -98,7 +125,11 @@ const getCurrentUser = ({
         });
 
       // Get User ID
-      const ID = await getCurrentUserID(webURL, { username, password });
+      const { data: ID } = await getCurrentUserID({
+        webURL,
+        username,
+        password,
+      });
 
       // Get current user
       const res = await getUserInformation(ID, { webURL });

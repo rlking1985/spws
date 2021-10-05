@@ -20,11 +20,23 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns the names and GUIDs for all lists in the site.
+ *
  * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774663(v=office.12)?redirectedfrom=MSDN
+ * @example
+ * ```
+ * // Get list collection for current site
+ * const res = await getListCollection()
+ *
+ * // Get list collection for another site
+ * const res = await getListCollection({ webURL: "/sites/other" })
+ * ```
  */
-const getListCollection = async (
-  webURL = defaults.webURL
-): Promise<Operation> => {
+const getListCollection = async ({
+  webURL = defaults.webURL,
+}: {
+  /** The SharePoint webURL */
+  webURL?: string;
+} = {}): Promise<Operation> => {
   // Create request object
   const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
@@ -34,7 +46,6 @@ const getListCollection = async (
   );
 
   try {
-    // Return request
     const res = await req.send();
 
     // Create data object

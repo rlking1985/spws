@@ -9,19 +9,29 @@ describe("Get List Collection", () => {
 
   it("An error is thrown as Bad Request when using a bad URL", async () => {
     try {
-      await getListCollection(new Date().toISOString());
+      await getListCollection({ webURL: new Date().toISOString() });
     } catch (error: any) {
       let err: SpwsError = error;
       expect(err.statusText).toMatch(/Bad Request/i);
     }
   });
 
-  it("An error is thrown as Not Found webURL doesn't exist", async () => {
+  it("An error is thrown as Not Found relative webURL doesn't exist", async () => {
     try {
-      await getListCollection("This Site Does Not Exist");
+      await getListCollection({ webURL: "This Site Does Not Exist" });
     } catch (error: any) {
       let err: SpwsError = error;
       expect(err.statusText).toMatch(/Not Found/i);
+    }
+  });
+
+  it("An error is thrown as Not Found absolute webURL doesn't exist", async () => {
+    try {
+      const res = await getListCollection({ webURL: "/sites/other" });
+      expect(res).toBeFalsy();
+    } catch (e: any) {
+      const error: SpwsError = e;
+      expect(error.message).toMatch(/Not Found/i);
     }
   });
 });

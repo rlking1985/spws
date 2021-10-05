@@ -30,14 +30,16 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns a schema for the specified list.
+ *
+ * @param listName The list display name or GUID
  * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772709(v=office.12)
  * @example
  * ```
  * // Get list using default parameters
  * const list = await getList({ listName: "Announcements" });
- * // Get list on another site without parsing XML
- * const list = await getList({ listName: "Announcements", webURL: "/sites/hr", parse: false });
- * // Get list with only the Title and Fields parsed
+ * // Get list on another site
+ * const list = await getList({ listName: "Announcements", webURL: "/sites/hr" });
+ * // Get list with only the Title and Fields attributes parsed
  * const list = await getList({ listName: "Title", attributes: ["Title", "Fields"] })
  * ```
  */
@@ -47,7 +49,9 @@ const getList = async (
     webURL = defaults.webURL,
     attributes = [],
   }: {
+    /** The SharePoint web URL */
     webURL?: string;
+    /** The list attributes that should be returned in the data object */
     attributes?: ListAttributes[];
   } = {}
 ): Promise<Operation> => {
@@ -69,9 +73,7 @@ const getList = async (
     const list = res.responseXML.querySelector("List");
 
     // If the list cannot be found
-    if (!list) {
-      throw new SpwsError(res);
-    }
+    if (!list) throw new SpwsError(res);
 
     // Create array of attributes either from params or all of the list attributes
     const attributesArray =

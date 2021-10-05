@@ -5,6 +5,7 @@ class SpwsError extends Error {
   statusText: string;
   data?: {
     [key: string]: string;
+    errorstring: string;
     detail: string;
   };
 
@@ -26,12 +27,11 @@ class SpwsError extends Error {
     this.responseXML = responseXML || null;
     this.status = status || 0;
     this.statusText = statusText || "";
-    this.message = message || "";
 
     // Iterate through all xml to find error data
     let xml: any = this.responseXML;
 
-    this.data = !this.responseXML
+    const data = !this.responseXML
       ? {}
       : [...xml.querySelectorAll("*")].reduce((object, element) => {
           // Get element name
@@ -50,6 +50,10 @@ class SpwsError extends Error {
           // Return the object
           return object;
         }, {});
+    this.data = data;
+
+    // Create error message
+    this.message = message || data.errorstring || data.detail || "asd";
   }
 }
 

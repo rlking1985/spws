@@ -108,7 +108,7 @@ const sendBatchRequest = async ({
         let item = {};
 
         // Get row
-        const row = el.getElementsByTagName(`z:row`)[0];
+        const row = el.querySelector(`z\\:row`);
 
         // If for is truthy
         if (row) {

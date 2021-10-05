@@ -21,16 +21,16 @@ interface Operation extends SpwsResponse {
 }
 
 /**
- * Adds the user to the specified group
+ * Removes the specified user from the specified group.
  * @param userLoginName A string that contains the user name (DOMAIN\User_Alias) of the user.
  * @param groupName A string that contains the name of the group.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772683(v=office.12)
+ * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774499(v=office.12)
  * @example
  * ```
- * const res = await addUserToGroup("dev\\john.smith", "Site Owners")
+ * const res = await removeUserFromGroup("dev\\john.smith", "Site Owners")
  * ```
  */
-const addUserToGroup = async (
+const removeUserFromGroup = async (
   userLoginName: string,
   groupName: string,
   {
@@ -66,15 +66,15 @@ const addUserToGroup = async (
       webService: WebServices.UserGroup,
       webURL,
       soapAction:
-        "http://schemas.microsoft.com/sharepoint/soap/directory/AddUserToGroup",
+        "http://schemas.microsoft.com/sharepoint/soap/directory/RemoveUserFromGroup",
     });
 
     // Create envelope
     req.createEnvelope(
-      `<AddUserToGroup xmlns="http://schemas.microsoft.com/sharepoint/soap/directory/">
+      `<RemoveUserFromGroup xmlns="http://schemas.microsoft.com/sharepoint/soap/directory/">
       <groupName>${groupName}</groupName>
       <userLoginName>${userLoginName}</userLoginName>
-    </AddUserToGroup>`
+    </RemoveUserFromGroup>`
     );
 
     // Send request
@@ -90,4 +90,4 @@ const addUserToGroup = async (
   }
 };
 
-export default addUserToGroup;
+export default removeUserFromGroup;
