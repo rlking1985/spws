@@ -104,6 +104,7 @@ const getCurrentUser = ({
   webURL = defaults.webURL,
   username,
   password,
+  ID,
 }: {
   /** The SharePoint web URL */
   webURL?: string;
@@ -111,11 +112,20 @@ const getCurrentUser = ({
   username?: string;
   /** A password if authenticating as another user (spws-proxy package needed) */
   password?: string;
+  /** The user ID. If defined, the page scrape is skipped and user info is returned\
+   * This is useful for testing as scraping pages is flaky
+   */
+  ID?: string;
 } = {}): Promise<Operation> =>
   new Promise(async (resolve, reject) => {
     try {
       // If current user has already been set, return current user
-      if (defaults.currentUser && !username && !password)
+      if (
+        defaults.currentUser &&
+        defaults.currentUser.ID === ID &&
+        !username &&
+        !password
+      )
         return resolve({
           responseText: "",
           responseXML: new Document(),
@@ -124,15 +134,23 @@ const getCurrentUser = ({
           data: defaults.currentUser,
         });
 
-      // Get User ID
-      const { data: ID } = await getCurrentUserID({
-        webURL,
-        username,
-        password,
-      });
+      // Create userID variable
+      let userID = ID;
+
+      // If no user ID is supplied
+      if (!userID) {
+        // Get User ID
+        const res = await getCurrentUserID({
+          webURL,
+          username,
+          password,
+        });
+        // Assign to userID
+        userID = res.data;
+      }
 
       // Get current user
-      const res = await getUserInformation(ID, { webURL });
+      const res = await getUserInformation(userID, { webURL });
 
       // If a username or password was supplied
       if (username || password) {

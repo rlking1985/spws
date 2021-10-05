@@ -1,9 +1,25 @@
 import { defaults } from "../..";
+import { SpwsError } from "../../classes";
 import getCurrentUser, { getCurrentUserID } from "./getCurrentUser";
 
 describe("Get Current User", () => {
+  it("Current user with ID passed", async () => {
+    const res = await getCurrentUser({ ID: "14" });
+    expect(res.data.ContentType).toBe("Person");
+    expect(res.data.ID).toBe("14");
+  });
+
+  it("Current user with invalid ID errors", async () => {
+    try {
+      const res = await getCurrentUser({ ID: "NotARealID" });
+      expect(res).toBeFalsy();
+    } catch (e) {
+      const error: SpwsError = e;
+      expect(error.message).toMatch(/No user properties found/i);
+    }
+  });
+
   it("Current user is received", async () => {
-    expect(defaults.currentUser).toBeNull();
     const res = await getCurrentUser();
     expect(res.data.ContentType).toBe("Person");
     expect(res.data.ID).toBe("1");
@@ -32,7 +48,6 @@ describe("Get Current User", () => {
     ).toBe(true);
 
     // Expect the defaults to have no current user value
-    expect(defaults.currentUser).toBeNull();
   });
 
   it("Invalid user throws error", async () => {
