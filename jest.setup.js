@@ -12,3 +12,5 @@ dotenv.config();
 
 // Set default web URL (see .env)
 defaults.webURL = `//${config.host}:${config.port}/${process.env.TEST_URL}/operations`;
+
+window.rootWebURL = `//${config.host}:${config.port}/${process.env.TEST_URL}`;
