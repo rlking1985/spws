@@ -66,10 +66,10 @@ const getGroupCollectionFromUser = async (
     // Create data object
     const data = Array.from(res.responseXML.querySelectorAll("Group")).map(
       (el): Group => ({
-        ID: el.getAttribute("ID") || "",
-        Name: el.getAttribute("Name") || "",
+        ID: el.getAttribute("ID")!,
+        Name: el.getAttribute("Name")!,
         Description: el.getAttribute("Description") || "",
-        OwnerID: el.getAttribute("OwnerID") || "",
+        OwnerID: el.getAttribute("OwnerID")!,
         OwnerIsUser: el.getAttribute("OwnerIsUser") === "True",
       })
     );

@@ -65,6 +65,7 @@ class SpwsRequest {
             responseXML: this.xhr.responseXML!,
             status: this.xhr.status,
             statusText: this.xhr.statusText,
+            envelope: this.envelope,
             message: "",
           };
           if (this.xhr.status === 200) {

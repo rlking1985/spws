@@ -6,10 +6,7 @@
  * @example
  *
  * await asyncForEach([1, 2, 3, 4, 5], async (number) => {
- *   // Do something asynchronous, for example, wait for 1 second
- *   await waitFor(1000);
- *   // Log the number to the console
- *   console.log("number :", number);
+ *   // Do something asynchronous
  *  });
  */
 const asyncForEach = async (

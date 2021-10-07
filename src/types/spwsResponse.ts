@@ -6,6 +6,7 @@ type SpwsResponse = {
   responseXML: Document;
   status: number;
   statusText: string;
+  envelope?: string;
 };
 
 // Default batch response

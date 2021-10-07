@@ -11,13 +11,13 @@ import { WebServices, Fields } from "../../../enum";
 // import {  } from "../lists";
 
 // Types
-import { SpwsResponse } from "../../../types";
+import { SpwsResponse, Item } from "../../../types";
 
 // Utils
 import { parseEncodedAbsUrl } from "../../../utils";
 
 interface Operation extends SpwsResponse {
-  data: object;
+  data: Item[];
 }
 
 /**
@@ -93,9 +93,6 @@ const getListItems = async (
        * When True, the query returns published lookup field values, if present, regardless of
        * whether the list item that is the target of the lookup is in an incomplete or draft state */
       OptimizeLookups?: boolean;
-      /** When this element is supplied, it overrides any view attributes that can be retrieved
-       * from the persisted view specified by the viewName parameter. */
-      ViewAttributes?: boolean;
     };
     /** The SharePoint webURL  */
     webURL?: string;
@@ -162,8 +159,14 @@ const getListItems = async (
     // Send request
     const res = await req.send();
 
+    // Check for row data parent
+    const rsData = res.responseXML.querySelector("rs\\:data");
+
+    // If row data is not found, throw error
+    if (!rsData) throw new SpwsError(res);
+
     // Get rows
-    const rows = Array.from(res.responseXML.querySelectorAll("z\\:row"));
+    const rows = Array.from(rsData.querySelectorAll("z\\:row"));
 
     // Create data
     const data = parseFields
@@ -176,7 +179,6 @@ const getListItems = async (
             },
             {}
           );
-          console.log(`item`, item);
           // Parse Encoded Abs URL
           item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
 
@@ -186,7 +188,7 @@ const getListItems = async (
         rows.map((row) => {
           let item = Array.from(row.attributes).reduce(
             (object: { [key: string]: string }, { nodeName, nodeValue }) => {
-              object[nodeName.replace("ows_", "")] = nodeValue || "";
+              object[nodeName.replace("ows_", "")] = nodeValue!;
               return object;
             },
             {}
