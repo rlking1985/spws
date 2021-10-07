@@ -6,11 +6,13 @@ describe("getListItems", () => {
     try {
       const res = await getListItems("User Information List", {
         webURL: global.rootWebURL,
-        // fields: ["Modified", "Editor"],
+        fields: ["Modified", "Editor"],
         queryOptions: {
-          datesInUtc: false,
-          expandUserField: true,
-          removeInvalidXmlCharacters: true,
+          DatesInUtc: false,
+          ExpandUserField: true,
+          RemoveInvalidXmlCharacters: true,
+          IncludeMandatoryColumns: false,
+          IncludeAttachmentVersion: true,
         },
         query: `<Where>
             <Eq>

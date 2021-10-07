@@ -14,7 +14,7 @@ import { WebServices, Fields } from "../../../enum";
 import { SpwsResponse } from "../../../types";
 
 // Utils
-// import {  } from "../../utils";
+import { parseEncodedAbsUrl } from "../../../utils";
 
 interface Operation extends SpwsResponse {
   data: object;
@@ -61,17 +61,41 @@ const getListItems = async (
       /** Specifies the format in which dates are returned.
        * If True, dates returned are in Coordinated Universal Time (UTC) format.
        * If False, dates returned are in [ISO-8601] format. */
-      datesInUtc?: boolean;
+      DatesInUtc?: boolean;
       /** If set to True, specifies that fields in list items that are lookup fields
        * to the user information list are returned as if they were multi-value lookups,
        * including "Name", "EMail", "SipAddress", and "Title" fields from the user
        * information list for the looked up item. These values are separated by ";#",
        * and any commas in the lookup field name are encoded as ",,". */
-      expandUserField?: boolean;
+      ExpandUserField?: boolean;
       /** If set to True, the server MUST remove all characters that have an
        * ASCII valuein the range 0-31,other than 9, 10, or 13, in the field values
        * of the list items returned. */
-      removeInvalidXmlCharacters?: boolean;
+      RemoveInvalidXmlCharacters?: boolean;
+      /** Specifies a URL used to filter document library items for items in the specified folder.*/
+      Folder?: string;
+      /** Specifies that required fields and fields used by specified calculated fields
+       * be returned in addition to the fields specified by the viewFields parameter, if set to True */
+      IncludeMandatoryColumns?: boolean;
+      /** If it is True, the EffectivePermMask attribute is returned when the permissions of a
+       * given row differ from the base permissions of the list */
+      IncludePermissions?: boolean;
+      /** If set to True, specifies that the value returned for the Attachments field is a list of full URLs
+       * separated by the delimiter ";#". */
+      IncludeAttachmentUrls?: boolean;
+      /** This MUST be used only in conjunction with IncludeAttachmentUrls.
+       * Specifying True causes the GUID and version number to be returned for attachments that
+       * can be used for conflict detection on update. */
+      IncludeAttachmentVersion?: boolean;
+      /** Specifies how to return lookup values when a list item that is the target of a lookup
+       * is in an incomplete or draft state.
+       * When False, the data returned will include the current lookup field values
+       * When True, the query returns published lookup field values, if present, regardless of
+       * whether the list item that is the target of the lookup is in an incomplete or draft state */
+      OptimizeLookups?: boolean;
+      /** When this element is supplied, it overrides any view attributes that can be retrieved
+       * from the persisted view specified by the viewName parameter. */
+      ViewAttributes?: boolean;
     };
     /** The SharePoint webURL  */
     webURL?: string;
@@ -87,10 +111,16 @@ const getListItems = async (
     // If true, only specified fields will be returned with data instead of all item attributes
     const parseFields = Array.isArray(fields) && fields.length > 0;
 
+    // Array literal to store fields if parseFields is true
+    let fieldsClone: string[] = [];
+
     // If fields is an array and has fields
     if (parseFields) {
+      // Add to fields clone
+      fieldsClone = [...new Set([...fields, Fields.EncodedAbsUrl])];
+
       // Create fieldRef string
-      const fieldRefs = [...new Set([...fields, Fields.EncodedAbsUrl])]
+      const fieldRefs = fieldsClone
         .map((field) => `<FieldRef Name="${field}" />`)
         .join("");
 
@@ -108,14 +138,14 @@ const getListItems = async (
 
     // If queryOptions are defined
     if (queryOptions) {
-      if (typeof queryOptions.datesInUtc !== "undefined")
-        queryOpt += `<DatesInUtc>${queryOptions.datesInUtc}</DatesInUtc>`;
-
-      if (typeof queryOptions.expandUserField !== "undefined")
-        queryOpt += `<ExpandUserField>${queryOptions.expandUserField}</ExpandUserField>`;
-
-      if (typeof queryOptions.removeInvalidXmlCharacters !== "undefined")
-        queryOpt += `<RemoveInvalidXmlCharacters>${queryOptions.removeInvalidXmlCharacters}</RemoveInvalidXmlCharacters>`;
+      // Iterate through all queryOptions
+      Object.entries(queryOptions).forEach(([tagName, value]) => {
+        // If value is not undefined
+        if (typeof value !== "undefined") {
+          // Add to query opt string
+          queryOpt += `<${tagName}>${value}</${tagName}>`;
+        }
+      });
     }
     // Close Query Options Tag
     queryOpt += "</QueryOptions>";
@@ -129,7 +159,6 @@ const getListItems = async (
       <rowLimit>${rowLimit}</rowLimit>
       <queryOptions>${queryOpt}</queryOptions>
     </GetListItems>`);
-
     // Send request
     const res = await req.send();
 
@@ -140,20 +169,22 @@ const getListItems = async (
     const data = parseFields
       ? // Create items with field data
         rows.map((row) => {
-          const item = fields.reduce(
+          let item = fieldsClone.reduce(
             (object: { [key: string]: string }, field) => {
               object[field] = row.getAttribute(`ows_${field}`) || "";
               return object;
             },
             {}
           );
+          console.log(`item`, item);
           // Parse Encoded Abs URL
+          item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
 
           return item;
         })
       : // Create items with all attributes
         rows.map((row) => {
-          const item = Array.from(row.attributes).reduce(
+          let item = Array.from(row.attributes).reduce(
             (object: { [key: string]: string }, { nodeName, nodeValue }) => {
               object[nodeName.replace("ows_", "")] = nodeValue || "";
               return object;
@@ -162,6 +193,8 @@ const getListItems = async (
           );
 
           // Parse Encoded Abs URL
+          item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
+
           return item;
         });
 

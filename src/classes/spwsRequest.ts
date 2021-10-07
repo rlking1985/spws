@@ -9,7 +9,7 @@ import escapeXml from "../utils/escapeXml";
 
 class SpwsRequest {
   escapeXml = escapeXml;
-  private envelope = ``;
+  envelope = ``;
   xhr: XMLHttpRequest;
 
   constructor({
