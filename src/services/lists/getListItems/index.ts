@@ -105,6 +105,7 @@ const getListItems = async (
 
     // Create queryOptions
     let queryOpt = "<QueryOptions>";
+
     // If queryOptions are defined
     if (queryOptions) {
       if (typeof queryOptions.datesInUtc !== "undefined")
@@ -119,8 +120,6 @@ const getListItems = async (
     // Close Query Options Tag
     queryOpt += "</QueryOptions>";
 
-    console.log(`queryOpt`, queryOpt);
-    //<QueryOptions></QueryOptions>
     // Create envelope
     req.createEnvelope(`<GetListItems xmlns="http://schemas.microsoft.com/sharepoint/soap/">
       <listName>${listName}</listName>
@@ -137,7 +136,6 @@ const getListItems = async (
     // Get rows
     const rows = Array.from(res.responseXML.querySelectorAll("z\\:row"));
 
-    // if ()
     // Create data
     const data = parseFields
       ? // Create items with field data

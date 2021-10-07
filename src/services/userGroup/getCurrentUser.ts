@@ -40,6 +40,7 @@ export const getCurrentUserID = ({
   password?: string;
 } = {}): Promise<CurrentUserID> =>
   new Promise((resolve, reject) => {
+    console.log(`webURL`, webURL);
     let xhr = new XMLHttpRequest();
     xhr.open("GET", `${webURL}/_layouts/viewlsts.aspx`, false);
 
