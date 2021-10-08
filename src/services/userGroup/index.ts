@@ -1,4 +1,5 @@
-import getCurrentUser, { getCurrentUserID } from "./getCurrentUser";
+import getCurrentUser from "./getCurrentUser";
+import getCurrentUserID from "./getCurrentUserID";
 import getGroupCollectionFromUser from "./getGroupCollectionFromUser";
 import getUserInformation from "../userGroup/getUserInformation";
 import addUserToGroup from "./addUserToGroup";
