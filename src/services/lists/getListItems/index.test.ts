@@ -182,4 +182,17 @@ describe("getListItems", () => {
     }
     expect(res).toBeUndefined();
   });
+
+  it("Errors: List View Threshold Exceeded", async () => {
+    let res;
+    try {
+      res = await getListItems("Get List Items Threshold");
+    } catch (e) {
+      const error: SpwsError = e;
+      expect(error.message).toMatch(
+        /The attempted operation is prohibited because it exceeds the list view threshold enforced by the administrator./i
+      );
+    }
+    expect(res).toBeUndefined();
+  }, 600000);
 });

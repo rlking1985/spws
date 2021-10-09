@@ -1,5 +1,4 @@
-import { defaults } from "../..";
-import getList from "./getList";
+import { defaults, getList } from "../..";
 import { SpwsError } from "../../classes";
 
 describe("Get List", () => {
@@ -60,11 +59,7 @@ describe("Get List", () => {
   });
 
   it("Get list that contains XML in Title", async () => {
-    try {
-      const res = await getList("Get List <XML>");
-      expect(res.status).toBe(200);
-    } catch (error: any) {
-      expect(error).toBeFalsy();
-    }
+    const res = await getList("Get List <XML>");
+    expect(res.status).toBe(200);
   });
 });

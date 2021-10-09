@@ -3,7 +3,7 @@ import getCurrentUserID from "./getCurrentUserID";
 describe("getCurrentUserID", () => {
   it("Get the current user ID with default params", async () => {
     const res = await getCurrentUserID();
-    expect(res.data).toBe(process.env.TEST_CURRENT_USER_ID);
+    expect(res.data).toBe(process.env.TEST_USER_ID);
   });
 
   it("Get the current user ID errors with unknown site", async () => {

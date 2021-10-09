@@ -1,11 +1,11 @@
 // SPWS Library
-import { defaults, getListItems } from "../..";
+import { getListItems } from "../..";
 
 // Classes
-import { SpwsRequest, SpwsError } from "../../classes";
+import { SpwsError } from "../../classes";
 
 // Enum
-import { WebServices } from "../../enum";
+// import {  } from "../../enum";
 
 // Services
 // import {  } from "../lists";
@@ -32,15 +32,6 @@ interface GetItemsOptions extends GetListItemsOptions {
   listName: string;
 }
 
-/**
- * Adds the user to the specified group
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772683(v=office.12)
- * @param userLoginName The users login name including the domain
- * @example
- * ```
- * const res = await getItems("dev\john.smith", "Site Owners")
- * ```
- */
 const getMultiListItems = async (
   lists: GetItemsOptions[]
 ): Promise<Operation> => {

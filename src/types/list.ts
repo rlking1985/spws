@@ -1,6 +1,7 @@
 // Interfaces
 import Field from "./field";
 
+// TODO: Change these to the correct type and change the web requests to correspond
 type List = {
   AllowDeletion?: string;
   AllowMultiResponses?: string;

@@ -21,19 +21,19 @@ describe("Get Current User", () => {
   it("Current user is received", async () => {
     const res = await getCurrentUser();
     expect(res.data.ContentType).toBe("Person");
-    expect(res.data.ID).toBe("1");
+    expect(res.data.ID).toBe(process.env.TEST_USER_ID);
   });
 
   it("Current user is from cache", async () => {
     // Expect the default current user to already be loaded
-    expect(defaults.currentUser.ID).toBe("1");
+    expect(defaults.currentUser.ID).toBe(process.env.TEST_USER_ID);
     const res = await getCurrentUser();
-    expect(res.data.ID).toBe("1");
+    expect(res.data.ID).toBe(process.env.TEST_USER_ID);
   });
 
   it("User with other credentials is received", async () => {
-    // Expect the current user to still be "1"
-    expect(defaults.currentUser.ID).toBe("1");
+    // Expect the current user to still be process.env.TEST_USER_ID
+    expect(defaults.currentUser.ID).toBe(process.env.TEST_USER_ID);
 
     // Send request for another user credentials
     const res = await getCurrentUser({

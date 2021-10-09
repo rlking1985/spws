@@ -2,9 +2,9 @@ import getUserInformation from "./getUserInformation";
 
 describe("Get User Information", () => {
   it("Returns user ID 1", async () => {
-    const res = await getUserInformation("1");
+    const res = await getUserInformation(process.env.TEST_USER_ID);
     expect(res.data.ContentType).toBe("Person");
-    expect(res.data.ID).toBe("1");
+    expect(res.data.ID).toBe(process.env.TEST_USER_ID);
   });
 
   it("Returns user ID 14", async () => {
