@@ -20,13 +20,13 @@ interface Operation extends SpwsResponse {
   data: number;
 }
 
-const getLastItemID = async (
+const getFirstItemID = async (
   listName: string,
   { webURL = defaults.webURL }: { webURL?: string } = {}
 ): Promise<Operation> => {
   try {
     const res = await getListItems(listName, {
-      query: `<Where><IsNotNull><FieldRef Name="ID" /></IsNotNull></Where><OrderBy><FieldRef Name="ID" Ascending="FALSE" /></OrderBy>`,
+      query: `<Where><IsNotNull><FieldRef Name="ID" /></IsNotNull></Where><OrderBy><FieldRef Name="ID" Ascending="TRUE" /></OrderBy>`,
       rowLimit: 1,
       webURL,
     });
@@ -47,4 +47,4 @@ const getLastItemID = async (
   }
 };
 
-export default getLastItemID;
+export default getFirstItemID;

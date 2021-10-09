@@ -3,6 +3,11 @@ import { SpwsError } from "../../../classes";
 import getListItems from "./";
 
 describe("getListItems", () => {
+  it("Passes: Batching request", async () => {
+    const res = await getListItems("Get List Items", { batch: true });
+  });
+  return;
+
   it("Passes: default options", async () => {
     const res = await getListItems("Get List Items");
     const item = res.data[0];

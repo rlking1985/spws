@@ -7,9 +7,6 @@ import { SpwsError } from "../../classes";
 // Enum
 // import {  } from "../../enum";
 
-// Services
-// import {  } from "../lists";
-
 // Types
 import { SpwsResponse } from "../../types";
 
@@ -17,7 +14,7 @@ import { SpwsResponse } from "../../types";
 // import {  } from "../../utils";
 
 interface Operation extends SpwsResponse {
-  data: string;
+  data: number;
 }
 
 const getListViewThreshold = async (
@@ -31,7 +28,7 @@ const getListViewThreshold = async (
     });
 
     // Return object
-    return { ...res, data: res.data.MaxItemsPerThrottledOperation! };
+    return { ...res, data: +res.data.MaxItemsPerThrottledOperation! };
   } catch (error: any) {
     throw new SpwsError(error);
   }

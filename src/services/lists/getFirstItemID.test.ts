@@ -1,17 +1,17 @@
 import { SpwsError } from "../../classes";
-import getLastItemID from "./getLastItemID";
+import getFirstItemID from "./getFirstItemID";
 
-describe("getLastItemID", () => {
+describe("getFirstItemID", () => {
   it("Passes: ID is returned", async () => {
-    const res = await getLastItemID("Get List Items Threshold");
+    const res = await getFirstItemID("Get List Items Threshold");
     expect(typeof res.data).toBe("number");
-    expect(res.data).toBeTruthy();
+    expect(res.data).toBeLessThan(1000);
   });
 
   it("Passes: ID is returned", async () => {
     let res;
     try {
-      res = await getLastItemID("Get List Items Empty");
+      res = await getFirstItemID("Get List Items Empty");
     } catch (e) {
       const error: SpwsError = e;
       expect(error.message).toMatch(
@@ -24,7 +24,7 @@ describe("getLastItemID", () => {
   it("Errors: list does not exist", async () => {
     let res;
     try {
-      res = await getLastItemID("List Does Not Exist");
+      res = await getFirstItemID("List Does Not Exist");
     } catch (e) {
       const error: SpwsError = e;
       expect(error.message).toMatch(

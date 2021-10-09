@@ -1,5 +1,10 @@
 // SPWS Library
-import { defaults } from "../../..";
+import {
+  defaults,
+  getListViewThreshold,
+  getLastItemID,
+  getFirstItemID,
+} from "../../..";
 
 // Classes
 import { SpwsRequest, SpwsError } from "../../../classes";
@@ -7,14 +12,14 @@ import { SpwsRequest, SpwsError } from "../../../classes";
 // Enum
 import { WebServices, Fields } from "../../../enum";
 
-// Services
-// import {  } from "../lists";
-
 // Types
 import { SpwsResponse, Item } from "../../../types";
 
 // Utils
-import { parseEncodedAbsUrl } from "../../../utils";
+import { asyncForEach } from "../../../utils";
+
+// Local
+import sendRequest from "./sendRequest";
 
 interface Operation extends SpwsResponse {
   data: Item[];
@@ -23,6 +28,11 @@ interface Operation extends SpwsResponse {
 export type GetListItemsOptions = {
   /** The SharePoint webURL  */
   webURL?: string;
+  /**
+   * If true, requests are batched to not exceed the list view threshold.
+   * Batch sizes are automatically assigned to match the list view threshold limit.
+   */
+  batch?: boolean;
   /**
    * A string that contains the GUID for the view surrounded by curly braces ({}),
    * which determines the view to use for the default view attributes represented by the query, viewFields, and rowLimit parameters.
@@ -92,6 +102,7 @@ export type GetListItemsOptions = {
 const getListItems = async (
   listName: string,
   {
+    batch = false,
     viewName = "",
     fields = [],
     query = `<Query/>`,
@@ -146,11 +157,6 @@ const getListItems = async (
       viewFields = `<ViewFields>${fieldRefs}</ViewFields>`;
     }
 
-    // Create query string and include <Query/> tags
-    const camlQuery = /<query>/i.test(query)
-      ? query
-      : `<Query>${query}</Query>`;
-
     // Create queryOptions
     let queryOpt = "<QueryOptions>";
 
@@ -168,62 +174,48 @@ const getListItems = async (
     // Close Query Options Tag
     queryOpt += "</QueryOptions>";
 
-    // Create envelope
-    req.createEnvelope(`<GetListItems xmlns="http://schemas.microsoft.com/sharepoint/soap/">
-      <listName>${listName}</listName>
-      <viewName>${viewName}</viewName>
-      <query>${camlQuery}</query>
-      <viewFields>${viewFields}</viewFields>
-      <rowLimit>${rowLimit}</rowLimit>
-      <queryOptions>${queryOpt}</queryOptions>
-    </GetListItems>`);
+    // Create query string and include <Query/> tags
+    const camlQuery = /<query>/i.test(query)
+      ? query
+      : `<Query>${query}</Query>`;
 
-    // Send request
-    const res = await req.send();
+    // Create variables to handle batching
+    let lastItemID: number = 0;
+    let firstItemID: number = 0;
+    let batches: number = 0;
 
-    // Check for row data parent
-    const rsData = res.responseXML.querySelector("rs\\:data");
+    // If batch is true
+    if (batch) {
+      // TODO: Add LVT result to internal cache so we don't request this over and over
+      // Get list view threshold
+      const { data: listViewThreshold } = await getListViewThreshold(listName);
 
-    // If row data is not found, throw error
-    if (!rsData) throw new SpwsError(res);
+      // Get last item ID
+      const { data: lastID } = await getLastItemID(listName);
+      lastItemID = lastID;
 
-    // Get rows
-    const rows = Array.from(rsData.querySelectorAll("z\\:row"));
+      // Get first item ID
+      const { data: firstID } = await getFirstItemID(listName);
+      firstItemID = firstID;
 
-    // Create data
-    const data = parseFields
-      ? // Create items with field data
-        rows.map((row) => {
-          let item = fieldsClone.reduce(
-            (object: { [key: string]: string }, field) => {
-              object[field] = row.getAttribute(`ows_${field}`) || "";
-              return object;
-            },
-            {}
-          );
-          // Parse Encoded Abs URL
-          item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
+      // Calculate batches
+      batches = Math.ceil((lastItemID - firstID) / listViewThreshold);
+    }
 
-          return item;
-        })
-      : // Create items with all attributes
-        rows.map((row) => {
-          let item = Array.from(row.attributes).reduce(
-            (object: { [key: string]: string }, { nodeName, nodeValue }) => {
-              object[nodeName.replace("ows_", "")] = nodeValue!;
-              return object;
-            },
-            {}
-          );
+    // Send Request (using local function)
+    const res = await sendRequest({
+      req,
+      listName,
+      viewName,
+      camlQuery,
+      viewFields,
+      rowLimit,
+      queryOpt,
+      parseFields,
+      fields: fieldsClone,
+    });
 
-          // Parse Encoded Abs URL
-          item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
-
-          return item;
-        });
-
-    // Return object
-    return { ...res, data };
+    return res;
   } catch (error: any) {
     throw new SpwsError(error);
   }
