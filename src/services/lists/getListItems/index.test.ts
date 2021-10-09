@@ -128,16 +128,58 @@ describe("getListItems", () => {
 
   // This is important as it's better to error then return all items
   it("Errors: Invalid Query", async () => {
+    let res;
     try {
-      const res = await getListItems("Get List Items", {
+      res = await getListItems("Get List Items", {
         query: `<Where><Eq><FieldRef Name="FieldDostNotExist" /><Value Type="Text">Demo Item</Value></Eq></Where>`,
       });
-      expect(res).toBeUndefined;
     } catch (e) {
       const error: SpwsError = e;
       expect(error.message).toMatch(
         /One or more field types are not installed properly. Go to the list settings page to delete these fields./i
       );
     }
+    expect(res).toBeUndefined();
+  });
+
+  it("Errors: Incorrect listName type", async () => {
+    let res;
+    try {
+      // @ts-expect-error
+      res = await getListItems({ listName: "Get List Items" });
+    } catch (e) {
+      const error: SpwsError = e;
+      expect(error.message).toMatch(
+        /Expected string for listName but received object/i
+      );
+    }
+    expect(res).toBeUndefined();
+  });
+
+  it("Errors: Incorrect listName type", async () => {
+    let res;
+    try {
+      res = await getListItems("");
+    } catch (e) {
+      const error: SpwsError = e;
+      expect(error.message).toMatch(
+        /Expected listName to be a valid string but received an empty string/i
+      );
+    }
+    expect(res).toBeUndefined();
+  });
+
+  it("Errors: Incorrect fields", async () => {
+    let res;
+    try {
+      // @ts-expect-error
+      res = await getListItems("Get List Items", { fields: { Title: null } });
+    } catch (e) {
+      const error: SpwsError = e;
+      expect(error.message).toMatch(
+        /Expected fields to be an array but recieved object/i
+      );
+    }
+    expect(res).toBeUndefined();
   });
 });

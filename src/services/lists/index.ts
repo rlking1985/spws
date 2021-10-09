@@ -1,6 +1,5 @@
-import getList from "./getList";
-import getListCollection from "./getListCollection";
-import updateListItems from "./updateListItems";
-import getListItems from "./getListItems";
-
-export { getList, getListCollection, updateListItems, getListItems };
+export { default as getList } from "./getList";
+export { default as getListCollection } from "./getListCollection";
+export { default as updateListItems } from "./updateListItems";
+export { default as getListItems } from "./getListItems";
+export { default as getMultiListItems } from "./getMultiListItems";

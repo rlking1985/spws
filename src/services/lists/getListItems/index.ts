@@ -101,6 +101,25 @@ const getListItems = async (
   }: GetListItemsOptions = {}
 ): Promise<Operation> => {
   try {
+    // Validate type
+    if (typeof listName !== "string")
+      throw new SpwsError({
+        message: `Expected string for listName but received ${typeof listName}`,
+      });
+
+    // Validate truthy string
+    if (!listName)
+      throw new SpwsError({
+        message:
+          "Expected listName to be a valid string but received an empty string",
+      });
+
+    // Validate fields
+    if (fields && !Array.isArray(fields))
+      throw new SpwsError({
+        message: `Expected fields to be an array but recieved ${typeof fields}`,
+      });
+
     // Create request object
     const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
@@ -158,6 +177,7 @@ const getListItems = async (
       <rowLimit>${rowLimit}</rowLimit>
       <queryOptions>${queryOpt}</queryOptions>
     </GetListItems>`);
+
     // Send request
     const res = await req.send();
 
