@@ -6,7 +6,6 @@ describe("getListItems", () => {
   it("Passes: Batching request", async () => {
     const res = await getListItems("Get List Items", { batch: true });
   });
-  return;
 
   it("Passes: default options", async () => {
     const res = await getListItems("Get List Items");
@@ -17,14 +16,16 @@ describe("getListItems", () => {
     expect(Object.entries(item).length).toBeGreaterThan(10);
 
     // Check envelope (case sensitive)
-    expect(res.envelope).toMatch(/<listName>Get List Items<\/listName>/);
-    expect(res.envelope).toMatch(/<viewName><\/viewName>/);
-    expect(res.envelope).toMatch(/<query><Query><Query\/><\/Query><\/query>/);
-    expect(res.envelope).toMatch(
+    expect(res.envelope[0]).toMatch(/<listName>Get List Items<\/listName>/);
+    expect(res.envelope[0]).toMatch(/<viewName><\/viewName>/);
+    expect(res.envelope[0]).toMatch(
+      /<query><Query><Query\/><\/Query><\/query>/
+    );
+    expect(res.envelope[0]).toMatch(
       /<viewFields><ViewFields Properties='True' \/><\/viewFields>/
     );
-    expect(res.envelope).toMatch(/<rowLimit>0<\/rowLimit>/);
-    expect(res.envelope).toMatch(/<QueryOptions><\/QueryOptions>/);
+    expect(res.envelope[0]).toMatch(/<rowLimit>0<\/rowLimit>/);
+    expect(res.envelope[0]).toMatch(/<QueryOptions><\/QueryOptions>/);
   });
 
   it("Passes: Limited Fields", async () => {
@@ -36,11 +37,11 @@ describe("getListItems", () => {
     expect(item.DispFormUrl).toMatch(/http:/i);
 
     // Check envelope (case sensitive)
-    expect(res.envelope).toMatch(
+    expect(res.envelope[0]).toMatch(
       /<viewFields><ViewFields><FieldRef Name="ID" \/><FieldRef Name="EncodedAbsUrl" \/><\/ViewFields><\/viewFields>/
     );
     // Expect query options to still be empty even though an options object is used
-    expect(res.envelope).toMatch(/<QueryOptions><\/QueryOptions>/);
+    expect(res.envelope[0]).toMatch(/<QueryOptions><\/QueryOptions>/);
   });
 
   it("Passes: Fields that don't exist return as empty string", async () => {
@@ -56,7 +57,7 @@ describe("getListItems", () => {
     });
 
     // DateInUtc is not added to query Options
-    expect(res.envelope).toMatch(
+    expect(res.envelope[0]).toMatch(
       /<queryOptions><QueryOptions><ExpandUserField>true<\/ExpandUserField><\/QueryOptions><\/queryOptions>/
     );
   });
@@ -84,7 +85,7 @@ describe("getListItems", () => {
     expect(item.DispFormUrl).toMatch(/http:/i);
 
     // Expect query options to be exactly
-    expect(res.envelope).toMatch(
+    expect(res.envelope[0]).toMatch(
       /<queryOptions><QueryOptions><DatesInUtc>true<\/DatesInUtc><ExpandUserField>true<\/ExpandUserField><Folder><\/Folder><IncludeAttachmentUrls>true<\/IncludeAttachmentUrls><IncludeMandatoryColumns>true<\/IncludeMandatoryColumns><IncludePermissions>true<\/IncludePermissions><IncludeAttachmentVersion>true<\/IncludeAttachmentVersion><OptimizeLookups>true<\/OptimizeLookups><RemoveInvalidXmlCharacters>true<\/RemoveInvalidXmlCharacters><\/QueryOptions><\/queryOptions>/
     );
   });
@@ -96,7 +97,7 @@ describe("getListItems", () => {
     });
 
     expect(res.data).toHaveLength(1);
-    expect(res.envelope).toMatch(
+    expect(res.envelope[0]).toMatch(
       /<query><Query><Where><Eq><FieldRef Name="Title" \/><Value Type="Text">Demo Item<\/Value><\/Eq><\/Where><\/Query><\/query>/
     );
   });
@@ -108,7 +109,7 @@ describe("getListItems", () => {
     });
 
     expect(res.data).toHaveLength(0);
-    expect(res.envelope).toMatch(
+    expect(res.envelope[0]).toMatch(
       /<query><Query><Where><Eq><FieldRef Name="ID" \/><Value Type="Text">0<\/Value><\/Eq><\/Where><\/Query><\/query>/
     );
   });

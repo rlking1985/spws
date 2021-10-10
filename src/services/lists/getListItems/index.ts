@@ -13,7 +13,7 @@ import { SpwsRequest, SpwsError } from "../../../classes";
 import { WebServices, Fields } from "../../../enum";
 
 // Types
-import { SpwsResponse, Item } from "../../../types";
+import { SpwsResponse, Item, SpwsBatchResponse } from "../../../types";
 
 // Utils
 import { asyncForEach } from "../../../utils";
@@ -21,8 +21,13 @@ import { asyncForEach } from "../../../utils";
 // Local
 import sendRequest from "./sendRequest";
 
-interface Operation extends SpwsResponse {
+interface Operation {
   data: Item[];
+  responseText: string[];
+  responseXML: Document[];
+  status: number[];
+  statusText: string[];
+  envelope?: string[];
 }
 
 export type GetListItemsOptions = {
@@ -202,6 +207,16 @@ const getListItems = async (
       batches = Math.ceil((lastItemID - firstID) / listViewThreshold);
     }
 
+    // Create response object
+    const response: Operation = {
+      data: [],
+      responseText: [],
+      responseXML: [],
+      status: [],
+      statusText: [],
+      envelope: [],
+    };
+
     // Send Request (using local function)
     const res = await sendRequest({
       req,
@@ -215,7 +230,16 @@ const getListItems = async (
       fields: fieldsClone,
     });
 
-    return res;
+    // Push to responses
+    response.data.push(...res.data);
+    response.responseText.push(res.responseText);
+    response.responseXML.push(res.responseXML);
+    response.status.push(res.status);
+    response.statusText.push(res.statusText);
+    response.envelope!.push(res.envelope!);
+
+    // Return response
+    return response;
   } catch (error: any) {
     throw new SpwsError(error);
   }

@@ -68,11 +68,11 @@ const getMultiListItems = async (
 
     // Push to responses
     response.data.push(...res.data);
-    response.responseText.push(res.responseText);
-    response.responseXML.push(res.responseXML);
-    response.status.push(res.status);
-    response.statusText.push(res.statusText);
-    response.envelope!.push(res.envelope!);
+    response.responseText.push(...res.responseText);
+    response.responseXML.push(...res.responseXML);
+    response.status.push(...res.status);
+    response.statusText.push(...res.statusText);
+    response.envelope!.push(...res.envelope!);
   });
 
   // Return response object
