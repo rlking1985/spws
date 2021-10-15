@@ -1,10 +1,7 @@
-// SPWS Library
-import {
-  defaults,
-  getListViewThreshold,
-  getLastItemID,
-  getFirstItemID,
-} from "../../..";
+// Libraries
+import { defaults, getListViewThreshold, getLastItemID, getFirstItemID } from "../../..";
+// TODO: Remove this library dependency
+import CamlBuilder from "camljs";
 
 // Classes
 import { SpwsRequest, SpwsError } from "../../../classes";
@@ -13,7 +10,7 @@ import { SpwsRequest, SpwsError } from "../../../classes";
 import { WebServices, Fields } from "../../../enum";
 
 // Types
-import { SpwsResponse, Item, SpwsBatchResponse } from "../../../types";
+import { Item, SpwsBatchResponse } from "../../../types";
 
 // Utils
 import { asyncForEach } from "../../../utils";
@@ -21,13 +18,8 @@ import { asyncForEach } from "../../../utils";
 // Local
 import sendRequest from "./sendRequest";
 
-interface Operation {
+interface Operation extends SpwsBatchResponse {
   data: Item[];
-  responseText: string[];
-  responseXML: Document[];
-  status: number[];
-  statusText: string[];
-  envelope?: string[];
 }
 
 export type GetListItemsOptions = {
@@ -126,8 +118,7 @@ const getListItems = async (
     // Validate truthy string
     if (!listName)
       throw new SpwsError({
-        message:
-          "Expected listName to be a valid string but received an empty string",
+        message: "Expected listName to be a valid string but received an empty string",
       });
 
     // Validate fields
@@ -135,9 +126,6 @@ const getListItems = async (
       throw new SpwsError({
         message: `Expected fields to be an array but recieved ${typeof fields}`,
       });
-
-    // Create request object
-    const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
     // Creat viewFields string
     let viewFields = `<ViewFields Properties='True' />`;
@@ -154,9 +142,7 @@ const getListItems = async (
       fieldsClone = [...new Set([...fields, Fields.EncodedAbsUrl])];
 
       // Create fieldRef string
-      const fieldRefs = fieldsClone
-        .map((field) => `<FieldRef Name="${field}" />`)
-        .join("");
+      const fieldRefs = fieldsClone.map((field) => `<FieldRef Name="${field}" />`).join("");
 
       // Wrap fieldRefs with viewFields tag
       viewFields = `<ViewFields>${fieldRefs}</ViewFields>`;
@@ -180,20 +166,22 @@ const getListItems = async (
     queryOpt += "</QueryOptions>";
 
     // Create query string and include <Query/> tags
-    const camlQuery = /<query>/i.test(query)
+    const camlQuery = /<query>|<\/query>|<query\/>/i.test(query)
       ? query
       : `<Query>${query}</Query>`;
 
     // Create variables to handle batching
-    let lastItemID: number = 0;
-    let firstItemID: number = 0;
-    let batches: number = 0;
+    let lastItemID = 0;
+    let firstItemID = 0;
+    let batchCount = 1;
+    let listViewThreshold = 0;
 
     // If batch is true
     if (batch) {
       // TODO: Add LVT result to internal cache so we don't request this over and over
       // Get list view threshold
-      const { data: listViewThreshold } = await getListViewThreshold(listName);
+      const { data: viewThreshold } = await getListViewThreshold(listName);
+      listViewThreshold = viewThreshold;
 
       // Get last item ID
       const { data: lastID } = await getLastItemID(listName);
@@ -203,9 +191,12 @@ const getListItems = async (
       const { data: firstID } = await getFirstItemID(listName);
       firstItemID = firstID;
 
-      // Calculate batches
-      batches = Math.ceil((lastItemID - firstID) / listViewThreshold);
+      // Calculate batchCount
+      batchCount = Math.ceil((lastItemID - firstID) / viewThreshold);
     }
+
+    // Create batches array
+    const batches = Array.from(new Array(batchCount));
 
     // Create response object
     const response: Operation = {
@@ -217,26 +208,64 @@ const getListItems = async (
       envelope: [],
     };
 
-    // Send Request (using local function)
-    const res = await sendRequest({
-      req,
-      listName,
-      viewName,
-      camlQuery,
-      viewFields,
-      rowLimit,
-      queryOpt,
-      parseFields,
-      fields: fieldsClone,
-    });
+    // Iterate over all batches
+    await asyncForEach(batches, async (b, index) => {
+      // Create request payload
+      let payload = {
+        listName,
+        viewName,
+        camlQuery,
+        viewFields,
+        rowLimit,
+        queryOpt,
+        parseFields,
+        fields: fieldsClone,
+        req: new SpwsRequest({ webService: WebServices.Lists, webURL }),
+      };
 
-    // Push to responses
-    response.data.push(...res.data);
-    response.responseText.push(res.responseText);
-    response.responseXML.push(res.responseXML);
-    response.status.push(res.status);
-    response.statusText.push(res.statusText);
-    response.envelope!.push(res.envelope!);
+      // if (index > 0) return;
+      if (batch) {
+        // Get from the first ID (-1)
+        let fromID = firstItemID + listViewThreshold * index - 1;
+        // Add the list view threshold (-1)
+        let toID = firstItemID + (listViewThreshold - 1) * (index + 1);
+        // Use lastItemID if the less than the toID
+        if (toID > lastItemID) toID = lastItemID;
+
+        // If the query has no children
+        if (camlQuery.length < 15) {
+          payload.camlQuery = `<Query>${new CamlBuilder()
+            .Where()
+            .CounterField("ID")
+            .GreaterThan(fromID)
+            .And()
+            .CounterField("ID")
+            .LessThanOrEqualTo(toID)
+            .ToString()}</Query>`;
+        } else {
+          // Append to the query if it had children
+          payload.camlQuery = CamlBuilder.FromXml(camlQuery)
+            .ModifyWhere()
+            .AppendAnd()
+            .CounterField("ID")
+            .GreaterThan(fromID)
+            .And()
+            .CounterField("ID")
+            .LessThanOrEqualTo(toID)
+            .ToString();
+        }
+      }
+      // Send Request (using local function)
+      const res = await sendRequest(payload);
+
+      // Push to responses
+      response.data.push(...res.data);
+      response.responseText.push(res.responseText);
+      response.responseXML.push(res.responseXML);
+      response.status.push(res.status);
+      response.statusText.push(res.statusText);
+      response.envelope!.push(res.envelope!);
+    });
 
     // Return response
     return response;

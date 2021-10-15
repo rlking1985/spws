@@ -2,11 +2,7 @@ import { defaults } from "../../..";
 import { SpwsError } from "../../../classes";
 import getListItems from "./";
 
-describe("getListItems", () => {
-  it("Passes: Batching request", async () => {
-    const res = await getListItems("Get List Items", { batch: true });
-  });
-
+describe("getListItems: No batching", () => {
   it("Passes: default options", async () => {
     const res = await getListItems("Get List Items");
     const item = res.data[0];
@@ -18,15 +14,11 @@ describe("getListItems", () => {
     // Check envelope (case sensitive)
     expect(res.envelope[0]).toMatch(/<listName>Get List Items<\/listName>/);
     expect(res.envelope[0]).toMatch(/<viewName><\/viewName>/);
-    expect(res.envelope[0]).toMatch(
-      /<query><Query><Query\/><\/Query><\/query>/
-    );
-    expect(res.envelope[0]).toMatch(
-      /<viewFields><ViewFields Properties='True' \/><\/viewFields>/
-    );
+    expect(res.envelope[0]).toMatch(/<query><Query\/><\/query>/);
+    expect(res.envelope[0]).toMatch(/<viewFields><ViewFields Properties='True' \/><\/viewFields>/);
     expect(res.envelope[0]).toMatch(/<rowLimit>0<\/rowLimit>/);
     expect(res.envelope[0]).toMatch(/<QueryOptions><\/QueryOptions>/);
-  });
+  }, 10000);
 
   it("Passes: Limited Fields", async () => {
     const res = await getListItems("Get List Items", { fields: ["ID"] });
@@ -155,9 +147,7 @@ describe("getListItems", () => {
       res = await getListItems({ listName: "Get List Items" });
     } catch (e) {
       const error: SpwsError = e;
-      expect(error.message).toMatch(
-        /Expected string for listName but received object/i
-      );
+      expect(error.message).toMatch(/Expected string for listName but received object/i);
     }
     expect(res).toBeUndefined();
   });
@@ -182,9 +172,7 @@ describe("getListItems", () => {
       res = await getListItems("Get List Items", { fields: { Title: null } });
     } catch (e) {
       const error: SpwsError = e;
-      expect(error.message).toMatch(
-        /Expected fields to be an array but recieved object/i
-      );
+      expect(error.message).toMatch(/Expected fields to be an array but recieved object/i);
     }
     expect(res).toBeUndefined();
   });
@@ -201,4 +189,16 @@ describe("getListItems", () => {
     }
     expect(res).toBeUndefined();
   }, 600000);
+});
+
+describe("getListItems: Batching", () => {
+  it("Passes: Batching request", async () => {
+    const res = await getListItems("Get List Items Threshold", {
+      fields: ["Title"],
+      batch: true,
+      query: `<Where><Leq><FieldRef Name="ID" /><Value Type="Text">1000</Value></Leq></Where>`,
+    });
+
+    expect(res.data).toHaveLength(400);
+  }, 30000);
 });

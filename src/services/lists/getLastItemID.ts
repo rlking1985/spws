@@ -11,12 +11,12 @@ import { SpwsError } from "../../classes";
 // import {  } from "../lists";
 
 // Types
-import { SpwsResponse } from "../../types";
+import { SpwsBatchResponse } from "../../types";
 
 // Utils
 // import {  } from "../../utils";
 
-interface Operation extends SpwsResponse {
+interface Operation extends SpwsBatchResponse {
   data: number;
 }
 
@@ -29,12 +29,18 @@ const getLastItemID = async (
       query: `<Where><IsNotNull><FieldRef Name="ID" /></IsNotNull></Where><OrderBy><FieldRef Name="ID" Ascending="FALSE" /></OrderBy>`,
       rowLimit: 1,
       webURL,
+      batch: false,
     });
 
     // Validate response
-    if (res.data.length !== 1)
+    if (res.data.length > 1)
       throw new SpwsError({
         message: "Unable to get last item ID. More than 1 item was returned",
+      });
+
+    if (res.data.length === 0)
+      throw new SpwsError({
+        message: "Unable to get last item ID. No items were returned",
       });
 
     // Get the item ID

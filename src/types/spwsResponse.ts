@@ -9,7 +9,12 @@ type SpwsResponse = {
   envelope?: string;
 };
 
-// Default batch response
-export type SpwsBatchResponse = SpwsResponse[];
+export type SpwsBatchResponse = {
+  responseText: string[];
+  responseXML: Document[];
+  status: number[];
+  statusText: string[];
+  envelope?: string[];
+};
 
 export default SpwsResponse;
