@@ -1,4 +1,5 @@
 import { defaults, getCurrentUser } from "../..";
+import { cache } from "./getCurrentUser";
 import { SpwsError } from "../../classes";
 
 describe("Get Current User", () => {
@@ -25,38 +26,14 @@ describe("Get Current User", () => {
   });
 
   it("Current user is from cache", async () => {
-    // Expect the default current user to already be loaded
-    expect(defaults.currentUser.ID).toBe(process.env.TEST_USER_ID);
+    // Clear cahce
+    cache.currentUser[defaults.webURL] = null;
+
+    // Send request as this will cache the result;
     const res = await getCurrentUser();
+
+    // Expect the default current user to already be loaded
+    expect(cache.currentUser[defaults.webURL].ID).toBe(process.env.TEST_USER_ID);
     expect(res.data.ID).toBe(process.env.TEST_USER_ID);
-  });
-
-  it("User with other credentials is received", async () => {
-    // Expect the current user to still be process.env.TEST_USER_ID
-    expect(defaults.currentUser.ID).toBe(process.env.TEST_USER_ID);
-
-    // Send request for another user credentials
-    const res = await getCurrentUser({
-      username: process.env.TEST_USER_VISITOR,
-      password: process.env.TEST_USER_PASSWORD,
-    });
-
-    // Expect the correct account to be returned
-    expect(
-      res.data.Account.toLowerCase().includes(process.env.TEST_USER_VISITOR)
-    ).toBe(true);
-
-    // Expect the defaults to have no current user value
-  });
-
-  it("Invalid user throws error", async () => {
-    try {
-      await getCurrentUser({
-        username: process.env.TEST_USER_VISITOR + "thisWillFail",
-        password: process.env.TEST_USER_PASSWORD,
-      });
-    } catch (error) {
-      expect(error.message).toMatch(/Page does not contain the _spUserId/i);
-    }
   });
 });

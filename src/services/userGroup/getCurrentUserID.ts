@@ -27,27 +27,10 @@ interface CurrentUserID extends SpwsResponse {
  * const res = await getCurrentUserID();
  * ```
  */
-const getCurrentUserID = ({
-  webURL = defaults.webURL,
-  username,
-  password,
-}: {
-  /** The SharePoint web URL */
-  webURL?: string;
-  /** The username if authenticating as another user (testing only) */
-  username?: string;
-  /** The password if authenticating as another user (testing only) */
-  password?: string;
-} = {}): Promise<CurrentUserID> =>
+const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
   new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", `${webURL}/_layouts/viewlsts.aspx`, false);
-
-    // If username and password are truthy
-    if (username && password) {
-      xhr.setRequestHeader("username", username);
-      xhr.setRequestHeader("password", password);
-    }
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
@@ -59,8 +42,7 @@ const getCurrentUserID = ({
           if (!spUserId)
             return reject(
               new SpwsError({
-                message:
-                  "Page does not contain the _spUserId, unable to getCurrentUser",
+                message: "Page does not contain the _spUserId, unable to getCurrentUser",
               })
             );
 
@@ -83,9 +65,7 @@ const getCurrentUserID = ({
           );
         } else {
           // Create response error
-          reject(
-            new SpwsError({ message: "Unable to get SharePoint User ID" })
-          );
+          reject(new SpwsError({ message: "Unable to get SharePoint User ID" }));
         }
       }
     };

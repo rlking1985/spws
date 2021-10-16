@@ -22,6 +22,13 @@ interface Operation extends SpwsBatchResponse {
   data: Item[];
 }
 
+// Create cache for any data that doesn't need to be repeated
+const cache: {
+  listViewThreshold: {
+    [key: string]: number;
+  };
+} = { listViewThreshold: {} };
+
 export type GetListItemsOptions = {
   /** The SharePoint webURL  */
   webURL?: string;
@@ -104,7 +111,7 @@ const getListItems = async (
     fields = [],
     query = `<Query/>`,
     webURL = defaults.webURL,
-    queryOptions,
+    queryOptions = { ...defaults.queryOptions },
     rowLimit = 0,
   }: GetListItemsOptions = {}
 ): Promise<Operation> => {
@@ -174,14 +181,15 @@ const getListItems = async (
     let lastItemID = 0;
     let firstItemID = 0;
     let batchCount = 1;
-    let listViewThreshold = 0;
 
     // If batch is true
     if (batch) {
-      // TODO: Add LVT result to internal cache so we don't request this over and over
-      // Get list view threshold
-      const { data: viewThreshold } = await getListViewThreshold(listName);
-      listViewThreshold = viewThreshold;
+      if (!cache.listViewThreshold[webURL]) {
+        // Get list view threshold
+        const { data: listViewThreshold } = await getListViewThreshold(listName);
+        // Set cached list view threshold
+        cache.listViewThreshold[webURL] = listViewThreshold;
+      }
 
       // Get last item ID
       const { data: lastID } = await getLastItemID(listName);
@@ -192,7 +200,7 @@ const getListItems = async (
       firstItemID = firstID;
 
       // Calculate batchCount
-      batchCount = Math.ceil((lastItemID - firstID) / viewThreshold);
+      batchCount = Math.ceil((lastItemID - firstID) / cache.listViewThreshold[webURL]);
     }
 
     // Create batches array
@@ -212,23 +220,23 @@ const getListItems = async (
     await asyncForEach(batches, async (b, index) => {
       // Create request payload
       let payload = {
-        listName,
-        viewName,
         camlQuery,
-        viewFields,
-        rowLimit,
-        queryOpt,
-        parseFields,
         fields: fieldsClone,
+        listName,
+        parseFields,
+        queryOpt,
         req: new SpwsRequest({ webService: WebServices.Lists, webURL }),
+        rowLimit,
+        viewFields,
+        viewName,
       };
 
       // if (index > 0) return;
       if (batch) {
         // Get from the first ID (-1)
-        let fromID = firstItemID + listViewThreshold * index - 1;
+        let fromID = firstItemID + cache.listViewThreshold[webURL] * index - 1;
         // Add the list view threshold (-1)
-        let toID = firstItemID + (listViewThreshold - 1) * (index + 1);
+        let toID = firstItemID + (cache.listViewThreshold[webURL] - 1) * (index + 1);
         // Use lastItemID if the less than the toID
         if (toID > lastItemID) toID = lastItemID;
 
