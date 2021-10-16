@@ -42,11 +42,7 @@ const addUserToGroup = async (
 ): Promise<Operation> => {
   try {
     // Validate User Login Name
-    if (
-      !userLoginName ||
-      typeof userLoginName !== "string" ||
-      !userLoginName.includes("\\")
-    )
+    if (!userLoginName || typeof userLoginName !== "string" || !userLoginName.includes("\\"))
       throw new SpwsError({
         message: `Expected userLoginName of a valid string including the domain but received type of ${typeof userLoginName} with value ${
           userLoginName || "(no value)"
@@ -65,8 +61,7 @@ const addUserToGroup = async (
     const req = new SpwsRequest({
       webService: WebServices.UserGroup,
       webURL,
-      soapAction:
-        "http://schemas.microsoft.com/sharepoint/soap/directory/AddUserToGroup",
+      soapAction: "http://schemas.microsoft.com/sharepoint/soap/directory/AddUserToGroup",
     });
 
     // Create envelope
@@ -81,7 +76,7 @@ const addUserToGroup = async (
     const res = await req.send();
 
     // If fault, throw error
-    if (res.responseXML.querySelector("soap\\:Fault")) throw new SpwsError(res);
+    if (res.responseXML.querySelector("soap\\:Fault, Fault")) throw new SpwsError(res);
 
     // Return object
     return { ...res, data: { success: true } };

@@ -36,13 +36,13 @@ const sendRequest = async ({
   const res = await req.send();
 
   // Check for row data parent
-  const rsData = res.responseXML.querySelector("rs\\:data");
+  const rsData = res.responseXML.querySelector("rs\\:data, data");
 
   // If row data is not found, throw error
   if (!rsData) throw new SpwsError(res);
 
   // Get rows
-  const rows = Array.from(rsData.querySelectorAll("z\\:row"));
+  const rows = Array.from(rsData.querySelectorAll("z\\:row, row"));
 
   // Create data
   const data = parseFields

@@ -32,8 +32,7 @@ const sendBatchRequest = async ({
     const req = new SpwsRequest({
       webService: WebServices.Lists,
       webURL,
-      soapAction:
-        "http://schemas.microsoft.com/sharepoint/soap/UpdateListItems",
+      soapAction: "http://schemas.microsoft.com/sharepoint/soap/UpdateListItems",
     });
 
     // Create envelope
@@ -46,17 +45,11 @@ const sendBatchRequest = async ({
               .map(
                 (method, index) => `
                 <Method ID="${index + 1}" Cmd="${method.command}">
-                ${
-                  method.command !== "New"
-                    ? `<Field Name="ID">${method.ID}</Field>`
-                    : ""
-                }
+                ${method.command !== "New" ? `<Field Name="ID">${method.ID}</Field>` : ""}
                   ${Object.entries(method.values || {})
                     .map(
                       ([field, value = ""]) =>
-                        `<Field Name="${field.slice(0, 32)}">${req.escapeXml(
-                          value
-                        )}</Field>`
+                        `<Field Name="${field.slice(0, 32)}">${req.escapeXml(value)}</Field>`
                     )
                     .join("")}
                 </Method>`
@@ -80,69 +73,64 @@ const sendBatchRequest = async ({
     data.success = true;
 
     // Get Result from the responseXML
-    data.methods = Array.from(res.responseXML.querySelectorAll("Result")).map(
-      (el) => {
-        // Example "1,New"
-        const methodInfo = el.getAttribute("ID")?.split(",")!;
+    data.methods = Array.from(res.responseXML.querySelectorAll("Result")).map((el) => {
+      // Example "1,New"
+      const methodInfo = el.getAttribute("ID")?.split(",")!;
 
-        // Set ID and Command
-        const ID = methodInfo[0] || "";
+      // Set ID and Command
+      const ID = methodInfo[0] || "";
 
-        // Create command string
-        let command: Command;
+      // Create command string
+      let command: Command;
 
-        // Assign correct string value
-        switch ((methodInfo[1] || "").toUpperCase()) {
-          case "NEW":
-            command = "New";
-            break;
-          case "UPDATE":
-            command = "Update";
-            break;
-          default:
-            command = "Delete";
-            break;
-        }
-
-        // Object literal to store item
-        let item = {};
-
-        // Get row
-        const row = el.querySelector(`z\\:row`);
-
-        // If for is truthy
-        if (row) {
-          // Create item
-          item = Array.from(row.attributes).reduce(
-            (object: Item, { name, nodeValue }) => {
-              object[name.replace("ows_", "")] = nodeValue || "";
-              return object;
-            },
-            {}
-          );
-        }
-
-        // Create result data
-        const errorCode = el.querySelector("ErrorCode")?.textContent || "";
-        const errorText = el.querySelector("ErrorText")?.textContent || "";
-        const status = errorCode === "0x00000000" ? "success" : "error";
-
-        // If any methods fail, set the overall success boolean to false
-        if (data!.success && status === "error") data!.success = false;
-
-        // Create data object
-        let result: Result = {
-          ID,
-          command: command,
-          status,
-          errorCode,
-          errorText,
-          item,
-        };
-
-        return result;
+      // Assign correct string value
+      switch ((methodInfo[1] || "").toUpperCase()) {
+        case "NEW":
+          command = "New";
+          break;
+        case "UPDATE":
+          command = "Update";
+          break;
+        default:
+          command = "Delete";
+          break;
       }
-    );
+
+      // Object literal to store item
+      let item = {};
+
+      // Get row
+      const row = el.querySelector(`z\\:row, row`);
+
+      // If for is truthy
+      if (row) {
+        // Create item
+        item = Array.from(row.attributes).reduce((object: Item, { name, nodeValue }) => {
+          object[name.replace("ows_", "")] = nodeValue || "";
+          return object;
+        }, {});
+      }
+
+      // Create result data
+      const errorCode = el.querySelector("ErrorCode")?.textContent || "";
+      const errorText = el.querySelector("ErrorText")?.textContent || "";
+      const status = errorCode === "0x00000000" ? "success" : "error";
+
+      // If any methods fail, set the overall success boolean to false
+      if (data!.success && status === "error") data!.success = false;
+
+      // Create data object
+      let result: Result = {
+        ID,
+        command: command,
+        status,
+        errorCode,
+        errorText,
+        item,
+      };
+
+      return result;
+    });
 
     // Resolve request
     return { ...res, data };

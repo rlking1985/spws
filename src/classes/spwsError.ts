@@ -53,7 +53,7 @@ class SpwsError extends Error {
     this.data = data;
 
     // Create error message
-    this.message = message || data.errorstring || data.detail || "asd";
+    this.message = message || data.errorstring || data.detail || "Unknown Error";
   }
 }
 
