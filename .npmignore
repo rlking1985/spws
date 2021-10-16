@@ -11,3 +11,4 @@ tsconfig.json
 typedoc.json
 yarn.lock
 prettier.config
+spws.proxy.config
