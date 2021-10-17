@@ -1,5 +1,11 @@
 export * from "./services/lists";
 export * from "./services/userGroup";
+declare global {
+  interface Window {
+    readonly L_Menu_BaseUrl: string;
+    readonly _spUserId?: number;
+  }
+}
 
 /**
  * The default options used in every web request.

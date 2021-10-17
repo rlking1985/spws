@@ -7,7 +7,7 @@ import { SpwsError } from "../../classes";
 // Enum
 
 // Services
-import { getUserInformation } from "../..";
+// import {  } from "../..";
 
 // Types
 import { CurrentUser, SpwsResponse } from "../../types";
@@ -29,6 +29,10 @@ interface CurrentUserID extends SpwsResponse {
  */
 const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
   new Promise((resolve, reject) => {
+    // If the user ID exists in window
+    if (window._spUserId) return { data: window._spUserId };
+
+    // Create xhr
     let xhr = new XMLHttpRequest();
     xhr.open("GET", `${webURL}/_layouts/viewlsts.aspx`, false);
 
@@ -71,9 +75,5 @@ const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
     };
     xhr.send();
   });
-
-interface Operation extends SpwsResponse {
-  data: CurrentUser;
-}
 
 export default getCurrentUserID;

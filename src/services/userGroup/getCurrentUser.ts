@@ -18,7 +18,7 @@ interface Operation extends SpwsResponse {
 }
 
 // Create cache
-export const cache: { currentUser: { [key: string]: CurrentUser } } = { currentUser: {} };
+export const cache: { currentUser?: CurrentUser } = { currentUser: undefined };
 
 /**
  * Gets the current authenticated user.
@@ -38,14 +38,14 @@ const getCurrentUser = ({
   new Promise(async (resolve, reject) => {
     try {
       // If the current user for the webURL has already been set, return the cached user
-      if (cache.currentUser[webURL]) {
-        if (ID && ID === cache.currentUser[webURL].ID) {
+      if (cache.currentUser) {
+        if (ID && ID === cache.currentUser.ID) {
           return resolve({
             responseText: "",
             responseXML: new Document(),
             status: 200,
             statusText: "OK",
-            data: cache.currentUser[webURL],
+            data: cache.currentUser,
           });
         }
       }
@@ -66,7 +66,7 @@ const getCurrentUser = ({
       const res = await getUserInformation(userID, { webURL });
 
       // Set the cahced current user
-      cache.currentUser[webURL] = res.data;
+      cache.currentUser = res.data;
 
       // Return the current user
       resolve(res);
