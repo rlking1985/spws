@@ -9,7 +9,7 @@ jest.config.ts
 jest.setup.js
 package-lock.json
 prettier.config
-spws.proxy.config
+spws.proxy.config.js
 src/
 tsconfig.json
 typedoc.json
