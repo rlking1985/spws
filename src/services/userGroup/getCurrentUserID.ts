@@ -40,7 +40,7 @@ const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           // Get SharePoint User ID variable
-          const spUserId = xhr.responseText.match(/_spUserId=[0-9]+/gim);
+          const spUserId = xhr.responseText.match(/userId:[0-9]+/gim);
 
           // If not found, reject with error
           if (!spUserId)
@@ -52,7 +52,7 @@ const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
 
           // Return the ID from the matched string
           return resolve({
-            data: spUserId[0].split("=")[1],
+            data: spUserId[0].split(":")[1],
             responseText: xhr.responseText,
             responseXML: xhr.responseXML!,
             status: xhr.status,
