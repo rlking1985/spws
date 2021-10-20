@@ -29,8 +29,17 @@ interface CurrentUserID extends SpwsResponse {
  */
 const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
   new Promise((resolve, reject) => {
+    let globalUserID =
+      (window._spPageContextInfo && window._spPageContextInfo.userId) || window._spUserId;
     // If the user ID exists in window
-    if (window._spUserId) return { data: window._spUserId };
+    if (globalUserID)
+      return resolve({
+        data: globalUserID.toString(),
+        responseText: "",
+        responseXML: new Document(),
+        status: 200,
+        statusText: "success",
+      });
 
     // Create xhr
     let xhr = new XMLHttpRequest();

@@ -4,6 +4,9 @@ declare global {
   interface Window {
     readonly L_Menu_BaseUrl: string;
     readonly _spUserId?: number;
+    readonly _spPageContextInfo: {
+      userId: number;
+    };
   }
 }
 
