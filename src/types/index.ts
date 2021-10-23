@@ -6,5 +6,6 @@ export { default as Item } from "./item";
 export { default as List } from "./list";
 export { default as ListAttributes } from "./listAttributes";
 export { default as ListCollection } from "./listCollection";
+export { default as User } from "./user";
 export { default as Method, Command } from "./method";
 export { default as SpwsResponse, SpwsBatchResponse } from "./spwsResponse";

@@ -1,4 +1,4 @@
-import { getCurrentUser, getListItems } from "../..";
+import { getCurrentUser } from "../..";
 import { cache } from "./getCurrentUser";
 import { SpwsError } from "../../classes";
 
@@ -7,7 +7,6 @@ describe("Get Current User", () => {
     const res = await getCurrentUser({ ID: "14" });
     expect(res.data.ContentType).toBe("Person");
     expect(res.data.ID).toBe("14");
-    console.log(`res.data`, res.data);
   });
 
   it("Current user with invalid ID errors", async () => {
