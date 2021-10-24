@@ -1,6 +1,6 @@
 export { default as Batch } from "./batch";
 export { default as CurrentUser } from "./currentUser";
-export { default as Field } from "./field";
+export { default as Field, FieldType } from "./field";
 export { default as Group } from "./group";
 export { default as Item } from "./item";
 export { default as List } from "./list";

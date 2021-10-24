@@ -1,3 +1,38 @@
+/** The data type of the field. Windows SharePoint Services includes the following data types by default */
+export type FieldType =
+  | "AllDayEvent"
+  | "Attachments"
+  | "Boolean"
+  | "Calculated"
+  | "Choice"
+  | "Computed"
+  | "ContentTypeId"
+  | "Counter"
+  | "CrossProjectLink"
+  | "Currency"
+  | "DateTime"
+  | "File"
+  | "GridChoice"
+  | "Guid"
+  | "Integer"
+  | "Lookup"
+  | "LookupMulti"
+  | "ModStat"
+  | "MultiChoice"
+  | "MultiColumn"
+  | "Note"
+  | "Number"
+  | "PageSeparator"
+  | "Recurrence"
+  | "Text"
+  | "ThreadIndex"
+  | "Threading"
+  | "URL"
+  | "User"
+  | "UserMulti"
+  | "WorkflowEventType"
+  | "WorkflowStatus";
+
 /**
  * Defines the internal data types used in the list infrastructure of a SharePoint Web site.
  * A field is a column or attribute of information that a user can add to a list.
@@ -105,7 +140,7 @@ type Field = {
   SuppressNameDisplay?: boolean;
   TextOnly?: boolean;
   Title?: string;
-  Type?: string;
+  Type?: FieldType;
   UniqueId?: string;
   UnlimitedLengthInDocumentLibrary?: boolean;
   URLEncode?: boolean;
