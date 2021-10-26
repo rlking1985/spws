@@ -97,12 +97,6 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*.ts"],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.js",
-    "**/*.spec.ts",
-    "**/*.test.js",
-    "**/*.test.ts"
-  ]
+  "include": ["src/**/*.ts", "fiddle/index.test.ts"],
+  "exclude": ["node_modules", "**/*.spec.js", "**/*.spec.ts", "**/*.test.js", "**/*.test.ts"]
 }

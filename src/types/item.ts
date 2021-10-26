@@ -1,5 +1,5 @@
 type Item = {
-  [key: string]: string | object | Date | unknown;
+  [key: string]: any;
   ID?: string;
   Title?: string;
   Modified?: string | Date;
