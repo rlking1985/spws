@@ -83,13 +83,12 @@ const getUserInformation = (
           }
           // Prepare data object to be stored as user (fix SharePoint keys)
           data.WorkEmail = data.WorkEMail;
-          delete data.WorkEmail;
+          delete data.WorkEMail;
           data.ID = (data.Id || "").toString();
           delete data.Id;
 
           // Create user
           const user: CurrentUser = { ...data };
-
           // Create response object
           const response: Operation = {
             responseXML: xhr.responseXML || new Document(),

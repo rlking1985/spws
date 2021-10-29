@@ -29,9 +29,7 @@ describe("Get User Information", () => {
     try {
       await getUserInformation("0");
     } catch (error) {
-      expect(error.message).toMatch(
-        /Resource not found for the segment 'UserInformationList'/i
-      );
+      expect(error.message).toMatch(/Resource not found for the segment 'UserInformationList'/i);
     }
   });
 });
