@@ -9,11 +9,11 @@ import { SpwsError } from "../../classes";
 // Services
 
 // Types
-import { CurrentUser, SpwsResponse } from "../../types";
+import { UserInformation, SpwsResponse } from "../../types";
 
 // Utils
 interface Operation extends SpwsResponse {
-  data: CurrentUser;
+  data: UserInformation;
 }
 
 /**
@@ -88,7 +88,8 @@ const getUserInformation = (
           delete data.Id;
 
           // Create user
-          const user: CurrentUser = { ...data };
+          const user: UserInformation = { ...data };
+
           // Create response object
           const response: Operation = {
             responseXML: xhr.responseXML || new Document(),

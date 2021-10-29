@@ -10,15 +10,15 @@ import { SpwsError } from "../../classes";
 import { getUserInformation, getCurrentUserID } from "../../";
 
 // Types
-import { CurrentUser, SpwsResponse } from "../../types";
+import { UserInformation, SpwsResponse } from "../../types";
 
 // Utils
 interface Operation extends SpwsResponse {
-  data: CurrentUser;
+  data: UserInformation;
 }
 
 // Create cache
-export const cache: { currentUser?: CurrentUser } = { currentUser: undefined };
+export const cache: { currentUser?: UserInformation } = { currentUser: undefined };
 
 /**
  * Gets the current authenticated user.

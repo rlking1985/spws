@@ -10,7 +10,7 @@ import { SpwsError } from "../../classes";
 // import {  } from "../..";
 
 // Types
-import { CurrentUser, SpwsResponse } from "../../types";
+import { SpwsResponse } from "../../types";
 
 // Utils
 
