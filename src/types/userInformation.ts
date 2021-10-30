@@ -21,9 +21,9 @@ type Deferred = {
 // <d:Path>/army/wii/_catalogs/users</d:Path>
 
 type UserInformation = {
-  AboutMe: string | null;
+  AboutMe?: string;
   Account: string;
-  AskMeAbout: string | null;
+  AskMeAbout?: string;
   Attachments: Deferred;
   ContentType: "Person" | "SharePointGroup" | "DomainGroup";
   ContentTypeID: string;
@@ -31,26 +31,26 @@ type UserInformation = {
   CreatedBy: Deferred;
   CreatedById: string;
   Deleted: boolean;
-  Department: string | null;
-  FirstName: string | null;
+  Department?: string;
+  FirstName?: string;
   ID: string;
   IsSiteAdmin: boolean;
-  LastName: string | null;
-  MobilePhone: string | null;
+  LastName?: string;
+  MobilePhone?: string;
   Modified: Date;
   ModifiedBy: Deferred;
   ModifiedById: string;
-  Name: string | null;
-  Office: string | null;
+  Name?: string;
+  Office?: string;
   Owshiddenversion: number;
-  Picture: string | null;
+  Picture?: string;
   SipAddress: string;
   Path: string;
-  Title: string | null;
+  Title?: string;
   UserName: string;
-  WebSite: string | null;
-  WorkEmail: string | null;
-  WorkPhone: string | null;
+  WebSite?: string;
+  WorkEmail?: string;
+  WorkPhone?: string;
 };
 
 export default UserInformation;
