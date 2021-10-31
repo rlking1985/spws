@@ -97,7 +97,7 @@ const sendBatchRequest = async ({
       }
 
       // Object literal to store item
-      let item = {};
+      let item = {} as Item;
 
       // Get row
       const row = el.querySelector(`z\\:row, row`);
@@ -105,10 +105,9 @@ const sendBatchRequest = async ({
       // If for is truthy
       if (row) {
         // Create item
-        item = Array.from(row.attributes).reduce((object: Item, { name, nodeValue }) => {
-          object[name.replace("ows_", "")] = nodeValue || "";
-          return object;
-        }, {});
+        Array.from(row.attributes).forEach(({ name, nodeValue }) => {
+          item[name.replace("ows_", "")] = nodeValue || "";
+        });
       }
 
       // Create result data

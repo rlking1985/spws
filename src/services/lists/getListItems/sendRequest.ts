@@ -1,6 +1,6 @@
 import { SpwsError, SpwsRequest } from "../../../classes";
 import { parseEncodedAbsUrl } from "../../../utils";
-
+import { Item } from "../../../types";
 const sendRequest = async ({
   req,
   listName,
@@ -51,7 +51,7 @@ const sendRequest = async ({
         let item = fields.reduce((object: { [key: string]: string }, field) => {
           object[field] = row.getAttribute(`ows_${field}`) || "";
           return object;
-        }, {});
+        }, {}) as Item;
         // Parse Encoded Abs URL
         item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
 
@@ -65,7 +65,7 @@ const sendRequest = async ({
             return object;
           },
           {}
-        );
+        ) as Item;
 
         // Parse Encoded Abs URL
         item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };

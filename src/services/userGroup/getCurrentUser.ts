@@ -42,7 +42,7 @@ const getCurrentUser = ({
         if (ID && ID === cache.currentUser.ID) {
           return resolve({
             responseText: "",
-            responseXML: new Document(),
+            responseXML: document.implementation.createHTMLDocument(""),
             status: 200,
             statusText: "OK",
             data: cache.currentUser,
