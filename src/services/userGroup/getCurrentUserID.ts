@@ -36,7 +36,7 @@ const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
       return resolve({
         data: globalUserID.toString(),
         responseText: "",
-        responseXML: new Document(),
+        responseXML: document.implementation.createHTMLDocument(""),
         status: 200,
         statusText: "success",
       });

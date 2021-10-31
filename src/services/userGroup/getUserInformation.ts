@@ -92,7 +92,7 @@ const getUserInformation = (
 
           // Create response object
           const response: Operation = {
-            responseXML: xhr.responseXML || new Document(),
+            responseXML: xhr.responseXML || document.implementation.createHTMLDocument(""),
             responseText: xhr.responseText,
             status: xhr.status,
             statusText: xhr.statusText,
