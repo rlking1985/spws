@@ -20,17 +20,26 @@ interface CurrentUserID extends SpwsResponse {
 
 /**
  * Gets the current user's ID
- * @param webURL The SharePoint web URL
+ * @param options The SharePoint web URL
+ * @param options.webURL The SharePoint web URL
+ * @param options.getFromWindow If false, the user ID will be scraped from the SharePoint page.
  * @example
  * ```
  * // Get the current user ID
  * const res = await getCurrentUserID();
+ *
+ * // Get the current user ID
+ * const res = await getCurrentUserID({ getFromWindow: false });
  * ```
  */
-const getCurrentUserID = (webURL = defaults.webURL): Promise<CurrentUserID> =>
+const getCurrentUserID = ({
+  webURL = defaults.webURL,
+  getFromWindow = true,
+} = {}): Promise<CurrentUserID> =>
   new Promise((resolve, reject) => {
     let globalUserID =
-      (window._spPageContextInfo && window._spPageContextInfo.userId) || window._spUserId;
+      getFromWindow &&
+      ((window._spPageContextInfo && window._spPageContextInfo.userId) || window._spUserId);
     // If the user ID exists in window
     if (globalUserID)
       return resolve({

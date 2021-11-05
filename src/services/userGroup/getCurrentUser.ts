@@ -56,7 +56,7 @@ const getCurrentUser = ({
       // If no user ID is supplied
       if (!userID) {
         // Get User ID
-        const res = await getCurrentUserID(webURL);
+        const res = await getCurrentUserID({ webURL });
 
         // Assign to userID
         userID = res.data;
