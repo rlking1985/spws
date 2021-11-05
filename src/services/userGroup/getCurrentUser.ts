@@ -26,10 +26,13 @@ export const cache: { currentUser?: UserInformation } = { currentUser: undefined
  */
 const getCurrentUser = ({
   webURL = defaults.webURL,
+  getFromWindow = true,
   ID,
 }: {
   /** The SharePoint web URL */
   webURL?: string;
+  /** If false, the user ID will be scraped from a SharePoint page */
+  getFromWindow?: boolean;
   /** The user ID. If defined, the page scrape is skipped and user info is returned\
    * This is useful for testing as scraping pages is flaky
    */
@@ -56,7 +59,7 @@ const getCurrentUser = ({
       // If no user ID is supplied
       if (!userID) {
         // Get User ID
-        const res = await getCurrentUserID({ webURL });
+        const res = await getCurrentUserID({ webURL, getFromWindow });
 
         // Assign to userID
         userID = res.data;
