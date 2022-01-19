@@ -12,7 +12,10 @@
  * // Returns
  * "Operations &amp; Development"
  */
-const escapeXml = (xml: string): string => {
+const escapeXml = (xml: string | number): string => {
+  // If not a string, cast to string
+  if (typeof xml === "number") xml = xml.toString();
+
   return xml
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
