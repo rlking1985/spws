@@ -2,6 +2,8 @@ export * from "./services/lists";
 export * from "./services/userGroup";
 declare global {
   interface Window {
+    readonly adminWebURL: string;
+    readonly rootWebURL: string;
     readonly L_Menu_BaseUrl: string;
     readonly _spUserId?: number;
     readonly _spPageContextInfo: {

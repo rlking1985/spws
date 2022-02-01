@@ -14,3 +14,4 @@ dotenv.config();
 defaults.webURL = `//${config.host}:${config.port}/${process.env.TEST_URL}/operations`;
 
 window.rootWebURL = `//${config.host}:${config.port}/${process.env.TEST_URL}`;
+window.adminWebURL = `//192.168.72.1:4050/${process.env.TEST_URL}/operations`;
