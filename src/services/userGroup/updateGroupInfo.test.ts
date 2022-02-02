@@ -1,5 +1,4 @@
 import { SpwsError } from "../../classes";
-import { asyncForEach } from "../../utils";
 import updateGroupInfo from "./updateGroupInfo";
 
 describe("updateGroupInfo", () => {
