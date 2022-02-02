@@ -5,6 +5,7 @@ import getGroupCollectionFromSite from "./getGroupCollectionFromSite";
 import getGroupCollectionFromUser from "./getGroupCollectionFromUser";
 import getUserCollectionFromSite from "./getUserCollectionFromSite";
 import getUserInformation from "../userGroup/getUserInformation";
+import updateGroupInfo from "../userGroup/updateGroupInfo";
 
 export {
   addUserToGroup,
@@ -14,4 +15,5 @@ export {
   getGroupCollectionFromUser,
   getUserCollectionFromSite,
   getUserInformation,
+  updateGroupInfo,
 };

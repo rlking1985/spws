@@ -7,21 +7,14 @@ import { SpwsRequest, SpwsError } from "../../classes";
 // Enum
 import { WebServices } from "../../enum";
 
-// Services
-// import {  } from "../lists";
-
-// Types
 import { SpwsResponse } from "../../types";
-
-// Utils
-// import {  } from "../../utils";
 
 interface Operation extends SpwsResponse {
   data: { success: boolean };
 }
 
 /**
- * Updates information for the specified group.
+ * Updates information for the specified group. The API does not support changing the description (Microsoft docs are incorrect).
  * @param oldGroupName A string that contains the old name of the group.
  * @param groupName A string that contains the new name of the group.
  * @param ownerIdentifier A string that contains the user name (DOMAIN\User_Alias) for the owner of the group.
@@ -33,13 +26,7 @@ interface Operation extends SpwsResponse {
  * const res = await removeUserFromGroup("dev\\john.smith", "Site Owners")
  * ```
  */
-const updateGroupInfo = async ({
-  oldGroupName,
-  groupName,
-  ownerIdentifier,
-  ownerType,
-  webURL = defaults.webURL,
-}: {
+const updateGroupInfo = async (params: {
   oldGroupName: string;
   groupName: string;
   ownerIdentifier: string;
@@ -47,36 +34,48 @@ const updateGroupInfo = async ({
   webURL?: string;
 }): Promise<Operation> => {
   try {
-    // Validate oldGroupName
-    if (!oldGroupName || typeof oldGroupName !== "string")
+    // Destruct params
+    const { ownerType, ownerIdentifier } = params;
+
+    // Validate ownerIdentifier if ownerType is a user
+    if (ownerType === "user" && !ownerIdentifier.includes("\\")) {
       throw new SpwsError({
-        message: `Expected oldGroupName of a valid string but received type of ${typeof oldGroupName} with value ${
-          oldGroupName || "(no value)"
+        message: `Expected ownerIdentifier of a valid string including the domain (e.g. dev\\john.smith) but received type of ${typeof ownerIdentifier} with value ${
+          ownerIdentifier || "(no value)"
         }`,
       });
+    }
 
-    // // Validate Group Name
-    // if (!groupName || typeof groupName !== "string")
-    //   throw new SpwsError({
-    //     message: `Expected groupName of a valid string but received type of ${typeof groupName} with value ${
-    //       groupName || "(no value)"
-    //     }`,
-    //   });
+    // Validate while creating envelop xml
+    let envelopeXml = Object.entries(params)
+      .map(([key, value]) => {
+        // Don't validate the webURL
+        if (key === "webURL") return "";
+        // If the value is empty or not a string
+        if (!value || typeof value !== "string")
+          // Throw error
+          throw new SpwsError({
+            message: `Expected ${key} of a valid string but received type of ${typeof value} with value ${
+              value || "(no value)"
+            }`,
+          });
+
+        // Return xml
+        return `<${key}>${value}</${key}>`;
+      })
+      .join("");
 
     // Create request object
     const req = new SpwsRequest({
       webService: WebServices.UserGroup,
-      webURL,
+      webURL: params.webURL || defaults.webURL,
       soapAction: "http://schemas.microsoft.com/sharepoint/soap/directory/UpdateGroupInfo",
     });
 
     // Create envelope
     req.createEnvelope(
       `<UpdateGroupInfo xmlns="http://schemas.microsoft.com/sharepoint/soap/directory/">
-        <oldGroupName>${oldGroupName}</oldGroupName>
-        ${groupName ? `<groupName>${groupName}</groupName>` : ""}
-        ${ownerIdentifier ? `<ownerIdentifier>${ownerIdentifier}</ownerIdentifier>` : ""}
-        ${ownerType ? `<ownerType>${ownerType}</ownerType>` : ""}
+        ${envelopeXml}
         <description></description>
     </UpdateGroupInfo>`
     );
