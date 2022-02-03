@@ -7,7 +7,11 @@ import { SpwsRequest, SpwsError } from "../../classes";
 // Enum
 import { WebServices } from "../../enum";
 
+// Types
 import { SpwsResponse } from "../../types";
+
+// Utils
+import { escapeXml } from "../../utils";
 
 interface Operation extends SpwsResponse {
   data: { success: boolean };
@@ -61,7 +65,7 @@ const updateGroupInfo = async (params: {
           });
 
         // Return xml
-        return `<${key}>${value}</${key}>`;
+        return `<${key}>${escapeXml(value)}</${key}>`;
       })
       .join("");
 

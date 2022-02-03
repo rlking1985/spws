@@ -1,6 +1,6 @@
 {
   "name": "spws",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "SharePoint Web Services Wrapper",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

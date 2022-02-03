@@ -23,6 +23,17 @@ describe("updateGroupInfo", () => {
     expect(res.data.success).toBe(true);
   });
 
+  it("Passes with illegal XML characters", async () => {
+    const res = await updateGroupInfo({
+      ...payload,
+      oldGroupName: "Update Group Info & Test",
+      groupName: "Update Group Info & Test",
+      ownerType: "user",
+      ownerIdentifier: "drn\\ross.king3",
+    });
+    expect(res.data.success).toBe(true);
+  });
+
   it("Errors setting owner as user when domain name isn't included", async () => {
     try {
       const res = await updateGroupInfo({
