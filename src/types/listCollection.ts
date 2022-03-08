@@ -1,7 +1,5 @@
 import List from "./list";
 
-type ListCollection = {
-  [index: number]: List;
-};
+type ListCollection = List[];
 
 export default ListCollection;
