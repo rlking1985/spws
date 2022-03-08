@@ -7,12 +7,8 @@ import { SpwsRequest, SpwsError } from "../../classes";
 // Enum
 import { WebServices } from "../../enum";
 
-// Services
-
 // Types
 import { List, ListCollection, SpwsResponse } from "../../types";
-
-// Utils
 
 interface Operation extends SpwsResponse {
   data: ListCollection;
@@ -41,25 +37,18 @@ const getListCollection = async ({
   const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
   // Create envelope
-  req.createEnvelope(
-    `<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`
-  );
+  req.createEnvelope(`<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`);
 
   try {
     const res = await req.send();
 
     // Create data object
-    const data = Array.from(res.responseXML.querySelectorAll("List")).map(
-      (list) => {
-        return Array.from(list.attributes).reduce(
-          (object: List, { name, value }) => {
-            object[name] = value;
-            return object;
-          },
-          {}
-        );
-      }
-    );
+    const data = Array.from(res.responseXML.querySelectorAll("List")).map((list) => {
+      return Array.from(list.attributes).reduce((object: List, { name, value }) => {
+        object[name] = value;
+        return object;
+      }, {});
+    });
 
     return { ...res, data };
   } catch (error: any) {
