@@ -9,7 +9,7 @@ import { SpwsError } from "../../../classes";
 // Services
 
 // Types
-import { SpwsResponse, Item, Command } from "../../../types";
+import { SpwsResponse, Item, Command, Method } from "../../../types";
 
 // Utils
 import { asyncForEach } from "../../../utils";
@@ -20,17 +20,7 @@ import sendBatchRequest from "./sendBatchRequest";
 /**
  * Contains the specifics for the create update or delete operation.
  */
-export type Methods = {
-  /** The operation type */
-  command: Command;
-  /** If the command is "Update" or "Delete" the ID is required */
-  ID?: string;
-  /** Values are required for "New" and "Update" commands */
-  values?: {
-    /** Any field name and string value */
-    [key: string]: string;
-  };
-}[];
+export type Methods = Method[];
 
 /**
  * The update list items result
