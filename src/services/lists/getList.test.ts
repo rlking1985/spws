@@ -5,11 +5,23 @@ describe("Get List", () => {
   // Set list namew
   const listName = "Get List";
 
+  it("Default values are loaded", async () => {
+    const res = await getList(listName, {
+      webURL: defaults.webURL,
+    });
+
+    // Get the gender field
+    const gender = res.data.Fields!.find(({ StaticName }) => StaticName === "Gender");
+
+    expect(res.responseXML).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(gender.Default).toMatch(/Male/i);
+  });
+
   it("Response should be parsed with all attributes", async () => {
     const res = await getList(listName, {
       webURL: defaults.webURL,
     });
-    //
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
     expect(Object.keys(res.data).length).toBeGreaterThan(50);
