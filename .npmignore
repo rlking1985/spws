@@ -10,7 +10,7 @@ jest.setup.js
 package-lock.json
 prettier.config
 spws.proxy.config.js
-src/
+src/**/*.test.js
 tsconfig.json
 typedoc.json
 yarn.lock
