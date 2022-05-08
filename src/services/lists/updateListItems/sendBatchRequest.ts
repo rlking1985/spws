@@ -72,7 +72,7 @@ const sendBatchRequest = async ({
     // Default success to true when parsing
     data.success = true;
 
-    // Get Result from the responseXML
+    // BUG: Potential bug where res.responseXML may be blank???
     data.methods = Array.from(res.responseXML.querySelectorAll("Result")).map((el) => {
       // Example "1,New"
       const methodInfo = el.getAttribute("ID")?.split(",")!;

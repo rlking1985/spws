@@ -60,9 +60,25 @@ class SpwsRequest {
       // Create  callback
       this.xhr.onreadystatechange = () => {
         if (this.xhr.readyState === XMLHttpRequest.DONE) {
+          // Create responseXML object as sometimes the xml may be empty
+          let responseXML = this.xhr.responseXML;
+
+          // If responseXML is null
+          if (!responseXML) {
+            // Create parser
+            const parser = new DOMParser();
+
+            try {
+              // Assign parsed response text to response XML
+              responseXML = parser.parseFromString(this.xhr.responseText || "", "text/xml");
+            } catch (error) {
+              // If an error occurs, assign responseXML as an empty document
+              responseXML = parser.parseFromString("", "text/xml");
+            }
+          }
           const xData = {
             responseText: this.xhr.responseText,
-            responseXML: this.xhr.responseXML!,
+            responseXML: responseXML,
             status: this.xhr.status,
             statusText: this.xhr.statusText,
             envelope: this.envelope,
@@ -73,8 +89,7 @@ class SpwsRequest {
           } else {
             switch (this.xhr.status) {
               case 0:
-                xData.responseText =
-                  "Cross origin http://objectpoint forbidden";
+                xData.responseText = "Cross origin http://objectpoint forbidden";
 
                 break;
 
