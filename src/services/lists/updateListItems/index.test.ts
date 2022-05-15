@@ -93,6 +93,16 @@ describe("Update List Items: New Items", () => {
     expect(res[0].responseXML).toBeTruthy();
   });
 
+  fit("Folders can be created", async () => {
+    const res = await updateListItems(listName, [
+      { command: "New", values: { BaseName: chance.apple_token(), FSObjType: "1" } },
+    ]);
+    console.log("res :>> ", res);
+    expect(res[0].data.methods).toHaveLength(1);
+    expect(res[0].data.success).toBe(true);
+    expect(res[0].responseXML).toBeTruthy();
+  });
+
   it("Errors with invalid methods", async () => {
     try {
       await updateListItems(
