@@ -60,12 +60,15 @@ const updateListItems = async (
   listName: string,
   methods: Methods,
   {
-    batchSize = 0,
+    batchSize = 400,
+    onBatchComplete,
     onError = "Continue",
     webURL = defaults.webURL,
   }: {
-    /** The maximum amount of updates that can be sent per web request */
+    /** The maximum amount of updates that can be sent per web request. A batch size of 0 is Infinite */
     batchSize?: number;
+    /** A callback function that is invoked when a batch is complete */
+    onBatchComplete?: (batch: Operation) => void;
     /** Return (stop) or continue execution of the scripts if an error occurs */
     onError?: "Return" | "Continue";
     /** The SharePoint webURL */
@@ -118,6 +121,8 @@ const updateListItems = async (
         webURL,
         onError,
       });
+
+      if (onBatchComplete) await onBatchComplete(batchResult);
 
       // Push batch result to results array
       results.push(batchResult);
