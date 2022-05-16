@@ -3,6 +3,7 @@ import getCurrentUser from "./getCurrentUser";
 import getCurrentUserID from "./getCurrentUserID";
 import getGroupCollectionFromSite from "./getGroupCollectionFromSite";
 import getGroupCollectionFromUser from "./getGroupCollectionFromUser";
+import getUserCollectionFromGroup from "../userGroup/getUserCollectionFromGroup";
 import getUserCollectionFromSite from "./getUserCollectionFromSite";
 import getUserInformation from "../userGroup/getUserInformation";
 import removeUserFromGroup from "../userGroup/removeUserFromGroup";
@@ -14,6 +15,7 @@ export {
   getCurrentUserID,
   getGroupCollectionFromSite,
   getGroupCollectionFromUser,
+  getUserCollectionFromGroup,
   getUserCollectionFromSite,
   getUserInformation,
   removeUserFromGroup,
