@@ -1,6 +1,5 @@
 import Chance from "chance";
 import updateListItems, { Methods } from ".";
-import { SpwsError } from "../../../classes";
 
 // TODO: Add "Update" and "Delete" Commands. This needs to be done after get list items
 describe("Update List Items: New Items", () => {
@@ -46,8 +45,31 @@ describe("Update List Items: New Items", () => {
 
     // Expect 3 batches (methods length minus batch size)
     expect(res).toHaveLength(Math.ceil(methods.length / batchSize));
+
     // Expect status to pass
     expect(res.every(({ data }) => data.success)).toBe(true);
+  });
+
+  it("Requests are batched with callback invoked", async () => {
+    const batchSize = 2;
+    const methods: Methods = [
+      { command: "New", values: { Title } },
+      { command: "New", values: { Title } },
+      { command: "New", values: { Title } },
+      { command: "New", values: { Title } },
+      { command: "New", values: { Title } },
+    ];
+
+    let results = [];
+    await updateListItems(listName, methods, {
+      batchSize,
+      onBatchComplete: async (result) => {
+        results.push(result);
+      },
+    });
+
+    // Expect 3 batches (methods length minus batch size)
+    expect(results).toHaveLength(Math.ceil(methods.length / batchSize));
   });
 
   it("New item with long field name", async () => {
@@ -66,6 +88,16 @@ describe("Update List Items: New Items", () => {
 
   it("Number fields can be saved", async () => {
     const res = await updateListItems(listName, [{ command: "New", values: { Age: 5 as any } }]);
+    expect(res[0].data.methods).toHaveLength(1);
+    expect(res[0].data.success).toBe(true);
+    expect(res[0].responseXML).toBeTruthy();
+  });
+
+  fit("Folders can be created", async () => {
+    const res = await updateListItems(listName, [
+      { command: "New", values: { BaseName: chance.apple_token(), FSObjType: "1" } },
+    ]);
+    console.log("res :>> ", res);
     expect(res[0].data.methods).toHaveLength(1);
     expect(res[0].data.success).toBe(true);
     expect(res[0].responseXML).toBeTruthy();

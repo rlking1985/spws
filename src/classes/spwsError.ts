@@ -31,6 +31,7 @@ class SpwsError extends Error {
     // Iterate through all xml to find error data
     let xml: any = this.responseXML;
 
+    // BUG: Need to handle this in a try catch as .querySelectorAll will error if xml is undefined. This has occured in prod
     const data = !this.responseXML
       ? {}
       : [...xml.querySelectorAll("*")].reduce((object, element) => {

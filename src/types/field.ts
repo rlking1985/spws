@@ -64,6 +64,7 @@ type Field = {
   ColName?: string;
   Commas?: boolean;
   Decimals?: number;
+  Default?: any;
   Description?: string;
   Dir?: string;
   DisplaceOnUpgrade?: boolean;

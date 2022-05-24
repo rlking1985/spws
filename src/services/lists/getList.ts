@@ -5,21 +5,12 @@ import { defaults } from "../..";
 import { SpwsRequest, SpwsError } from "../../classes";
 
 // Enum
-import {
-  Field as FieldEnum,
-  ListAttributes as ListAttributesEnum,
-  WebServices,
-} from "../../enum";
+import { Field as FieldEnum, ListAttributes as ListAttributesEnum, WebServices } from "../../enum";
 
 // Services
 
 // Types
-import {
-  Field as FieldType,
-  List,
-  ListAttributes,
-  SpwsResponse,
-} from "../../types";
+import { Field as ListField, List, ListAttributes, SpwsResponse, FieldType } from "../../types";
 
 // Utils
 import { escapeXml } from "../../utils";
@@ -77,9 +68,7 @@ const getList = async (
 
     // Create array of attributes either from params or all of the list attributes
     const attributesArray =
-      attributes.length > 0
-        ? attributes
-        : Array.from(list.attributes).map((el) => el.name);
+      attributes.length > 0 ? attributes : Array.from(list.attributes).map((el) => el.name);
 
     // Create data object with only specified attributes
     const data = attributesArray.reduce((object: List, attribute) => {
@@ -88,20 +77,26 @@ const getList = async (
     }, {});
 
     // If the attributes param is empty, or it included fields
-    if (
-      attributes.length === 0 ||
-      attributes.includes(ListAttributesEnum.Fields)
-    )
+    if (attributes.length === 0 || attributes.includes(ListAttributesEnum.Fields))
       // Add fields to data
       data[ListAttributesEnum.Fields] = Array.from(
         // Field attributes must be an array
         list.querySelectorAll(`${ListAttributesEnum.Fields} > Field`)
       ).map((fieldElement) => {
         // Create field object
-        let field: FieldType = {};
+        let field: ListField = {};
+
+        // Get the default element
+        const defaultElement = fieldElement.querySelector("Default");
+
+        // Set the default field value
+        field.Default = defaultElement ? defaultElement.textContent || "" : undefined;
+
+        // Get the field type
+        const fieldType = fieldElement.getAttribute(FieldEnum.Type) as FieldType;
 
         // If the field type is a choice field
-        if (fieldElement.getAttribute(FieldEnum.Type) === "Choice") {
+        if (fieldType === "Choice" || fieldType === "MultiChoice") {
           // Add choicess to the field
           field.Choices = Array.from(fieldElement.querySelectorAll("CHOICE"))
             // Return text content
@@ -111,24 +106,21 @@ const getList = async (
         }
 
         // Reduce field from available attributes
-        return Array.from(fieldElement.attributes).reduce(
-          (object: FieldType, element) => {
-            // Get field name and value
-            const key = element.nodeName;
-            let value: string | boolean = element.textContent || "";
+        return Array.from(fieldElement.attributes).reduce((object: ListField, element) => {
+          // Get field name and value
+          const key = element.nodeName;
+          let value: string | boolean = element.textContent || "";
 
-            // If the value is true or false
-            if (["TRUE", "FALSE"].includes(value)) {
-              // Cast to boolean
-              value = value === "TRUE";
-            }
+          // If the value is true or false
+          if (["TRUE", "FALSE"].includes(value)) {
+            // Cast to boolean
+            value = value === "TRUE";
+          }
 
-            // Assign key and prop
-            object[key] = value;
-            return object;
-          },
-          field
-        );
+          // Assign key and prop
+          object[key] = value;
+          return object;
+        }, field);
       });
 
     return {
