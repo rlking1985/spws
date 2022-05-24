@@ -8,7 +8,7 @@ import { SpwsRequest, SpwsError } from "../../classes";
 import { WebServices } from "../../enum";
 
 // Types
-import { List, ListCollection, SpwsResponse, Field, FieldType, KnownKeys } from "../../types";
+import { SpwsResponse, FieldType, Field as SpwsField, KnownKeys } from "../../types";
 
 interface Operation extends SpwsResponse {
   data: undefined;
@@ -41,17 +41,45 @@ type ListProperties = {
   Title?: string;
 };
 
-interface NewField extends Field {
+interface Field {
+  StaticName: string;
+  DisplayName: string;
+  Type: FieldType;
+  Choices?: string[];
+  /** Deprecated. use Sealed unless the field is 'Title' */
+  AllowDeletion?: boolean;
+  /** Supersedes Allow Deletion but does not work on Title field */
+  Sealed?: boolean;
+  NumLines?: number;
+  Description?: string;
+  Required?: boolean;
+  Filterable?: boolean;
+  Sortable?: boolean;
+  FillInChoice?: boolean;
+  RichText?: boolean;
+  RichTextMode?: "Text" | "FullHtml";
+  Hidden?: boolean;
+  /** Column must be indexed first or error will occur */
+  EnforceUniqueValues?: boolean;
+  /** Deleting an indexed field will cause a unfixable breaking error in the list */
+  Indexed?: boolean;
+}
+
+interface NewField extends SpwsField {
   StaticName: string;
   DisplayName: string;
   Type: FieldType;
 }
 
-interface UpdateField extends Field {
+interface UpdateField extends Partial<Field> {
   StaticName: string;
-  DisplayName?: string;
-  Type?: FieldType;
+  Type: FieldType;
+  // Must have a display name, else, the display name is cleared
+  DisplayName: string;
 }
+
+/** An array of static names */
+type DeleteField = string;
 
 type Command = "Update" | "New" | "Delete";
 
@@ -67,13 +95,24 @@ type UpdateListParams = {
   /** Update Fields */
   updateFields?: UpdateField[];
   /** Delete Fields */
-  deleteFields?: UpdateField[];
+  deleteFields?: DeleteField[];
 };
 
 /**
  * Creates an xml fields string
  */
 const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
+  // Keys that are excluded based on type of operation (command)
+  const excludedKeys: (keyof KnownKeys<SpwsField>)[] = [];
+  switch (type) {
+    case "New":
+      excludedKeys.push("EnforceUniqueValues", "Filterable");
+      break;
+
+    default:
+      break;
+  }
+
   // Create xml
   const xml = fields
     // Iterate through each field
@@ -92,32 +131,57 @@ const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
           fieldXml = `<Field Name="${field.StaticName}" ${Object.entries(field).reduce(
             // Iterate through each field key and prop
             (string, [key, prop]: [any, any]) => {
-              // Get field key and assign type
-              let fieldKey: keyof KnownKeys<Field> = key;
+              // Get value from prop
+              let value: string = "";
+              let fieldKey: keyof KnownKeys<SpwsField> = key;
 
-              switch (fieldKey) {
-                case "Choices":
-                  // TODO: Convert choices to string
-                  /**
-                   <CHOICES>
-                    <CHOICE>A</CHOICE>
-                    <CHOICE>B</CHOICE>
-                    <CHOICE>C</CHOICE>
-                  </CHOICES>
-                   */
+              // Switch by type of prop
+              switch (typeof prop) {
+                case "boolean":
+                  value = prop ? "TRUE" : "FALSE";
+                  break;
+
+                default:
+                  value = prop;
+                  break;
+              }
+
+              // Switch by field CRUD type
+              switch (type) {
+                case "New":
+                  // Exclude keys which are not allowed when creating fields
+                  if (excludedKeys.includes(fieldKey)) return string;
                   break;
 
                 default:
                   break;
               }
-              string += `${key}="${prop}" `;
+
+              // Append to string
+              string += `${fieldKey}="${value}" `;
+
+              // Return string (accumulator)
               return string;
             },
             ""
-          )}/>`;
+          )}>`;
           break;
       }
 
+      // Handle Choice Fields
+      if (
+        (field.Type === "Choice" || field.Type === "MultiChoice") &&
+        Array.isArray(field.Choices)
+      ) {
+        fieldXml += `<CHOICES>${field.Choices.map((choice) => `<CHOICE>${choice}</CHOICE>`).join(
+          ""
+        )}</CHOICES>`;
+      }
+
+      // Append to fieldXml
+      fieldXml += "</Field>";
+
+      // Return method
       return `<Method ID="${index + 1}">${fieldXml}</Method>
      `;
     })
@@ -131,6 +195,7 @@ const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
  * Updates a list based on the specified field definitions and list properties.
  *
  * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774660(v=office.12)
+ * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ms437580(v=office.14)
  * @example
  * ```
  * // Update list
@@ -177,12 +242,15 @@ const updateList = async ({
         "New"
       )}</newFields>
       <updateFields>${createFieldsXml(updateFields, "Update")}</updateFields>
-      <deleteFields>${createFieldsXml(deleteFields, "Delete")}</deleteFields>
+      <deleteFields><Fields>${deleteFields
+        .map((field, index) => `<Method ID="${index + 1}"><Field Name="${field}"/></Method>`)
+        .join("")}</Fields></deleteFields>
       <listVersion></listVersion>
     </UpdateList>
 `
   );
 
+  console.log("req.envelope :>> ", req.envelope);
   try {
     // Send request
     const res = await req.send();
@@ -193,7 +261,8 @@ const updateList = async ({
       newFields.some(({ StaticName, DisplayName }) => StaticName !== DisplayName)
     ) {
       // Resend the update to set correct display names
-      await updateList({ listName, updateFields: newFields });
+      let a = await updateList({ listName, updateFields: newFields });
+      console.log("a :>> ", a);
     }
 
     // Return result

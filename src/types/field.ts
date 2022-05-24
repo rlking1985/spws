@@ -63,16 +63,18 @@ type Field = {
   ClassInfo?: string;
   ColName?: string;
   Commas?: boolean;
-  Decimals?: number;
+  /** -1 for automatic */
+  Decimals?: -1 | 0 | 1 | 2 | 3 | 4 | 5;
   Default?: any;
   Description?: string;
-  Dir?: string;
+  Dir?: "LTR" | "RTL";
   DisplaceOnUpgrade?: boolean;
   DisplayImage?: string;
   DisplayName?: string;
   DisplayNameSrcField?: string;
   Div?: number;
   EnableLookup?: boolean;
+  EnforceUniqueValues?: boolean;
   ExceptionImage?: string;
   FieldRef?: string;
   FillInChoice?: boolean;
@@ -119,7 +121,7 @@ type Field = {
   RestrictedMode?: boolean;
   ResultType?: string;
   RichText?: boolean;
-  RichTextMode?: string;
+  RichTextMode?: "Text" | "FullHtml";
   RowOrdinal?: number;
   Sealed?: boolean;
   SeparateLine?: boolean;
@@ -133,6 +135,7 @@ type Field = {
   ShowInNewForm?: boolean;
   ShowInVersionHistory?: boolean;
   ShowInViewForms?: boolean;
+  LinkToItem?: boolean;
   Sortable?: boolean;
   SourceID?: string;
   StaticName?: string;
