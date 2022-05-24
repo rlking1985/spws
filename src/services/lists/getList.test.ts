@@ -5,6 +5,16 @@ describe("Get List", () => {
   // Set list namew
   const listName = "Get List";
 
+  it("Multiple Choice fields have choices", async () => {
+    const res = await getList(listName, {
+      webURL: defaults.webURL,
+    });
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "MultipleReason");
+    expect(res.responseXML).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(field.Choices).toHaveLength(3);
+  });
+
   it("Default values are loaded", async () => {
     const res = await getList(listName, {
       webURL: defaults.webURL,
