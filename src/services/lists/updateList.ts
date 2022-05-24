@@ -8,7 +8,7 @@ import { SpwsRequest, SpwsError } from "../../classes";
 import { WebServices } from "../../enum";
 
 // Types
-import { List, ListCollection, SpwsResponse, Field, FieldType } from "../../types";
+import { List, ListCollection, SpwsResponse, Field, FieldType, KnownKeys } from "../../types";
 
 interface Operation extends SpwsResponse {
   data: undefined;
@@ -43,10 +43,17 @@ type ListProperties = {
 
 interface NewField extends Field {
   StaticName: string;
-  // Sharepoint Bug that creates the display name as the static name.
   DisplayName: string;
   Type: FieldType;
 }
+
+interface UpdateField extends Field {
+  StaticName: string;
+  DisplayName?: string;
+  Type?: FieldType;
+}
+
+type Command = "Update" | "New" | "Delete";
 
 type UpdateListParams = {
   /** A string that contains the Display Name or GUID for the list. */
@@ -57,29 +64,67 @@ type UpdateListParams = {
   listProperties?: ListProperties;
   /** New Fields */
   newFields?: NewField[];
+  /** Update Fields */
+  updateFields?: UpdateField[];
+  /** Delete Fields */
+  deleteFields?: UpdateField[];
 };
 
-const createFieldsXml = (fields: NewField[]) => {
+/**
+ * Creates an xml fields string
+ */
+const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
+  // Create xml
   const xml = fields
+    // Iterate through each field
     .map((field, index) => {
-      return `<Fields>
-       <Method ID="${index + 1}">
-       
-      <Field Name="${field.StaticName}" ${Object.entries(field).reduce((string, [key, prop]) => {
-        string += `${key}="${prop}" `;
-        return string;
-      }, "")}/>
+      // Create field xml string
+      let fieldXml = "";
 
+      switch (type) {
+        case "Delete":
+          fieldXml = `<Field Name="${field.StaticName}"/>`;
+          break;
 
-       </Method>
-    
-    
-       </Fields>
+        case "New":
+        case "Update":
+          // Create field xml string
+          fieldXml = `<Field Name="${field.StaticName}" ${Object.entries(field).reduce(
+            // Iterate through each field key and prop
+            (string, [key, prop]: [any, any]) => {
+              // Get field key and assign type
+              let fieldKey: keyof KnownKeys<Field> = key;
+
+              switch (fieldKey) {
+                case "Choices":
+                  // TODO: Convert choices to string
+                  /**
+                   <CHOICES>
+                    <CHOICE>A</CHOICE>
+                    <CHOICE>B</CHOICE>
+                    <CHOICE>C</CHOICE>
+                  </CHOICES>
+                   */
+                  break;
+
+                default:
+                  break;
+              }
+              string += `${key}="${prop}" `;
+              return string;
+            },
+            ""
+          )}/>`;
+          break;
+      }
+
+      return `<Method ID="${index + 1}">${fieldXml}</Method>
      `;
     })
     .join("");
-  console.log("xml :>> ", xml);
-  return xml;
+
+  // Return xml
+  return `<Fields>${xml}</Fields>`;
 };
 
 /**
@@ -99,7 +144,9 @@ const updateList = async ({
   listName,
   webURL = defaults.webURL,
   listProperties = {},
+  deleteFields = [],
   newFields = [],
+  updateFields = [],
 }: UpdateListParams): Promise<Operation> => {
   // Create request object
   const req = new SpwsRequest({
@@ -120,25 +167,36 @@ const updateList = async ({
        }, "")}
        />
       </listProperties>
-      <newFields>${createFieldsXml(newFields)}</newFields>
-      <updateFields></updateFields>
-      <deleteFields></deleteFields>
+      <newFields>${createFieldsXml(
+        newFields.map((object) => {
+          // Clone field
+          let field = { ...object };
+          field.DisplayName = field.StaticName || field.DisplayName;
+          return field;
+        }),
+        "New"
+      )}</newFields>
+      <updateFields>${createFieldsXml(updateFields, "Update")}</updateFields>
+      <deleteFields>${createFieldsXml(deleteFields, "Delete")}</deleteFields>
       <listVersion></listVersion>
     </UpdateList>
 `
   );
 
   try {
+    // Send request
     const res = await req.send();
-    console.log("res :>> ", res.responseText);
-    // Create data object
-    // const data = Array.from(res.responseXML.querySelectorAll("List")).map((list) => {
-    //   return Array.from(list.attributes).reduce((object: List, { name, value }) => {
-    //     object[name] = value;
-    //     return object;
-    //   }, {});
-    // });
 
+    // If new fields were defined and static names are different to display names
+    if (
+      newFields.length > 0 &&
+      newFields.some(({ StaticName, DisplayName }) => StaticName !== DisplayName)
+    ) {
+      // Resend the update to set correct display names
+      await updateList({ listName, updateFields: newFields });
+    }
+
+    // Return result
     return { ...res, data: undefined };
   } catch (error: any) {
     throw new SpwsError(error);

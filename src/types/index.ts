@@ -9,4 +9,5 @@ export { default as Method, Command } from "./method";
 export { default as SpwsResponse, SpwsBatchResponse } from "./spwsResponse";
 export { default as Status } from "./status";
 export { default as User } from "./user";
+export { default as KnownKeys } from "./knownKeys";
 export { default as UserInformation } from "./userInformation";
