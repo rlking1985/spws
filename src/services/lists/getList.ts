@@ -5,7 +5,12 @@ import { defaults } from "../..";
 import { SpwsRequest, SpwsError } from "../../classes";
 
 // Enum
-import { Field as FieldEnum, ListAttributes as ListAttributesEnum, WebServices } from "../../enum";
+import {
+  Field,
+  Field as FieldEnum,
+  ListAttributes as ListAttributesEnum,
+  WebServices,
+} from "../../enum";
 
 // Services
 
@@ -76,6 +81,10 @@ const getList = async (
       return object;
     }, {});
 
+    // Create parser
+    const parser = new DOMParser();
+    const serializer = new XMLSerializer();
+
     // If the attributes param is empty, or it included fields
     if (attributes.length === 0 || attributes.includes(ListAttributesEnum.Fields))
       // Add fields to data
@@ -86,27 +95,11 @@ const getList = async (
         // Create field object
         let field: ListField = {};
 
-        // Get the default element
-        const defaultElement = fieldElement.querySelector("Default");
-
-        // Set the default field value
-        field.Default = defaultElement ? defaultElement.textContent || "" : undefined;
-
         // Get the field type
         const fieldType = fieldElement.getAttribute(FieldEnum.Type) as FieldType;
 
-        // If the field type is a choice field
-        if (fieldType === "Choice" || fieldType === "MultiChoice") {
-          // Add choicess to the field
-          field.Choices = Array.from(fieldElement.querySelectorAll("CHOICE"))
-            // Return text content
-            .map(({ textContent }) => textContent!)
-            // Remove empty choices
-            .filter((choice) => choice);
-        }
-
         // Reduce field from available attributes
-        return Array.from(fieldElement.attributes).reduce((object: ListField, element) => {
+        field = Array.from(fieldElement.attributes).reduce((object: ListField, element) => {
           // Get field name and value
           const key = element.nodeName;
           let value: string | boolean = element.textContent || "";
@@ -121,6 +114,52 @@ const getList = async (
           object[key] = value;
           return object;
         }, field);
+
+        // Handle Child Elements: Choices
+        if (fieldType === "Choice" || fieldType === "MultiChoice") {
+          // Add choicess to the field
+          field.Choices = Array.from(fieldElement.querySelectorAll("CHOICE"))
+            // Return text content
+            .map(({ textContent }) => textContent!)
+            // Remove empty choices
+            .filter((choice) => choice);
+        }
+
+        // Handle Child Elements: Validation
+        const validation = fieldElement.querySelector("Validation");
+        if (validation) field.Validation = serializer.serializeToString(validation);
+
+        // Handle Child Elements: Default Formula
+        const defaultFormula = fieldElement.querySelector("DefaultFormula");
+        if (defaultFormula) field.DefaultFormula = defaultFormula.textContent || "";
+
+        // Handle Child Elements: Default Formula Value
+        const defaultFormulaValue = fieldElement.querySelector("DefaultFormulaValue");
+        if (defaultFormulaValue) field.DefaultFormulaValue = defaultFormulaValue.textContent || "";
+
+        // Handle Child Elements: Default Value
+        const defaultValue = fieldElement.querySelector("Default");
+        if (defaultValue) field.Default = defaultValue.textContent || "";
+
+        // Handle Child Elements: Formula
+        if (field.Type === "Calculated") {
+          // String to store formula xml
+          let xml = "";
+
+          // Check each xml node and append to xml string
+          const formula = fieldElement.querySelector("Formula");
+          if (formula) xml += serializer.serializeToString(formula);
+          const formulaDisplayNames = fieldElement.querySelector("FormulaDisplayNames");
+          if (formulaDisplayNames) xml += serializer.serializeToString(formulaDisplayNames);
+          const fieldRefs = fieldElement.querySelector("FieldRefs");
+          if (fieldRefs) xml += serializer.serializeToString(fieldRefs);
+
+          // If xml string is truthy, assign to field
+          if (xml) field.Formula = xml;
+        }
+
+        // Return
+        return field;
       });
 
     return {

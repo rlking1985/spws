@@ -20,12 +20,38 @@ describe("Get List", () => {
       webURL: defaults.webURL,
     });
 
-    // Get the gender field
-    const gender = res.data.Fields!.find(({ StaticName }) => StaticName === "Gender");
+    // Get the field
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "Gender");
 
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
-    expect(gender.Default).toMatch(/Male/i);
+    expect(field.Default).toMatch(/Male/i);
+  });
+
+  it("Validation values are loaded", async () => {
+    const res = await getList(listName, {
+      webURL: defaults.webURL,
+    });
+
+    // Get the field
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "FavouriteColor");
+
+    expect(res.responseXML).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(field.Validation).toMatch(/<Validation/i);
+  });
+
+  it("Formula values are loaded", async () => {
+    const res = await getList(listName, {
+      webURL: defaults.webURL,
+    });
+
+    // Get the field
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "CalculatedField");
+
+    expect(res.responseXML).toBeTruthy();
+    expect(res.status).toBe(200);
+    expect(field.Formula).toMatch(/<Formula/i);
   });
 
   it("Response should be parsed with all attributes", async () => {

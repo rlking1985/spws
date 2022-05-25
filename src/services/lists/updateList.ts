@@ -41,37 +41,61 @@ type ListProperties = {
   Title?: string;
 };
 
-interface Field {
+type Field = {
   StaticName: string;
   DisplayName: string;
   Type: FieldType;
-  Choices?: string[];
-  /** Deprecated. use Sealed unless the field is 'Title' */
-  AllowDeletion?: boolean;
-  /** Supersedes Allow Deletion but does not work on Title field */
-  Sealed?: boolean;
-  NumLines?: number;
-  Description?: string;
-  Required?: boolean;
-  Filterable?: boolean;
-  Sortable?: boolean;
-  FillInChoice?: boolean;
-  RichText?: boolean;
-  RichTextMode?: "Text" | "FullHtml";
-  Hidden?: boolean;
-  /** Column must be indexed first or error will occur */
-  EnforceUniqueValues?: boolean;
-  /** Deleting an indexed field will cause a unfixable breaking error in the list */
-  Indexed?: boolean;
-}
+} & Pick<
+  SpwsField,
+  | "AllowDeletion"
+  | "Choices"
+  | "Default"
+  | "DefaultFormula"
+  | "DefaultFormulaValue"
+  | "Description"
+  | "EnforceUniqueValues" // Column must be indexed first or error will occur
+  | "FillInChoice"
+  | "Filterable"
+  | "Format"
+  | "Formula"
+  | "Formula" // When using formula a result type is required
+  | "Hidden" // Deprecated. use Sealed unless the field is 'Title'
+  | "Indexed" // Deleting an indexed field will cause a unfixable breaking error in the list
+  | "LinkToItem"
+  | "ListItemMenu"
+  | "Max"
+  | "MaxLength"
+  | "Min"
+  | "Mult"
+  | "NumLines"
+  | "Percentage"
+  | "Required"
+  | "ResultType" // Required when using a formula
+  | "RichText"
+  | "RichTextMode"
+  | "Sealed" // Supersedes AllowDeletion but does not work on Title field
+  | "ShowField"
+  | "ShowInDisplayForm"
+  | "ShowInEditForm"
+  | "ShowInFileDlg"
+  | "ShowInNewForm"
+  | "ShowInVersionHistory"
+  | "ShowInViewForms"
+  | "Sortable"
+  | "UnlimitedLengthInDocumentLibrary"
+  | "UserSelectionMode"
+  | "UserSelectionScope"
+  | "Validation"
+  | "Version"
+>;
 
-interface NewField extends SpwsField {
+interface NewField extends Field {
   StaticName: string;
   DisplayName: string;
   Type: FieldType;
 }
 
-interface UpdateField extends Partial<Field> {
+interface UpdateField extends Field {
   StaticName: string;
   Type: FieldType;
   // Must have a display name, else, the display name is cleared
@@ -80,9 +104,7 @@ interface UpdateField extends Partial<Field> {
 
 /** An array of static names */
 type DeleteField = string;
-
 type Command = "Update" | "New" | "Delete";
-
 type UpdateListParams = {
   /** A string that contains the Display Name or GUID for the list. */
   listName: string;
@@ -103,7 +125,13 @@ type UpdateListParams = {
  */
 const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
   // Keys that are excluded based on type of operation (command)
-  const excludedKeys: (keyof KnownKeys<SpwsField>)[] = [];
+  const excludedKeys: (keyof KnownKeys<SpwsField>)[] = [
+    "Choices",
+    "Default",
+    "DefaultFormula",
+    "Formula",
+    "Validation",
+  ];
   switch (type) {
     case "New":
       excludedKeys.push("EnforceUniqueValues", "Filterable");
@@ -135,6 +163,9 @@ const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
               let value: string = "";
               let fieldKey: keyof KnownKeys<SpwsField> = key;
 
+              // Exclude keys which are not allowed
+              if (excludedKeys.includes(fieldKey)) return string;
+
               // Switch by type of prop
               switch (typeof prop) {
                 case "boolean":
@@ -143,17 +174,6 @@ const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
 
                 default:
                   value = prop;
-                  break;
-              }
-
-              // Switch by field CRUD type
-              switch (type) {
-                case "New":
-                  // Exclude keys which are not allowed when creating fields
-                  if (excludedKeys.includes(fieldKey)) return string;
-                  break;
-
-                default:
                   break;
               }
 
@@ -168,15 +188,34 @@ const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
           break;
       }
 
-      // Handle Choice Fields
-      if (
-        (field.Type === "Choice" || field.Type === "MultiChoice") &&
-        Array.isArray(field.Choices)
-      ) {
-        fieldXml += `<CHOICES>${field.Choices.map((choice) => `<CHOICE>${choice}</CHOICE>`).join(
-          ""
-        )}</CHOICES>`;
+      // Handle Field Types
+      switch (field.Type) {
+        case "Calculated":
+          if (typeof field.Formula === "string") fieldXml += field.Formula;
+          break;
+
+        case "Choice":
+        case "MultiChoice":
+          // Handle Choice Fields
+          if (Array.isArray(field.Choices))
+            fieldXml += `<CHOICES>${field.Choices.map(
+              (choice) => `<CHOICE>${choice}</CHOICE>`
+            ).join("")}</CHOICES>`;
+
+          break;
+
+        default:
+          break;
       }
+
+      // Handle Child Elements
+      if (typeof field.Validation === "string") fieldXml += field.Validation;
+      if (typeof field.DefaultFormula === "string")
+        fieldXml += `<DefaultFormula>${field.DefaultFormula}</DefaultFormula>`;
+      if (typeof field.DefaultFormulaValue === "string")
+        fieldXml += `<DefaultFormulaValue>${field.DefaultFormulaValue}</DefaultFormulaValue>`;
+
+      if (typeof field.Default === "string") fieldXml += `<Default>${field.Default}</Default>`;
 
       // Append to fieldXml
       fieldXml += "</Field>";
@@ -250,7 +289,6 @@ const updateList = async ({
 `
   );
 
-  console.log("req.envelope :>> ", req.envelope);
   try {
     // Send request
     const res = await req.send();
@@ -260,9 +298,12 @@ const updateList = async ({
       newFields.length > 0 &&
       newFields.some(({ StaticName, DisplayName }) => StaticName !== DisplayName)
     ) {
-      // Resend the update to set correct display names
-      let a = await updateList({ listName, updateFields: newFields });
-      console.log("a :>> ", a);
+      try {
+        // Resend the update to set correct display names
+        await updateList({ listName, updateFields: newFields });
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     // Return result

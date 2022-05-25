@@ -97,7 +97,7 @@ describe("Update List Items: New Items", () => {
     const res = await updateListItems(listName, [
       { command: "New", values: { BaseName: chance.apple_token(), FSObjType: "1" } },
     ]);
-    console.log("res :>> ", res);
+
     expect(res[0].data.methods).toHaveLength(1);
     expect(res[0].data.success).toBe(true);
     expect(res[0].responseXML).toBeTruthy();
