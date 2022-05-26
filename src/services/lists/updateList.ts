@@ -14,7 +14,7 @@ interface Operation extends SpwsResponse {
   data: undefined;
 }
 
-type ListProperties = {
+export type ListProperties = {
   // 	true to allow multiple responses to the survey.
   AllowMultiResponses?: boolean;
   // A string that contains the description for the list.
@@ -41,7 +41,7 @@ type ListProperties = {
   Title?: string;
 };
 
-type Field = {
+export type Field = {
   StaticName: string;
   DisplayName: string;
   Type: FieldType;
@@ -89,13 +89,13 @@ type Field = {
   | "Version"
 >;
 
-interface NewField extends Field {
+export interface NewField extends Field {
   StaticName: string;
   DisplayName: string;
   Type: FieldType;
 }
 
-interface UpdateField extends Field {
+export interface UpdateField extends Field {
   StaticName: string;
   Type: FieldType;
   // Must have a display name, else, the display name is cleared
@@ -131,6 +131,7 @@ const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
     "DefaultFormula",
     "Formula",
     "Validation",
+    "Name",
   ];
   switch (type) {
     case "New":

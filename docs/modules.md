@@ -49,7 +49,7 @@ defaults.webURL = "/sites/my-site"
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `queryOptions` | `Object` | An XML fragment in the following form that contains separate nodes for the various properties of the SPQuery object |
+| `queryOptions` | { `DatesInUtc?`: `boolean` ; `ExpandUserField?`: `boolean` ; `Folder?`: `string` ; `IncludeAttachmentUrls?`: `boolean` ; `IncludeAttachmentVersion?`: `boolean` ; `IncludeMandatoryColumns?`: `boolean` ; `IncludePermissions?`: `boolean` ; `OptimizeLookups?`: `boolean` ; `RemoveInvalidXmlCharacters?`: `boolean`  } | An XML fragment in the following form that contains separate nodes for the various properties of the SPQuery object |
 | `queryOptions.DatesInUtc?` | `boolean` | Specifies the format in which dates are returned. If True, dates returned are in Coordinated Universal Time (UTC) format. If False, dates returned are in [ISO-8601] format. |
 | `queryOptions.ExpandUserField?` | `boolean` | If set to True, specifies that fields in list items that are lookup fields to the user information list are returned as if they were multi-value lookups, including "Name", "EMail", "SipAddress", and "Title" fields from the user information list for the looked up item. These values are separated by ";#", and any commas in the lookup field name are encoded as ",,". |
 | `queryOptions.Folder?` | `string` | Specifies a URL used to filter document library items for items in the specified folder. |
@@ -63,7 +63,7 @@ defaults.webURL = "/sites/my-site"
 
 #### Defined in
 
-[index.ts:24](https://github.com/rlking1985/spws/blob/ddfebca/src/index.ts#L24)
+[index.ts:24](https://github.com/rlking1985/spws/blob/7cd8ece/src/index.ts#L24)
 
 ## Functions
 
@@ -95,7 +95,7 @@ const res = await addUserToGroup("dev\\john.smith", "Site Owners")
 
 #### Defined in
 
-[services/userGroup/addUserToGroup.ts:33](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/addUserToGroup.ts#L33)
+[services/userGroup/addUserToGroup.ts:33](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/addUserToGroup.ts#L33)
 
 ___
 
@@ -122,7 +122,7 @@ Gets the current authenticated user.
 
 #### Defined in
 
-[services/userGroup/getCurrentUser.ts:27](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/getCurrentUser.ts#L27)
+[services/userGroup/getCurrentUser.ts:27](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/getCurrentUser.ts#L27)
 
 ___
 
@@ -155,7 +155,7 @@ const res = await getCurrentUserID({ getFromWindow: false });
 
 #### Defined in
 
-[services/userGroup/getCurrentUserID.ts:35](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/getCurrentUserID.ts#L35)
+[services/userGroup/getCurrentUserID.ts:35](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/getCurrentUserID.ts#L35)
 
 ___
 
@@ -177,7 +177,7 @@ ___
 
 #### Defined in
 
-[services/lists/getFirstItemID.ts:23](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/getFirstItemID.ts#L23)
+[services/lists/getFirstItemID.ts:23](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/getFirstItemID.ts#L23)
 
 ___
 
@@ -212,7 +212,7 @@ const res = await getGroupCollectionFromSite({ webURL: "/sites/other" })
 
 #### Defined in
 
-[services/userGroup/getGroupCollectionFromSite.ts:33](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/getGroupCollectionFromSite.ts#L33)
+[services/userGroup/getGroupCollectionFromSite.ts:33](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/getGroupCollectionFromSite.ts#L33)
 
 ___
 
@@ -247,7 +247,7 @@ const res = await getGroupCollectionFromUser("dev\\john.smith", { webURL: "/site
 
 #### Defined in
 
-[services/userGroup/getGroupCollectionFromUser.ts:34](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/getGroupCollectionFromUser.ts#L34)
+[services/userGroup/getGroupCollectionFromUser.ts:34](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/getGroupCollectionFromUser.ts#L34)
 
 ___
 
@@ -269,7 +269,7 @@ ___
 
 #### Defined in
 
-[services/lists/getLastItemID.ts:23](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/getLastItemID.ts#L23)
+[services/lists/getLastItemID.ts:23](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/getLastItemID.ts#L23)
 
 ___
 
@@ -306,7 +306,7 @@ const list = await getList({ listName: "Title", attributes: ["Title", "Fields"] 
 
 #### Defined in
 
-[services/lists/getList.ts:42](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/getList.ts#L42)
+[services/lists/getList.ts:42](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/getList.ts#L42)
 
 ___
 
@@ -340,7 +340,7 @@ const res = await getListCollection({ webURL: "/sites/other" })
 
 #### Defined in
 
-[services/lists/getListCollection.ts:30](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/getListCollection.ts#L30)
+[services/lists/getListCollection.ts:30](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/getListCollection.ts#L30)
 
 ___
 
@@ -372,7 +372,7 @@ const res = await getListItems("Task Tracker")
 
 #### Defined in
 
-[services/lists/getListItems/index.ts:106](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/getListItems/index.ts#L106)
+[services/lists/getListItems/index.ts:106](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/getListItems/index.ts#L106)
 
 ___
 
@@ -394,7 +394,7 @@ ___
 
 #### Defined in
 
-[services/lists/getListViewThreshold.ts:20](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/getListViewThreshold.ts#L20)
+[services/lists/getListViewThreshold.ts:20](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/getListViewThreshold.ts#L20)
 
 ___
 
@@ -414,7 +414,7 @@ ___
 
 #### Defined in
 
-[services/lists/getMultiListItems.ts:35](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/getMultiListItems.ts#L35)
+[services/lists/getMultiListItems.ts:35](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/getMultiListItems.ts#L35)
 
 ___
 
@@ -450,7 +450,7 @@ const res = await getUserCollectionFromSite("Site Owners", { webURL: "/sites/oth
 
 #### Defined in
 
-[services/userGroup/getUserCollectionFromGroup.ts:33](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/getUserCollectionFromGroup.ts#L33)
+[services/userGroup/getUserCollectionFromGroup.ts:33](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/getUserCollectionFromGroup.ts#L33)
 
 ___
 
@@ -485,7 +485,7 @@ const res = await getUserCollectionFromSite({ webURL: "/sites/other" })
 
 #### Defined in
 
-[services/userGroup/getUserCollectionFromSite.ts:33](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/getUserCollectionFromSite.ts#L33)
+[services/userGroup/getUserCollectionFromSite.ts:33](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/getUserCollectionFromSite.ts#L33)
 
 ___
 
@@ -520,7 +520,7 @@ const res = await getUserInformation("1", { webURL: "/sites/other" });
 
 #### Defined in
 
-[services/userGroup/getUserInformation.ts:32](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/getUserInformation.ts#L32)
+[services/userGroup/getUserInformation.ts:32](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/getUserInformation.ts#L32)
 
 ___
 
@@ -552,7 +552,7 @@ const res = await removeUserFromGroup("dev\\john.smith", "Site Owners")
 
 #### Defined in
 
-[services/userGroup/removeUserFromGroup.ts:33](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/removeUserFromGroup.ts#L33)
+[services/userGroup/removeUserFromGroup.ts:33](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/removeUserFromGroup.ts#L33)
 
 ___
 
@@ -586,7 +586,7 @@ const res = await removeUserFromGroup("dev\\john.smith", "Site Owners")
 
 #### Defined in
 
-[services/userGroup/updateGroupInfo.ts:33](https://github.com/rlking1985/spws/blob/ddfebca/src/services/userGroup/updateGroupInfo.ts#L33)
+[services/userGroup/updateGroupInfo.ts:33](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/userGroup/updateGroupInfo.ts#L33)
 
 ___
 
@@ -621,7 +621,7 @@ const res = await getListCollection({ webURL: "/sites/other" })
 
 #### Defined in
 
-[services/lists/updateList.ts:247](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/updateList.ts#L247)
+[services/lists/updateList.ts:248](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/updateList.ts#L248)
 
 ___
 
@@ -661,4 +661,4 @@ const res = await updateListItems("Announcements", [
 
 #### Defined in
 
-[services/lists/updateListItems/index.ts:59](https://github.com/rlking1985/spws/blob/ddfebca/src/services/lists/updateListItems/index.ts#L59)
+[services/lists/updateListItems/index.ts:59](https://github.com/rlking1985/spws/blob/7cd8ece/src/services/lists/updateListItems/index.ts#L59)
