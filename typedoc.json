@@ -7,5 +7,5 @@
   "cleanOutputDir": true,
   "hideGenerator": true,
   "excludeInternal": true,
-  "plugin": "none"
+  "plugin": "typedoc-plugin-markdown"
 }
