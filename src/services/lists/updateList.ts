@@ -239,10 +239,20 @@ const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
  * @example
  * ```
  * // Update list
- * const res = await getListCollection()
- *
- * // Get list collection for another site
- * const res = await getListCollection({ webURL: "/sites/other" })
+ * const res = await updateList({
+ *  listName: "Announcements",
+ *  webURL: "/sites/other",
+ *  listProperties: { Description: "Demo description" },
+ *  deleteFields: ["Age"],
+ *  newFields: [
+ *    {
+ *      StaticName: "DateOfBirth",
+ *      DisplayName: "Date of Birth",
+ *      Type: "DateTime",
+ *      Format: "DateOnly",
+ *    },
+ *  ],
+ *});
  * ```
  */
 const updateList = async ({
