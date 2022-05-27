@@ -311,7 +311,7 @@ const updateList = async ({
     ) {
       try {
         // Resend the update to set correct display names
-        await updateList({ listName, updateFields: newFields });
+        await updateList({ listName, updateFields: newFields, webURL });
       } catch (error) {
         console.error(error);
       }
