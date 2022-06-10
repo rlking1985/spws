@@ -1,5 +1,6 @@
 export * from "./services/lists";
 export * from "./services/userGroup";
+export * from "./services/views";
 declare global {
   interface Window {
     readonly adminWebURL: string;

@@ -9,7 +9,7 @@ describe("Get List", () => {
     const res = await getList(listName, {
       webURL: defaults.webURL,
     });
-    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "MultipleReason");
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "MultipleReason")!;
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
     expect(field.Choices).toHaveLength(3);
@@ -21,7 +21,7 @@ describe("Get List", () => {
     });
 
     // Get the field
-    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "Gender");
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "Gender")!;
 
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
@@ -34,7 +34,7 @@ describe("Get List", () => {
     });
 
     // Get the field
-    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "FavouriteColor");
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "FavouriteColor")!;
 
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
@@ -47,7 +47,7 @@ describe("Get List", () => {
     });
 
     // Get the field
-    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "CalculatedField");
+    const field = res.data.Fields!.find(({ StaticName }) => StaticName === "CalculatedField")!;
 
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
@@ -61,8 +61,8 @@ describe("Get List", () => {
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
     expect(Object.keys(res.data).length).toBeGreaterThan(50);
-    expect(res.data.Fields.length).toBeGreaterThan(0);
-    expect(typeof res.data.Fields[0]).toBe("object");
+    expect(res.data.Fields!.length).toBeGreaterThan(0);
+    expect(typeof res.data.Fields![0]).toBe("object");
   });
 
   it("Response should be parsed with all only Title and Fields", async () => {
@@ -74,8 +74,8 @@ describe("Get List", () => {
     expect(res.responseXML).toBeTruthy();
     expect(res.status).toBe(200);
     expect(Object.keys(res.data).length).toBe(2);
-    expect(res.data.Fields.length).toBeGreaterThan(0);
-    expect(typeof res.data.Fields[0]).toBe("object");
+    expect(res.data.Fields!.length).toBeGreaterThan(0);
+    expect(typeof res.data.Fields![0]).toBe("object");
   });
 
   it("Response should be parsed with all only Titles", async () => {
@@ -102,7 +102,7 @@ describe("Get List", () => {
       await getList("Lorem Ipsum List");
     } catch (error: any) {
       const err: SpwsError = error;
-      expect(err.data.detail).toMatch(/list does not exist/i);
+      expect(err.data!.detail).toMatch(/list does not exist/i);
     }
   });
 
