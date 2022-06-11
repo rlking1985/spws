@@ -117,7 +117,7 @@ const getView = async (
         Collapse: groupBy.getAttribute("Collapse") === "TRUE",
         limit: +(groupBy.getAttribute("GroupLimit") || "0"),
         fields: Array.from(groupBy.querySelectorAll("FieldRef")).map((node) => ({
-          Name: node.nodeName,
+          Name: node.getAttribute("Name")!,
           Ascending: node.getAttribute("Ascending") !== "FALSE",
         })),
       };
