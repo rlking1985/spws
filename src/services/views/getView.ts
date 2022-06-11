@@ -110,6 +110,19 @@ const getView = async (
         Value: aggregations.getAttribute("Value") === "Off" ? "Off" : "On",
       };
 
+    // Parse GroupBy
+    const groupBy = node.querySelector("GroupBy");
+    if (groupBy) {
+      view.GroupBy = {
+        Collapse: groupBy.getAttribute("Collapse") === "TRUE",
+        limit: +(groupBy.getAttribute("GroupLimit") || "0"),
+        fields: Array.from(groupBy.querySelectorAll("FieldRef")).map((node) => ({
+          Name: node.nodeName,
+          Ascending: node.getAttribute("Ascending") !== "FALSE",
+        })),
+      };
+    }
+
     // Return object
     return { ...res, data: view };
   } catch (error: any) {

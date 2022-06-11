@@ -22,6 +22,11 @@ export interface ListView extends View {
   Aggregations?: {
     Value: "Off" | "On";
   };
+  GroupBy?: {
+    Collapse: boolean;
+    limit: number;
+    fields: { Name: string; Ascending: boolean }[];
+  };
 }
 
 export default View;
