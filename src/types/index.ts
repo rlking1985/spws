@@ -12,3 +12,5 @@ export { default as User } from "./user";
 export { default as KnownKeys } from "./knownKeys";
 export { default as UserInformation } from "./userInformation";
 export { default as View, ListView } from "./view";
+export { default as PrincipalType } from "./principalType";
+export { default as PrincipalInfo } from "./principalInfo";

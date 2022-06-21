@@ -1,4 +1,5 @@
 export * from "./services/lists";
+export * from "./services/people";
 export * from "./services/userGroup";
 export * from "./services/views";
 declare global {
