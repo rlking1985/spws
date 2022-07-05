@@ -32,9 +32,7 @@ interface GetItemsOptions extends GetListItemsOptions {
   listName: string;
 }
 
-const getMultiListItems = async (
-  lists: GetItemsOptions[]
-): Promise<Operation> => {
+const getMultiListItems = async (lists: GetItemsOptions[]): Promise<Operation> => {
   // If lists is not an array
   if (!Array.isArray(lists))
     throw new SpwsError({
@@ -59,8 +57,13 @@ const getMultiListItems = async (
 
   // Iterate through all lists
   await asyncForEach(lists, async (list) => {
+    // Get listName
     const listName = list.listName;
-    let options = { ...list };
+
+    // Create options for getListItems
+    const options: Partial<typeof list> = { ...list };
+
+    // Delete the options list name
     delete options.listName;
 
     // Send request

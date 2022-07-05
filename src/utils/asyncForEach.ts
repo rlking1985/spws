@@ -9,9 +9,9 @@
  *   // Do something asynchronous
  *  });
  */
-const asyncForEach = async (
-  array: unknown[],
-  callback: (data: any, index: number, array: any[]) => void
+const asyncForEach = async <T>(
+  array: T[],
+  callback: (data: T, index: number, array: T[]) => void
 ) => {
   // Begin loop
   for (let index = 0; index < array.length; index++) {
