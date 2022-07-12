@@ -18,8 +18,8 @@ import { asyncForEach } from "../../../utils";
 // Local
 import sendRequest from "./sendRequest";
 
-interface Operation extends SpwsBatchResponse {
-  data: Item[];
+interface Operation<T> extends SpwsBatchResponse {
+  data: (Item & T)[];
 }
 
 // Create cache for any data that doesn't need to be repeated
@@ -103,7 +103,7 @@ export type GetListItemsOptions = {
  * const res = await getListItems("Task Tracker")
  * ```
  */
-const getListItems = async (
+const getListItems = async <T extends object = {}>(
   listName: string,
   {
     batch = false,
@@ -114,7 +114,7 @@ const getListItems = async (
     queryOptions = { ...defaults.queryOptions },
     rowLimit = 0,
   }: GetListItemsOptions = {}
-): Promise<Operation> => {
+): Promise<Operation<T>> => {
   try {
     // Validate type
     if (typeof listName !== "string")
@@ -207,7 +207,7 @@ const getListItems = async (
     const batches = Array.from(new Array(batchCount));
 
     // Create response object
-    const response: Operation = {
+    const response: Operation<T> = {
       data: [],
       responseText: [],
       responseXML: [],
@@ -264,7 +264,7 @@ const getListItems = async (
         }
       }
       // Send Request (using local function)
-      const res = await sendRequest(payload);
+      const res = await sendRequest<T>(payload);
 
       // Push to responses
       response.data.push(...res.data);
