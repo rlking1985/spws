@@ -10,7 +10,7 @@ import { SpwsRequest, SpwsError } from "../../../classes";
 import { WebServices, Fields } from "../../../enum";
 
 // Types
-import { Item, SpwsBatchResponse } from "../../../types";
+import { Item, KnownKeys, SpwsBatchResponse } from "../../../types";
 
 // Utils
 import { asyncForEach } from "../../../utils";
@@ -19,7 +19,7 @@ import { asyncForEach } from "../../../utils";
 import sendRequest from "./sendRequest";
 
 interface Operation<T> extends SpwsBatchResponse {
-  data: (Item & T)[];
+  data: (KnownKeys<Item> & T)[];
 }
 
 // Create cache for any data that doesn't need to be repeated
