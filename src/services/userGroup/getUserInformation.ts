@@ -104,7 +104,7 @@ const getUserInformation = (
         } else {
           reject(
             new SpwsError({
-              message: "Unable to get user information list data",
+              message: `Unable to get user information list data for user ID: ${ID || "Unknown"}`,
             })
           );
         }
