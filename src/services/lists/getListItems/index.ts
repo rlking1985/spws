@@ -186,21 +186,21 @@ const getListItems = async <T extends object = {}>(
     if (batch) {
       if (!cache.listViewThreshold[webURL]) {
         // Get list view threshold
-        const { data: listViewThreshold } = await getListViewThreshold(listName);
+        const { data: listViewThreshold } = await getListViewThreshold(listName, { webURL });
         // Set cached list view threshold
         cache.listViewThreshold[webURL] = listViewThreshold;
       }
 
       // Get last item ID
-      const { data: lastID } = await getLastItemID(listName);
+      const { data: lastID } = await getLastItemID(listName, { webURL });
       lastItemID = lastID;
 
       // Get first item ID
-      const { data: firstID } = await getFirstItemID(listName);
+      const { data: firstID } = await getFirstItemID(listName, { webURL });
       firstItemID = firstID;
 
       // Calculate batchCount
-      batchCount = Math.ceil((lastItemID - firstID) / cache.listViewThreshold[webURL]);
+      batchCount = Math.ceil((lastItemID - firstID) / cache.listViewThreshold[webURL]) || 1;
     }
 
     // Create batches array

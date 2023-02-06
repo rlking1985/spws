@@ -4,7 +4,7 @@ import { SpwsError } from "../../../classes";
 import getListItems from "./";
 
 describe("getListItems: No batching", () => {
-  fit("Passes: Exceeds List View Threshold", async () => {
+  it("Passes: Exceeds List View Threshold", async () => {
     const res = await getListItems("Get List Items Threshold", {
       query: new CamlBuilder().Where().TextField("Title").Contains("16400").ToString(),
       batch: true,
@@ -224,5 +224,16 @@ describe("getListItems: Batching", () => {
     });
 
     expect(res.data).toHaveLength(400);
+  }, 30000);
+
+  fit("Passes: Batching request on another site", async () => {
+    const res = await getListItems("Get List Items Batch", {
+      webURL: `${defaults.webURL}/site1`,
+      fields: ["Title"],
+      batch: true,
+      query: `<Where><Leq><FieldRef Name="ID" /><Value Type="Text">1000</Value></Leq></Where>`,
+    });
+
+    expect(res.data).toHaveLength(2);
   }, 30000);
 });
