@@ -1,6 +1,6 @@
 {
-  "name": "spws",
-  "version": "1.4.0",
+  "name": "@objectpoint/spws",
+  "version": "1.4.1",
   "description": "SharePoint Web Services Wrapper",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -53,5 +53,9 @@
   },
   "dependencies": {
     "camljs": "^2.12.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
   }
 }
