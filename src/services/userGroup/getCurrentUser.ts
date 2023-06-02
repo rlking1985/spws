@@ -65,8 +65,19 @@ const getCurrentUser = ({
         userID = res.data;
       }
 
-      // Get current user
-      const res = await getUserInformation(userID, { webURL });
+      // Create response variable
+      let res: Operation;
+
+      // Get user information
+      try {
+        res = await getUserInformation(userID, { webURL });
+      } catch (error) {
+        /**
+         * A known bug exists in production SharePoint where this request may sometimes fail
+         * Retry the request if the initial request fails
+         */
+        res = await getUserInformation(userID, { webURL });
+      }
 
       // Set the cahced current user
       cache.currentUser = res.data;

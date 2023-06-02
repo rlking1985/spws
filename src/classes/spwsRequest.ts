@@ -89,7 +89,7 @@ class SpwsRequest {
           } else {
             switch (this.xhr.status) {
               case 0:
-                xData.responseText = "Cross origin http://objectpoint forbidden";
+                xData.responseText = xData.responseText || `Unknown error with xhr status of 0`;
 
                 break;
 

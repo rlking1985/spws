@@ -27,6 +27,7 @@ const getFirstItemID = async (
   try {
     const res = await getListItems(listName, {
       query: `<Where><IsNotNull><FieldRef Name="ID" /></IsNotNull></Where><OrderBy><FieldRef Name="ID" Ascending="TRUE" /></OrderBy>`,
+      fields: ["ID"],
       rowLimit: 1,
       webURL,
       batch: false,

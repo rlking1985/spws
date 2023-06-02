@@ -27,13 +27,13 @@ describe("Get Current User", () => {
 
   it("Current user is from cache", async () => {
     // Clear cahce
-    cache.currentUser = null;
+    cache.currentUser = undefined;
 
     // Send request as this will cache the result;
     const res = await getCurrentUser();
 
     // Expect the default current user to already be loaded
-    expect(cache.currentUser.ID).toBe(process.env.TEST_USER_ID);
+    expect(cache.currentUser!.ID).toBe(process.env.TEST_USER_ID);
     expect(res.data.ID).toBe(process.env.TEST_USER_ID);
   });
 });

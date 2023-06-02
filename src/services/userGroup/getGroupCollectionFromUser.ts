@@ -13,6 +13,7 @@ import { WebServices } from "../../enum";
 import { Group, SpwsResponse } from "../../types";
 
 // Utils
+import { escapeXml } from "../../utils";
 
 interface Operation extends SpwsResponse {
   data: Group[];
@@ -57,7 +58,7 @@ const getGroupCollectionFromUser = async (
     // Create envelope
     req.createEnvelope(`
       <GetGroupCollectionFromUser xmlns="http://schemas.microsoft.com/sharepoint/soap/directory/">
-        <userLoginName>${userLoginName}</userLoginName>
+        <userLoginName>${escapeXml(userLoginName)}</userLoginName>
       </GetGroupCollectionFromUser>`);
 
     // Send request

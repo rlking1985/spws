@@ -14,7 +14,7 @@ import { WebServices } from "../../enum";
 import { SpwsResponse } from "../../types";
 
 // Utils
-// import {  } from "../../utils";
+import { escapeXml } from "../../utils";
 
 interface Operation extends SpwsResponse {
   data: { success: boolean };
@@ -67,8 +67,8 @@ const removeUserFromGroup = async (
     // Create envelope
     req.createEnvelope(
       `<RemoveUserFromGroup xmlns="http://schemas.microsoft.com/sharepoint/soap/directory/">
-      <groupName>${groupName}</groupName>
-      <userLoginName>${userLoginName}</userLoginName>
+      <groupName>${escapeXml(groupName)}</groupName>
+      <userLoginName>${escapeXml(userLoginName)}</userLoginName>
     </RemoveUserFromGroup>`
     );
 

@@ -1,7 +1,7 @@
 import { SpwsError, SpwsRequest } from "../../../classes";
 import { parseEncodedAbsUrl } from "../../../utils";
 import { Item } from "../../../types";
-const sendRequest = async ({
+const sendRequest = async <T extends object>({
   req,
   listName,
   viewName,
@@ -55,7 +55,7 @@ const sendRequest = async ({
         // Parse Encoded Abs URL
         item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
 
-        return item;
+        return item as Item & T;
       })
     : // Create items with all attributes
       rows.map((row) => {
@@ -65,7 +65,7 @@ const sendRequest = async ({
             return object;
           },
           {}
-        ) as Item;
+        ) as Item & T;
 
         // Parse Encoded Abs URL
         item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
