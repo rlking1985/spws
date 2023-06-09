@@ -226,7 +226,7 @@ describe("getListItems: Batching", () => {
     expect(res.data).toHaveLength(400);
   }, 30000);
 
-  fit("Passes: Batching request on another site", async () => {
+  it("Passes: Batching request on another site", async () => {
     const res = await getListItems("Get List Items Batch", {
       webURL: `${defaults.webURL}/site1`,
       fields: ["Title"],

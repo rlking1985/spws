@@ -1,5 +1,5 @@
 import Chance from "chance";
-import updateListItems, { Methods } from ".";
+import updateListItems, { Methods, Operation } from ".";
 
 // TODO: Add "Update" and "Delete" Commands. This needs to be done after get list items
 describe("Update List Items: New Items", () => {
@@ -60,7 +60,7 @@ describe("Update List Items: New Items", () => {
       { command: "New", values: { Title } },
     ];
 
-    let results = [];
+    let results: Operation[] = [];
     await updateListItems(listName, methods, {
       batchSize,
       onBatchComplete: async (result) => {
