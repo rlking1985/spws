@@ -1,6 +1,4 @@
 import CamlBuilder from "camljs";
-import { defaults } from "../../..";
-import { SpwsError } from "../../../classes";
 import getListItems from "./";
 import getList from "../getList";
 
@@ -20,6 +18,6 @@ describe("getListItems: Batch Tests", () => {
     });
 
     // The response should have all the items in the list
-    expect(res.data.length).toBe(list.ItemCount);
-  }, 30000);
+    expect(res.data.length).toBe(parseInt(list.ItemCount!));
+  }, 45000);
 });

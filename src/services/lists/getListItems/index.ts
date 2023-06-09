@@ -235,8 +235,11 @@ const getListItems = async <T extends object = {}>(
       if (batch) {
         // Get from the first ID (-1)
         let fromID = firstItemID + cache.listViewThreshold[webURL] * index - 1;
+
         // Add the list view threshold (-1)
-        let toID = firstItemID + (cache.listViewThreshold[webURL] - 1) * (index + 1);
+        // let toID = firstItemID + (cache.listViewThreshold[webURL] - 1) * (index + 1);
+        let toID = fromID + cache.listViewThreshold[webURL];
+
         // Use lastItemID if the less than the toID
         if (toID > lastItemID) toID = lastItemID;
 
