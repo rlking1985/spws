@@ -2,7 +2,7 @@ import getUserCollectionFromGroup from "./getUserCollectionFromGroup";
 import { SpwsError } from "../../classes";
 
 describe("getUserCollectionFromGroup", () => {
-  fit("getUserCollectionFromGroup type is correct", async () => {
+  it("getUserCollectionFromGroup type is correct", async () => {
     const res = await getUserCollectionFromGroup("Site Owners");
 
     expect(res.data[0]).toEqual(

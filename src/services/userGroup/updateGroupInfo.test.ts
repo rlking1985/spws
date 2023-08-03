@@ -7,10 +7,11 @@ describe("updateGroupInfo", () => {
     groupName: "Update Group Info Test",
     ownerIdentifier: "Site Owners",
     ownerType: "group" as "user" | "group",
-    webURL: window.adminWebURL,
   };
+
   it("Passes setting owner as group", async () => {
     const res = await updateGroupInfo(payload);
+
     expect(res.data.success).toBe(true);
   });
 

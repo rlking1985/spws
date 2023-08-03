@@ -104,6 +104,7 @@ class SpwsRequest {
           }
         }
       };
+
       // Send Request
       this.xhr.send(this.envelope);
     });

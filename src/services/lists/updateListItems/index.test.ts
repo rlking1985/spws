@@ -1,6 +1,12 @@
 import Chance from "chance";
 import updateListItems, { Methods, Operation } from ".";
 
+type Values = {
+  Title?: string;
+  ThisIsAExtremelyLongTextFieldNam?: string;
+  ThisIsAExtremelyLongTextFieldNam0?: string;
+};
+
 // TODO: Add "Update" and "Delete" Commands. This needs to be done after get list items
 describe("Update List Items: New Items", () => {
   const chance = new Chance();
@@ -9,6 +15,21 @@ describe("Update List Items: New Items", () => {
   const listName = "Update List Items";
   const Title = chance.word();
   const methods: Methods = [{ command: "New", values: { Title } }];
+
+  it("32+ Character Field Names are updated", async () => {
+    const values: Values = {
+      Title: "Testing Field Name 1",
+      ThisIsAExtremelyLongTextFieldNam: chance.address(),
+      ThisIsAExtremelyLongTextFieldNam0: chance.address(),
+    };
+    const res = await updateListItems(listName, [{ command: "New", values }], {
+      allowLongFieldNames: true,
+    });
+
+    expect(res[0].data.methods).toHaveLength(1);
+    expect(res[0].data.success).toBe(true);
+    expect(res[0].responseXML).toBeTruthy();
+  });
 
   it("Illegal characters are escaped", async () => {
     const res = await updateListItems(listName, [
@@ -93,7 +114,7 @@ describe("Update List Items: New Items", () => {
     expect(res[0].responseXML).toBeTruthy();
   });
 
-  fit("Folders can be created", async () => {
+  it("Folders can be created", async () => {
     const res = await updateListItems(listName, [
       { command: "New", values: { BaseName: chance.apple_token(), FSObjType: "1" } },
     ]);

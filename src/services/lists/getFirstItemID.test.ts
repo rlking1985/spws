@@ -2,7 +2,7 @@ import { SpwsError } from "../../classes";
 import getFirstItemID from "./getFirstItemID";
 
 describe("getFirstItemID", () => {
-  fit("Passes: ID is returned", async () => {
+  it("Passes: ID is returned", async () => {
     const res = await getFirstItemID("Get List Items Threshold");
     expect(typeof res.data).toBe("number");
     expect(res.data).toBeLessThan(1000);

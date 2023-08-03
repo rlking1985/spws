@@ -21,11 +21,13 @@ const sendBatchRequest = async ({
   methods,
   onError,
   webURL,
+  allowLongFieldNames,
 }: {
   listName: string;
   methods: Methods;
   onError: "Continue" | "Return";
   webURL: string;
+  allowLongFieldNames: boolean;
 }): Promise<Operation> => {
   try {
     // Create request object
@@ -47,10 +49,11 @@ const sendBatchRequest = async ({
                 <Method ID="${index + 1}" Cmd="${method.command}">
                 ${method.command !== "New" ? `<Field Name="ID">${method.ID}</Field>` : ""}
                   ${Object.entries(method.values || {})
-                    .map(
-                      ([field, value = ""]) =>
-                        `<Field Name="${field.slice(0, 32)}">${req.escapeXml(value)}</Field>`
-                    )
+                    .map(([field, value = ""]) => {
+                      // Get Field Static Name
+                      const staticName = allowLongFieldNames ? field : field.slice(0, 32);
+                      return `<Field Name="${staticName}">${req.escapeXml(value)}</Field>`;
+                    })
                     .join("")}
                 </Method>`
               )

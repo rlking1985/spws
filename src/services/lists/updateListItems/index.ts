@@ -64,6 +64,7 @@ const updateListItems = async (
     onBatchComplete,
     onError = "Continue",
     webURL = defaults.webURL,
+    allowLongFieldNames = false,
   }: {
     /** The maximum amount of updates that can be sent per web request. A batch size of 0 is Infinite */
     batchSize?: number;
@@ -73,6 +74,13 @@ const updateListItems = async (
     onError?: "Return" | "Continue";
     /** The SharePoint webURL */
     webURL?: string;
+    /** If true, the field names contained with values will not be trimmed to 32 characters.
+     * This allows field names that exceed 32 characters to be used.
+     * This is a rare use case where 2 or more fields share the exact same name for the first 32 characters. For example
+     * 1. ThisIsAExtremelyLongTextFieldNam
+     * 2. ThisIsAExtremelyLongTextFieldNam0
+     */
+    allowLongFieldNames?: boolean;
   } = {}
 ): Promise<Operation[]> => {
   try {
@@ -120,6 +128,7 @@ const updateListItems = async (
         methods,
         webURL,
         onError,
+        allowLongFieldNames,
       });
 
       if (onBatchComplete) await onBatchComplete(batchResult);
