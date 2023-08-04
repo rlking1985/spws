@@ -39,10 +39,10 @@ const getFirstItemID = async (
         message: "Unable to get first item ID. More than 1 item was returned",
       });
 
-    if (res.data.length === 0)
-      throw new SpwsError({
-        message: "Unable to get first item ID. No items were returned",
-      });
+    if (res.data.length === 0) return { ...res, data: 0 };
+    // throw new SpwsError({
+    //   message: "Unable to get first item ID. No items were returned",
+    // });
 
     // Get the item ID
     const data = +res.data[0].ID!;

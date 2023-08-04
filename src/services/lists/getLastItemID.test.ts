@@ -9,14 +9,8 @@ describe("getLastItemID", () => {
   });
 
   it("Errors: List has no items", async () => {
-    let res;
-    try {
-      res = await getLastItemID("Get List Items Empty");
-    } catch (e) {
-      const error: SpwsError = e;
-      expect(error.message).toMatch(/Unable to get last item ID. No items were returned/i);
-    }
-    expect(res).toBeUndefined();
+    const res = await getLastItemID("Get List Items Empty");
+    expect(res.data).toBe(0);
   });
 
   it("Errors: list does not exist", async () => {

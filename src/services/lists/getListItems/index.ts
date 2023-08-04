@@ -195,12 +195,15 @@ const getListItems = async <T extends object = {}>(
       const { data: lastID } = await getLastItemID(listName, { webURL });
       lastItemID = lastID;
 
-      // Get first item ID
-      const { data: firstID } = await getFirstItemID(listName, { webURL });
-      firstItemID = firstID;
+      // If the last ID is greater than 0 (e.g. the list has items)
+      if (lastID > 0) {
+        // Get first item ID
+        const { data: firstID } = await getFirstItemID(listName, { webURL });
+        firstItemID = firstID;
 
-      // Calculate batchCount
-      batchCount = Math.ceil((lastItemID - firstID) / cache.listViewThreshold[webURL]) || 1;
+        // Calculate batchCount
+        batchCount = Math.ceil((lastItemID - firstID) / cache.listViewThreshold[webURL]) || 1;
+      }
     }
 
     // Create batches array
