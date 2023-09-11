@@ -148,4 +148,21 @@ describe("Update List Items: New Items", () => {
       expect(error.message).toMatch(/Expected onError to be "Continue" or "Return"/i);
     }
   });
+
+  it("Errors with user that does not exist", async () => {
+    const res = await updateListItems(
+      listName,
+      [
+        {
+          command: "New",
+          values: { Title: "Fails as user does not exist", Manager: "-1;#drn\\doesnt.exist" },
+        },
+      ],
+      {
+        onBatchComplete: async (result) => {
+          expect(result.errors.length).toBeGreaterThan(0);
+        },
+      }
+    );
+  });
 });

@@ -32,6 +32,7 @@ export type Result = {
   ID: string;
   item: Item;
   status: "success" | "error";
+  values?: object;
 };
 
 export interface Operation extends SpwsResponse {
@@ -69,7 +70,7 @@ const updateListItems = async (
     /** The maximum amount of updates that can be sent per web request. A batch size of 0 is Infinite */
     batchSize?: number;
     /** A callback function that is invoked when a batch is complete */
-    onBatchComplete?: (batch: Operation) => void;
+    onBatchComplete?: (batch: Operation & { errors: Result[] }) => void;
     /** Return (stop) or continue execution of the scripts if an error occurs */
     onError?: "Return" | "Continue";
     /** The SharePoint webURL */
@@ -123,7 +124,7 @@ const updateListItems = async (
 
     // Iterate through all batches
     await asyncForEach(batches, async (methods) => {
-      const batchResult = await sendBatchRequest({
+      let batchResult = await sendBatchRequest({
         listName,
         methods,
         webURL,
@@ -131,7 +132,18 @@ const updateListItems = async (
         allowLongFieldNames,
       });
 
-      if (onBatchComplete) await onBatchComplete(batchResult);
+      // Find any errors
+      const errors = batchResult.data.methods
+        .filter((method) => method.status === "error")
+        .map((object) => {
+          const method = methods[+object.ID - 1];
+          if (method) {
+            object.values = method.values;
+          }
+          return object;
+        });
+
+      if (onBatchComplete) await onBatchComplete({ ...batchResult, errors });
 
       // Push batch result to results array
       results.push(batchResult);
