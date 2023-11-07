@@ -28,7 +28,7 @@ interface Operation {
   envelope?: string[];
 }
 
-interface GetItemsOptions extends GetListItemsOptions {
+interface GetItemsOptions extends GetListItemsOptions<any> {
   listName: string;
 }
 
