@@ -5,12 +5,7 @@ import { defaults } from "../..";
 import { SpwsRequest, SpwsError } from "../../classes";
 
 // Enum
-import {
-  Field,
-  Field as FieldEnum,
-  ListAttributes as ListAttributesEnum,
-  WebServices,
-} from "../../enum";
+import { Field as FieldEnum, ListAttributes as ListAttributesEnum, WebServices } from "../../enum";
 
 // Services
 

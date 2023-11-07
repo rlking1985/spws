@@ -10,7 +10,7 @@ import { SpwsRequest, SpwsError } from "../../../classes";
 import { WebServices, Fields } from "../../../enum";
 
 // Types
-import { Item, KnownKeys, SpwsBatchResponse } from "../../../types";
+import { Item, KnownKeys, SpwsBatchResponse, SpwsResponse } from "../../../types";
 
 // Utils
 import { asyncForEach } from "../../../utils";
@@ -29,7 +29,7 @@ const cache: {
   };
 } = { listViewThreshold: {} };
 
-export type GetListItemsOptions = {
+export type GetListItemsOptions<T> = {
   /** The SharePoint webURL  */
   webURL?: string;
   /**
@@ -37,6 +37,16 @@ export type GetListItemsOptions = {
    * Batch sizes are automatically assigned to match the list view threshold limit.
    */
   batch?: boolean;
+  /** A callback function that is called before the batches are sent. */
+  onBatchStart?: (total: number) => void;
+  /** A callback function that is called after each batch is sent. */
+  onBatchStep?: (params: {
+    index: number;
+    res: SpwsResponse & { data: (Item & T)[] };
+    total: number;
+  }) => void;
+  // create onBatchComplete async type to handle async functions
+
   /**
    * A string that contains the GUID for the view surrounded by curly braces ({}),
    * which determines the view to use for the default view attributes represented by the query, viewFields, and rowLimit parameters.
@@ -106,6 +116,8 @@ export type GetListItemsOptions = {
 const getListItems = async <T extends object = {}>(
   listName: string,
   {
+    onBatchStart = undefined,
+    onBatchStep = undefined,
     batch = false,
     viewName = "",
     fields = [],
@@ -113,7 +125,7 @@ const getListItems = async <T extends object = {}>(
     webURL = defaults.webURL,
     queryOptions = { ...defaults.queryOptions },
     rowLimit = 0,
-  }: GetListItemsOptions = {}
+  }: GetListItemsOptions<T> = {}
 ): Promise<Operation<T>> => {
   try {
     // Validate type
@@ -209,6 +221,9 @@ const getListItems = async <T extends object = {}>(
     // Create batches array
     const batches = Array.from(new Array(batchCount));
 
+    // If batch is true and onBatchStart is defined (batching is always false when getting the first and last item ID)
+    if (batch && onBatchStart) await onBatchStart(batches.length);
+
     // Create response object
     const response: Operation<T> = {
       data: [],
@@ -271,6 +286,9 @@ const getListItems = async <T extends object = {}>(
       }
       // Send Request (using local function)
       const res = await sendRequest<T>(payload);
+
+      // If batch is true and onBatchStart is defined (batching is always false when getting the first and last item ID)
+      if (batch && onBatchStep) await onBatchStep({ index, total: batches.length, res });
 
       // Push to responses
       response.data.push(...res.data);

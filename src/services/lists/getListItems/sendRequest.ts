@@ -1,6 +1,6 @@
 import { SpwsError, SpwsRequest } from "../../../classes";
 import { parseEncodedAbsUrl } from "../../../utils";
-import { Item } from "../../../types";
+import { Item, SpwsResponse } from "../../../types";
 const sendRequest = async <T extends object>({
   req,
   listName,
@@ -21,7 +21,7 @@ const sendRequest = async <T extends object>({
   queryOpt: string;
   parseFields: boolean;
   fields: string[];
-}) => {
+}): Promise<SpwsResponse & { data: Array<Item & T> }> => {
   // Create envelope
   req.createEnvelope(`<GetListItems xmlns="http://schemas.microsoft.com/sharepoint/soap/">
       <listName>${listName}</listName>

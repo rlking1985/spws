@@ -54,4 +54,27 @@ describe("getListItems: Batch Tests", () => {
     // The response should have all the items in the list
     expect(res.data.length).toBe(parseInt(list.ItemCount!));
   });
+
+  it("Get batch updates", async () => {
+    // Set list name
+    const listName = "Get List Items Threshold";
+
+    // Get list for the item count
+    const { data: list } = await getList(listName);
+
+    // Get batches (list view threshold / 2000)
+    const batchCount = Math.ceil(+list.ItemCount! / +list.MaxItemsPerThrottledOperation!);
+
+    // Send test request
+    const res = await getListItems(listName, {
+      fields: ["Modified", "Editor"],
+      query: new CamlBuilder().Where().DateField("Modified").IsNotNull().ToString(),
+      batch: true,
+      onBatchStart: (total) => expect(total).toBe(batchCount),
+      onBatchStep: ({ index, total }) => {
+        expect(index).toBeLessThanOrEqual(total);
+        expect(total).toBe(batchCount);
+      },
+    });
+  }, 30000);
 });
