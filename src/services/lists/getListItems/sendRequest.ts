@@ -1,6 +1,7 @@
 import { SpwsError, SpwsRequest } from "../../../classes";
 import { parseEncodedAbsUrl } from "../../../utils";
 import { Item, SpwsResponse } from "../../../types";
+import { Worker } from "worker_threads";
 const sendRequest = async <T extends object>({
   req,
   listName,
@@ -44,34 +45,26 @@ const sendRequest = async <T extends object>({
   // Get rows
   const rows = Array.from(rsData.querySelectorAll("z\\:row, row"));
 
+  // Create fields array
+  const fieldsArray = parseFields
+    ? // Use existing fields if they exist
+      [...fields]
+    : // Get fields from the first row
+      Array.from((rows[0] || {}).attributes || []).map(({ nodeName }) =>
+        nodeName.replace("ows_", "")
+      );
+
   // Create data
-  const data = parseFields
-    ? // Create items with field data
-      rows.map((row) => {
-        let item = fields.reduce((object: { [key: string]: string }, field) => {
-          object[field] = row.getAttribute(`ows_${field}`) || "";
-          return object;
-        }, {}) as Item;
-        // Parse Encoded Abs URL
-        item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
+  const data = rows.map((row) => {
+    let item = fieldsArray.reduce((object: { [key: string]: string }, field) => {
+      object[field] = row.getAttribute(`ows_${field}`) || "";
+      return object;
+    }, {}) as Item;
+    // Parse Encoded Abs URL
+    item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
 
-        return item as Item & T;
-      })
-    : // Create items with all attributes
-      rows.map((row) => {
-        let item = Array.from(row.attributes).reduce(
-          (object: { [key: string]: string }, { nodeName, nodeValue }) => {
-            object[nodeName.replace("ows_", "")] = nodeValue!;
-            return object;
-          },
-          {}
-        ) as Item & T;
-
-        // Parse Encoded Abs URL
-        item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
-
-        return item;
-      });
+    return item as Item & T;
+  });
 
   // Return object
   return { ...res, data };

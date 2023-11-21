@@ -236,4 +236,18 @@ describe("getListItems: Batching", () => {
 
     expect(res.data).toHaveLength(2);
   }, 30000);
+
+  describe("getListItems: Web Worker", () => {
+    fit("Passes: Web Worker", async () => {
+      const res = await getListItems("Get List Items Threshold", {
+        webURL: `${defaults.webURL}`,
+        fields: ["Title"],
+        batch: true,
+        query: new CamlBuilder().Where().NumberField("ID").GreaterThan(16000).ToString(),
+        worker: true,
+      });
+
+      expect(res.data.length).toBeGreaterThan(400);
+    }, 30000);
+  });
 });

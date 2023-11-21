@@ -30,6 +30,8 @@ const cache: {
 } = { listViewThreshold: {} };
 
 export type GetListItemsOptions<T> = {
+  /** If true, a web worker is used to parse the xml */
+  worker?: boolean;
   /** The SharePoint webURL  */
   webURL?: string;
   /**
@@ -124,6 +126,7 @@ const getListItems = async <T extends object = {}>(
     query = `<Query/>`,
     webURL = defaults.webURL,
     queryOptions = { ...defaults.queryOptions },
+    worker = false,
     rowLimit = 0,
   }: GetListItemsOptions<T> = {}
 ): Promise<Operation<T>> => {
