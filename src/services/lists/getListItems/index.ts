@@ -32,6 +32,10 @@ const cache: {
 export type GetListItemsOptions<T> = {
   /** The SharePoint webURL  */
   webURL?: string;
+  /** A callback function that is used to the parse an item after it as been
+   * parsed by the default parser but before it is returned to the array of items.
+   */
+  parseItem?: (item: Item & T) => Item & T;
   /**
    * If true, requests are batched to not exceed the list view threshold.
    * Batch sizes are automatically assigned to match the list view threshold limit.
@@ -118,6 +122,7 @@ const getListItems = async <T extends object = {}>(
   {
     onBatchStart = undefined,
     onBatchStep = undefined,
+    parseItem,
     batch = false,
     viewName = "",
     fields = [],
@@ -247,6 +252,7 @@ const getListItems = async <T extends object = {}>(
         rowLimit,
         viewFields,
         viewName,
+        parseItem,
       };
 
       // if (index > 0) return;

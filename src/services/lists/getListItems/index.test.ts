@@ -4,6 +4,48 @@ import { SpwsError } from "../../../classes";
 import getListItems from "./";
 
 describe("getListItems: No batching", () => {
+  it("Passes: default options", async () => {
+    const res = await getListItems("Get List Items");
+    const item = res.data[0];
+
+    expect(res.data.length).toBeGreaterThanOrEqual(1);
+    expect(typeof item.ID).toBe("string");
+    expect(Object.entries(item).length).toBeGreaterThan(10);
+
+    // Check envelope (case sensitive)
+    expect(res.envelope![0]).toMatch(/<listName>Get List Items<\/listName>/);
+    expect(res.envelope![0]).toMatch(/<viewName><\/viewName>/);
+    expect(res.envelope![0]).toMatch(/<query><Query\/><\/query>/);
+    expect(res.envelope![0]).toMatch(/<viewFields><ViewFields Properties='True' \/><\/viewFields>/);
+    expect(res.envelope![0]).toMatch(/<rowLimit>0<\/rowLimit>/);
+    expect(res.envelope![0]).toMatch(/<QueryOptions><\/QueryOptions>/);
+  }, 10000);
+
+  it("Passes: with custom parseItem function and all properties", async () => {
+    const res = await getListItems<{ _helloWord: string }>("Get List Items", {
+      parseItem(item) {
+        item._helloWord = "Hello World";
+        return item;
+      },
+    });
+
+    // Expect all items to have the key _helloWord and value "Hello World"
+    res.data.forEach((item) => expect(item._helloWord).toBe("Hello World"));
+  });
+
+  it("Passes: with custom parseItem function and specified fields", async () => {
+    const res = await getListItems<{ _helloWord: string }>("Get List Items", {
+      fields: ["ID", "Title"],
+      parseItem(item) {
+        item._helloWord = "Hello World";
+        return item;
+      },
+    });
+
+    // Expect all items to have the key _helloWord and value "Hello World"
+    res.data.forEach((item) => expect(item._helloWord).toBe("Hello World"));
+  });
+
   it("Passes: Exceeds List View Threshold", async () => {
     const res = await getListItems("Get List Items Threshold", {
       query: new CamlBuilder().Where().TextField("Title").Contains("16400").ToString(),
@@ -22,23 +64,6 @@ describe("getListItems: No batching", () => {
     // expect(res.envelope![0]).toMatch(/<viewFields><ViewFields Properties='True' \/><\/viewFields>/);
     // expect(res.envelope![0]).toMatch(/<rowLimit>0<\/rowLimit>/);
     // expect(res.envelope![0]).toMatch(/<QueryOptions><\/QueryOptions>/);
-  }, 10000);
-
-  it("Passes: default options", async () => {
-    const res = await getListItems("Get List Items");
-    const item = res.data[0];
-
-    expect(res.data.length).toBeGreaterThanOrEqual(1);
-    expect(typeof item.ID).toBe("string");
-    expect(Object.entries(item).length).toBeGreaterThan(10);
-
-    // Check envelope (case sensitive)
-    expect(res.envelope![0]).toMatch(/<listName>Get List Items<\/listName>/);
-    expect(res.envelope![0]).toMatch(/<viewName><\/viewName>/);
-    expect(res.envelope![0]).toMatch(/<query><Query\/><\/query>/);
-    expect(res.envelope![0]).toMatch(/<viewFields><ViewFields Properties='True' \/><\/viewFields>/);
-    expect(res.envelope![0]).toMatch(/<rowLimit>0<\/rowLimit>/);
-    expect(res.envelope![0]).toMatch(/<QueryOptions><\/QueryOptions>/);
   }, 10000);
 
   it("Passes: Limited Fields", async () => {

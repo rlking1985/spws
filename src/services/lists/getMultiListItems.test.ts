@@ -26,9 +26,7 @@ describe("getItems", () => {
       res = await getMultiListItems("Get List Items");
     } catch (e) {
       const error: SpwsError = e;
-      expect(error.message).toMatch(
-        /Unable to getItems. Expect array but received string/i
-      );
+      expect(error.message).toMatch(/Unable to getItems. Expect array but received string/i);
     }
     expect(res).toBeUndefined;
   });
@@ -39,9 +37,7 @@ describe("getItems", () => {
       expect(res).toBeUndefined;
     } catch (e) {
       const error: SpwsError = e;
-      expect(error.message).toMatch(
-        /Unable to getItems. Received an empty array/i
-      );
+      expect(error.message).toMatch(/Unable to getItems. Received an empty array/i);
     }
   });
 });

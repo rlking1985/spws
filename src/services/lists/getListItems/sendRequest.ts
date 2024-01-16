@@ -11,6 +11,7 @@ const sendRequest = async <T extends object>({
   queryOpt,
   parseFields,
   fields,
+  parseItem,
 }: {
   req: SpwsRequest;
   listName: string;
@@ -20,6 +21,7 @@ const sendRequest = async <T extends object>({
   rowLimit: number;
   queryOpt: string;
   parseFields: boolean;
+  parseItem?: (item: Item & T) => Item & T;
   fields: string[];
 }): Promise<SpwsResponse & { data: Array<Item & T> }> => {
   // Create envelope
@@ -55,6 +57,8 @@ const sendRequest = async <T extends object>({
         // Parse Encoded Abs URL
         item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
 
+        // If parseItem is defined, parse item
+        if (parseItem) item = parseItem(item as Item & T);
         return item as Item & T;
       })
     : // Create items with all attributes
@@ -69,6 +73,9 @@ const sendRequest = async <T extends object>({
 
         // Parse Encoded Abs URL
         item = { ...item, ...parseEncodedAbsUrl(item.EncodedAbsUrl) };
+
+        // If parseItem is defined, parse item
+        if (parseItem) item = parseItem(item as Item & T);
 
         return item;
       });
