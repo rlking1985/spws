@@ -33,11 +33,9 @@ const getUserInformation = (
   ID: string,
   {
     webURL = defaults.webURL,
-    async = true,
   }: {
     /** The SharePoint webURL */
     webURL?: string;
-    async?: boolean;
   } = {}
 ): Promise<Operation> =>
   new Promise((resolve, reject) => {
@@ -45,7 +43,7 @@ const getUserInformation = (
     let xhr = new XMLHttpRequest();
 
     // Open the request
-    xhr.open("GET", `${webURL}/_vti_bin/ListData.svc/UserInformationList(${ID})`, async);
+    xhr.open("GET", `${webURL}/_vti_bin/ListData.svc/UserInformationList(${ID})`, false);
     xhr.setRequestHeader("Accept", "application/json; charset=utf-8");
 
     // onChange
