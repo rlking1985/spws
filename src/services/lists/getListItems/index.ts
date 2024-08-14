@@ -1,5 +1,10 @@
 // Libraries
-import { defaults, getListViewThreshold, getLastItemID, getFirstItemID } from "../../..";
+import {
+  defaults,
+  getListViewThreshold,
+  getLastItemID,
+  getFirstItemID,
+} from "../../..";
 // TODO: Remove this library dependency
 import CamlBuilder from "camljs";
 
@@ -10,7 +15,12 @@ import { SpwsRequest, SpwsError } from "../../../classes";
 import { WebServices, Fields } from "../../../enum";
 
 // Types
-import { Item, KnownKeys, SpwsBatchResponse, SpwsResponse } from "../../../types";
+import {
+  Item,
+  KnownKeys,
+  SpwsBatchResponse,
+  SpwsResponse,
+} from "../../../types";
 
 // Utils
 import { asyncForEach } from "../../../utils";
@@ -41,6 +51,8 @@ export type GetListItemsOptions<T> = {
    * Batch sizes are automatically assigned to match the list view threshold limit.
    */
   batch?: boolean;
+  /** If true, the columns will be split into batches to handle column throttled limits e.g. user fields are 8 per request. */
+  // throttledColumns?: boolean; // NOT YET IMPLEMENTED
   /** A callback function that is called before the batches are sent. */
   onBatchStart?: (total: number) => void;
   /** A callback function that is called after each batch is sent. */
@@ -120,16 +132,16 @@ export type GetListItemsOptions<T> = {
 const getListItems = async <T extends object = {}>(
   listName: string,
   {
+    batch = false,
+    fields = [],
     onBatchStart = undefined,
     onBatchStep = undefined,
     parseItem,
-    batch = false,
-    viewName = "",
-    fields = [],
     query = `<Query/>`,
-    webURL = defaults.webURL,
     queryOptions = { ...defaults.queryOptions },
     rowLimit = 0,
+    viewName = "",
+    webURL = defaults.webURL,
   }: GetListItemsOptions<T> = {}
 ): Promise<Operation<T>> => {
   try {
@@ -142,7 +154,8 @@ const getListItems = async <T extends object = {}>(
     // Validate truthy string
     if (!listName)
       throw new SpwsError({
-        message: "Expected listName to be a valid string but received an empty string",
+        message:
+          "Expected listName to be a valid string but received an empty string",
       });
 
     // Validate fields
@@ -166,7 +179,9 @@ const getListItems = async <T extends object = {}>(
       fieldsClone = [...new Set([...fields, Fields.EncodedAbsUrl])];
 
       // Create fieldRef string
-      const fieldRefs = fieldsClone.map((field) => `<FieldRef Name="${field}" />`).join("");
+      const fieldRefs = fieldsClone
+        .map((field) => `<FieldRef Name="${field}" />`)
+        .join("");
 
       // Wrap fieldRefs with viewFields tag
       viewFields = `<ViewFields>${fieldRefs}</ViewFields>`;
@@ -203,7 +218,10 @@ const getListItems = async <T extends object = {}>(
     if (batch) {
       if (!cache.listViewThreshold[webURL]) {
         // Get list view threshold
-        const { data: listViewThreshold } = await getListViewThreshold(listName, { webURL });
+        const { data: listViewThreshold } = await getListViewThreshold(
+          listName,
+          { webURL }
+        );
         // Set cached list view threshold
         cache.listViewThreshold[webURL] = listViewThreshold;
       }
@@ -219,7 +237,9 @@ const getListItems = async <T extends object = {}>(
         firstItemID = firstID;
 
         // Calculate batchCount
-        batchCount = Math.ceil((lastItemID - firstID) / cache.listViewThreshold[webURL]) || 1;
+        batchCount =
+          Math.ceil((lastItemID - firstID) / cache.listViewThreshold[webURL]) ||
+          1;
       }
     }
 
@@ -294,7 +314,8 @@ const getListItems = async <T extends object = {}>(
       const res = await sendRequest<T>(payload);
 
       // If batch is true and onBatchStart is defined (batching is always false when getting the first and last item ID)
-      if (batch && onBatchStep) await onBatchStep({ index, total: batches.length, res });
+      if (batch && onBatchStep)
+        await onBatchStep({ index, total: batches.length, res });
 
       // Push to responses
       response.data.push(...res.data);

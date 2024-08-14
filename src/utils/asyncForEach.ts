@@ -15,6 +15,7 @@ const asyncForEach = async <T>(
 ) => {
   // Begin loop
   for (let index = 0; index < array.length; index++) {
+    // Await the asynchronous callback function for each element
     await callback(array[index], index, array);
   }
 };
