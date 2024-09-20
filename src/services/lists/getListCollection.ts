@@ -9,6 +9,7 @@ import { WebServices } from "../../enum";
 
 // Types
 import { List, ListCollection, SpwsResponse } from "../../types";
+import getListStaticName from "../../utils/getListStaticName";
 
 interface Operation extends SpwsResponse {
   data: ListCollection;
@@ -37,18 +38,36 @@ const getListCollection = async ({
   const req = new SpwsRequest({ webService: WebServices.Lists, webURL });
 
   // Create envelope
-  req.createEnvelope(`<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`);
+  req.createEnvelope(
+    `<GetListCollection xmlns="http://schemas.microsoft.com/sharepoint/soap/" />`
+  );
 
   try {
     const res = await req.send();
 
     // Create data object
-    const data = Array.from(res.responseXML.querySelectorAll("List")).map((list) => {
-      return Array.from(list.attributes).reduce((object: List, { name, value }) => {
-        object[name] = value;
-        return object;
-      }, {});
-    });
+    const data = Array.from(res.responseXML.querySelectorAll("List")).map(
+      (list) => {
+        // Create list object
+        const listData = Array.from(list.attributes).reduce(
+          (object: List, { name, value }) => {
+            object[name] = value;
+            return object;
+          },
+          { StaticName: "" }
+        );
+
+        // Try to get static name
+        try {
+          listData.StaticName = getListStaticName({
+            DefaultViewUrl: listData.DefaultViewUrl!,
+            Title: listData.Title!,
+          });
+        } catch (error) {}
+
+        return listData;
+      }
+    );
 
     return { ...res, data };
   } catch (error: any) {
