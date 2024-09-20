@@ -67,6 +67,8 @@ type List = {
   WebImageWidth?: string;
   WorkFlowId?: string;
   WriteSecurity?: string;
+  // Custom property derived from the DefaultViewUrl or Title
+  StaticName?: string;
   [key: string]: string | object | undefined;
 };
 

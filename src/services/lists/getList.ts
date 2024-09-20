@@ -5,15 +5,26 @@ import { defaults } from "../..";
 import { SpwsRequest, SpwsError } from "../../classes";
 
 // Enum
-import { Field as FieldEnum, ListAttributes as ListAttributesEnum, WebServices } from "../../enum";
+import {
+  Field as FieldEnum,
+  ListAttributes as ListAttributesEnum,
+  WebServices,
+} from "../../enum";
 
 // Services
 
 // Types
-import { Field as ListField, List, ListAttributes, SpwsResponse, FieldType } from "../../types";
+import {
+  Field as ListField,
+  List,
+  ListAttributes,
+  SpwsResponse,
+  FieldType,
+} from "../../types";
 
 // Utils
 import { escapeXml } from "../../utils";
+import getListStaticName from "../../utils/getListStaticName";
 
 interface Operation extends SpwsResponse {
   data: List;
@@ -68,7 +79,9 @@ const getList = async (
 
     // Create array of attributes either from params or all of the list attributes
     const attributesArray =
-      attributes.length > 0 ? attributes : Array.from(list.attributes).map((el) => el.name);
+      attributes.length > 0
+        ? attributes
+        : Array.from(list.attributes).map((el) => el.name);
 
     // Create data object with only specified attributes
     const data = attributesArray.reduce((object: List, attribute) => {
@@ -76,12 +89,27 @@ const getList = async (
       return object;
     }, {});
 
+    // If the attributes param is empty, or it included StaticName
+    if (attributes.length === 0 || attributes.includes("StaticName")) {
+      // Try to get the static name
+      try {
+        data.StaticName = getListStaticName({
+          DefaultViewUrl: data.DefaultViewUrl!,
+          Title: data.Title!,
+        });
+      } catch (error) {
+        // On error do nothing
+      }
+    }
+
     // Create parser
-    const parser = new DOMParser();
     const serializer = new XMLSerializer();
 
     // If the attributes param is empty, or it included fields
-    if (attributes.length === 0 || attributes.includes(ListAttributesEnum.Fields))
+    if (
+      attributes.length === 0 ||
+      attributes.includes(ListAttributesEnum.Fields)
+    )
       // Add fields to data
       data[ListAttributesEnum.Fields] = Array.from(
         // Field attributes must be an array
@@ -91,24 +119,29 @@ const getList = async (
         let field: ListField = {};
 
         // Get the field type
-        const fieldType = fieldElement.getAttribute(FieldEnum.Type) as FieldType;
+        const fieldType = fieldElement.getAttribute(
+          FieldEnum.Type
+        ) as FieldType;
 
         // Reduce field from available attributes
-        field = Array.from(fieldElement.attributes).reduce((object: ListField, element) => {
-          // Get field name and value
-          const key = element.nodeName;
-          let value: string | boolean = element.textContent || "";
+        field = Array.from(fieldElement.attributes).reduce(
+          (object: ListField, element) => {
+            // Get field name and value
+            const key = element.nodeName;
+            let value: string | boolean = element.textContent || "";
 
-          // If the value is true or false
-          if (["TRUE", "FALSE"].includes(value)) {
-            // Cast to boolean
-            value = value === "TRUE";
-          }
+            // If the value is true or false
+            if (["TRUE", "FALSE"].includes(value)) {
+              // Cast to boolean
+              value = value === "TRUE";
+            }
 
-          // Assign key and prop
-          object[key] = value;
-          return object;
-        }, field);
+            // Assign key and prop
+            object[key] = value;
+            return object;
+          },
+          field
+        );
 
         // Handle Child Elements: Choices
         if (fieldType === "Choice" || fieldType === "MultiChoice") {
@@ -122,15 +155,20 @@ const getList = async (
 
         // Handle Child Elements: Validation
         const validation = fieldElement.querySelector("Validation");
-        if (validation) field.Validation = serializer.serializeToString(validation);
+        if (validation)
+          field.Validation = serializer.serializeToString(validation);
 
         // Handle Child Elements: Default Formula
         const defaultFormula = fieldElement.querySelector("DefaultFormula");
-        if (defaultFormula) field.DefaultFormula = defaultFormula.textContent || "";
+        if (defaultFormula)
+          field.DefaultFormula = defaultFormula.textContent || "";
 
         // Handle Child Elements: Default Formula Value
-        const defaultFormulaValue = fieldElement.querySelector("DefaultFormulaValue");
-        if (defaultFormulaValue) field.DefaultFormulaValue = defaultFormulaValue.textContent || "";
+        const defaultFormulaValue = fieldElement.querySelector(
+          "DefaultFormulaValue"
+        );
+        if (defaultFormulaValue)
+          field.DefaultFormulaValue = defaultFormulaValue.textContent || "";
 
         // Handle Child Elements: Default Value
         const defaultValue = fieldElement.querySelector("Default");
@@ -144,8 +182,11 @@ const getList = async (
           // Check each xml node and append to xml string
           const formula = fieldElement.querySelector("Formula");
           if (formula) xml += serializer.serializeToString(formula);
-          const formulaDisplayNames = fieldElement.querySelector("FormulaDisplayNames");
-          if (formulaDisplayNames) xml += serializer.serializeToString(formulaDisplayNames);
+          const formulaDisplayNames = fieldElement.querySelector(
+            "FormulaDisplayNames"
+          );
+          if (formulaDisplayNames)
+            xml += serializer.serializeToString(formulaDisplayNames);
           const fieldRefs = fieldElement.querySelector("FieldRefs");
           if (fieldRefs) xml += serializer.serializeToString(fieldRefs);
 

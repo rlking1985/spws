@@ -63,6 +63,7 @@ enum ListAttributes {
   "WebImageWidth" = "WebImageWidth",
   "WorkFlowId" = "WorkFlowId",
   "WriteSecurity" = "WriteSecurity",
+  "StaticName" = "StaticName",
 }
 
 export default ListAttributes;
