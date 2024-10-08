@@ -14,3 +14,4 @@ export { default as UserInformation } from "./userInformation";
 export { default as View, ListView } from "./view";
 export { default as PrincipalType } from "./principalType";
 export { default as PrincipalInfo } from "./principalInfo";
+export { default as WorkflowData } from "./workflowData";
