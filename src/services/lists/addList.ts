@@ -36,7 +36,7 @@ type Params = {
  * const res = await deleteList("Announcements", { webURL: "/sites/other" })
  * ```
  */
-const deleteList = async (
+const addList = async (
   listName: string,
   { webURL = defaults.webURL, templateId = 100, description = "" }: Params = {}
 ): Promise<Operation> => {
@@ -59,7 +59,7 @@ const deleteList = async (
     const res = await req.send();
 
     // Parse list data
-    const data =  parseList({ res });
+    const data = parseList({ res });
 
     // Check for errors
     const errorString =
@@ -75,4 +75,4 @@ const deleteList = async (
   }
 };
 
-export default deleteList;
+export default addList;

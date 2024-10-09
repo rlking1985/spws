@@ -7,7 +7,5 @@ describe("getListViewThreshold", () => {
       itemURL:
         "http://objectpoint/sites/spws/operations/Lists/Workflows/1_.000",
     });
-
-    console.log("res :>> ", res.data);
   });
 });

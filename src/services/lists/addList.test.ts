@@ -10,8 +10,12 @@ describe("addList", () => {
 
   // Before all tests, create a list
   beforeAll(async () => {
-    await deleteList(listName);
-    // Create list in order to delete it
+    try {
+      // Create list in order to delete it
+      await deleteList(listName);
+    } catch (error) {
+      // Do nothing if list does not exist
+    }
   });
 
   it("Passes", async () => {
@@ -22,7 +26,11 @@ describe("addList", () => {
     expect(+res.data.ServerTemplate!).toBe(templateId);
   });
 
-  // it("Error when the list does not exist", async () => {
-  //   const res = await addList("DoesNotExist");
-  // });
+  it("Error when the list already exist", async () => {
+    await expect(addList(listName)).rejects.toThrowError(
+      expect.objectContaining({
+        message: expect.stringMatching(/already exists in this Web site/i),
+      })
+    );
+  });
 });
