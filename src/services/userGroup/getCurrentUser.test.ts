@@ -3,7 +3,7 @@ import { cache } from "./getCurrentUser";
 import { SpwsError } from "../../classes";
 
 describe("Get Current User", () => {
-  fit("Current user with ID passed", async () => {
+  it("Current user with ID passed", async () => {
     const res = await getCurrentUser({ ID: "14" });
     console.log('res :>> ', res);
     expect(res.data.ContentType).toBe("Person");
