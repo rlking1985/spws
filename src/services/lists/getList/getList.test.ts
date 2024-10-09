@@ -1,5 +1,5 @@
-import { defaults, getList } from "../..";
-import { SpwsError } from "../../classes";
+import { defaults, getList } from "../../..";
+import { SpwsError } from "../../../classes";
 
 describe("Get List", () => {
   // Set list namew

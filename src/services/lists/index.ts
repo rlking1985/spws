@@ -1,4 +1,5 @@
 export { default as deleteAttachment } from "./deleteAttachment";
+export { default as deleteList } from "./deleteList";
 export { default as getFirstItemID } from "./getFirstItemID";
 export { default as getLastItemID } from "./getLastItemID";
 export { default as getList } from "./getList";

@@ -1,6 +1,5 @@
-import { SpwsError } from "../../classes";
-import updateList from "./updateList";
-import getList from "./getList";
+import updateList from ".";
+import getList from "../getList";
 
 describe("Get List Collection", () => {
   const listName = "UpdateList";
@@ -11,7 +10,7 @@ describe("Get List Collection", () => {
     // Get custom columns
     const customColumns = res.data
       .Fields!.filter(({ StaticName }) => StaticName !== "Title")
-      .map(({ StaticName }) => StaticName);
+      .map(({ StaticName }) => StaticName!);
 
     // Delete all custom columns
     await updateList({ listName, deleteFields: customColumns });

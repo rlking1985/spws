@@ -8,28 +8,21 @@ import { SpwsRequest, SpwsError } from "../../classes";
 import { WebServices } from "../../enum";
 
 // Types
-import { SpwsResponse, ListTemplateId, List } from "../../types";
-
-// Functions
-import parseList from "./getList/parseList";
+import { SpwsResponse } from "../../types";
 
 interface Operation extends SpwsResponse {
-  data: List;
+  data: { success: boolean };
 }
 
 type Params = {
-  // The Template ID is an integer that specifies the list template to use. Defaults to 100 (Custom List)
-  templateId?: ListTemplateId;
-  // A string that contains a description for the list.
-  description?: string;
   // The SharePoint web URL, required if on a different site collection
   webURL?: string;
 };
 
 /**
- * Creates a new list.
+ * Deletes the list.
  *
- * @link https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772560(v=office.12)
+ * @link https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms773418(v=office.12)
  * @example
  * ```
  * // Get list collection for current site
@@ -38,28 +31,23 @@ type Params = {
  */
 const deleteList = async (
   listName: string,
-  { webURL = defaults.webURL, templateId = 100, description = "" }: Params = {}
+  { webURL = defaults.webURL }: Params = {}
 ): Promise<Operation> => {
   // Create request object
   const req = new SpwsRequest({
     webService: WebServices.Lists,
     webURL,
-    soapAction: "http://schemas.microsoft.com/sharepoint/soap/AddList",
+    soapAction: "http://schemas.microsoft.com/sharepoint/soap/DeleteList",
   });
 
   // Create envelope
-  req.createEnvelope(`<AddList xmlns="http://schemas.microsoft.com/sharepoint/soap/">
+  req.createEnvelope(` <DeleteList xmlns="http://schemas.microsoft.com/sharepoint/soap/">
       <listName>${listName}</listName>
-      <description>${description}</description>
-      <templateID>${templateId}</templateID>
-    </AddList>`);
+    </DeleteList>`);
 
   try {
     // Send request
     const res = await req.send();
-
-    // Parse list data
-    const data =  parseList({ res });
 
     // Check for errors
     const errorString =
@@ -69,7 +57,7 @@ const deleteList = async (
     if (errorString) throw new SpwsError({ ...res, responseText: errorString });
 
     // Return res. There is no data/response for this request
-    return { ...res, data };
+    return { ...res, data: { success: true } };
   } catch (error: any) {
     throw new SpwsError(error);
   }

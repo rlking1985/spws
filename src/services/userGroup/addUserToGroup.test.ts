@@ -32,6 +32,7 @@ describe("addUserToGroup", () => {
       ["", false, { userLoginName }],
       async (userLoginName) => {
         try {
+          // @ts-expect-error
           const res = await addUserToGroup(userLoginName, groupName);
           expect(res.data.success).toBe(false);
         } catch (e: any) {
@@ -57,6 +58,7 @@ describe("addUserToGroup", () => {
   it("Error when groupName is not valid", async () => {
     await asyncForEach(["", false, { groupName }], async (groupName) => {
       try {
+          // @ts-expect-error
         const res = await addUserToGroup(userLoginName, groupName);
         expect(res.data.success).toBe(false);
       } catch (e: any) {

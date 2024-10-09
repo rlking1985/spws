@@ -1,17 +1,20 @@
 // SPWS Library
-import { defaults } from "../..";
+import { defaults } from "../../..";
 
 // Classes
-import { SpwsRequest, SpwsError } from "../../classes";
+import { SpwsRequest, SpwsError } from "../../../classes";
 
 // Enum
-import { WebServices } from "../../enum";
+import { WebServices } from "../../../enum";
 
 // Types
-import { SpwsResponse, FieldType, Field as SpwsField, KnownKeys } from "../../types";
+import { SpwsResponse, FieldType, Field as SpwsField } from "../../../types";
+
+// Functions
+import createFieldsXml from "./createFieldsXml";
 
 interface Operation extends SpwsResponse {
-  data: undefined;
+  data: { success: boolean };
 }
 
 export type ListProperties = {
@@ -20,7 +23,7 @@ export type ListProperties = {
   // A string that contains the description for the list.
   Description?: string;
   // A string that contains LTR if the reading order is left-to-right, RTL if it is right-to-left, or None.
-  Direction?: "LTR" | "RTL" | "None";
+  Direction?: "LTR" | "RTL" | "none";
   // true to enable assigned-to e-mail for the issues list.
   EnableAssignedToEmail?: boolean;
   // true to enable attachments to items in the list. Does not apply to document libraries.
@@ -104,7 +107,8 @@ export interface UpdateField extends Field {
 
 /** An array of static names */
 type DeleteField = string;
-type Command = "Update" | "New" | "Delete";
+
+// Create List Params
 type UpdateListParams = {
   /** A string that contains the Display Name or GUID for the list. */
   listName: string;
@@ -118,117 +122,6 @@ type UpdateListParams = {
   updateFields?: UpdateField[];
   /** Delete Fields */
   deleteFields?: DeleteField[];
-};
-
-/**
- * Creates an xml fields string
- */
-const createFieldsXml = (fields: NewField[] | UpdateField[], type: Command) => {
-  // Keys that are excluded based on type of operation (command)
-  const excludedKeys: (keyof KnownKeys<SpwsField>)[] = [
-    "Choices",
-    "Default",
-    "DefaultFormula",
-    "Formula",
-    "Validation",
-    "Name",
-  ];
-  switch (type) {
-    case "New":
-      excludedKeys.push("EnforceUniqueValues", "Filterable");
-      break;
-
-    default:
-      break;
-  }
-
-  // Create xml
-  const xml = fields
-    // Iterate through each field
-    .map((field, index) => {
-      // Create field xml string
-      let fieldXml = "";
-
-      switch (type) {
-        case "Delete":
-          fieldXml = `<Field Name="${field.StaticName}"/>`;
-          break;
-
-        case "New":
-        case "Update":
-          // Create field xml string
-          fieldXml = `<Field Name="${field.StaticName}" ${Object.entries(field).reduce(
-            // Iterate through each field key and prop
-            (string, [key, prop]: [any, any]) => {
-              // Get value from prop
-              let value: string = "";
-              let fieldKey: keyof KnownKeys<SpwsField> = key;
-
-              // Exclude keys which are not allowed
-              if (excludedKeys.includes(fieldKey)) return string;
-
-              // Switch by type of prop
-              switch (typeof prop) {
-                case "boolean":
-                  value = prop ? "TRUE" : "FALSE";
-                  break;
-
-                default:
-                  value = prop;
-                  break;
-              }
-
-              // Append to string
-              string += `${fieldKey}="${value}" `;
-
-              // Return string (accumulator)
-              return string;
-            },
-            ""
-          )}>`;
-          break;
-      }
-
-      // Handle Field Types
-      switch (field.Type) {
-        case "Calculated":
-          if (typeof field.Formula === "string") fieldXml += field.Formula;
-          break;
-
-        case "Choice":
-        case "MultiChoice":
-          // Handle Choice Fields
-          if (Array.isArray(field.Choices))
-            fieldXml += `<CHOICES>${field.Choices.map(
-              (choice) => `<CHOICE>${choice}</CHOICE>`
-            ).join("")}</CHOICES>`;
-
-          break;
-
-        default:
-          break;
-      }
-
-      // Handle Child Elements
-      if (typeof field.Validation === "string") fieldXml += field.Validation;
-      if (typeof field.DefaultFormula === "string")
-        fieldXml += `<DefaultFormula>${field.DefaultFormula}</DefaultFormula>`;
-      if (typeof field.DefaultFormulaValue === "string")
-        fieldXml += `<DefaultFormulaValue>${field.DefaultFormulaValue}</DefaultFormulaValue>`;
-
-      if (typeof field.Default === "string") fieldXml += `<Default>${field.Default}</Default>`;
-
-      // Append to fieldXml
-      fieldXml += "</Field>";
-
-      // Return method
-      return `<Method ID="${index + 1}">${fieldXml}</Method>
-     `;
-    })
-    .join("");
-
-  // Return xml
-  return `<Fields>${xml}</Fields>`;
 };
 
 /**
@@ -293,7 +186,10 @@ const updateList = async ({
       )}</newFields>
       <updateFields>${createFieldsXml(updateFields, "Update")}</updateFields>
       <deleteFields><Fields>${deleteFields
-        .map((field, index) => `<Method ID="${index + 1}"><Field Name="${field}"/></Method>`)
+        .map(
+          (field, index) =>
+            `<Method ID="${index + 1}"><Field Name="${field}"/></Method>`
+        )
         .join("")}</Fields></deleteFields>
       <listVersion></listVersion>
     </UpdateList>
@@ -307,7 +203,9 @@ const updateList = async ({
     // If new fields were defined and static names are different to display names
     if (
       newFields.length > 0 &&
-      newFields.some(({ StaticName, DisplayName }) => StaticName !== DisplayName)
+      newFields.some(
+        ({ StaticName, DisplayName }) => StaticName !== DisplayName
+      )
     ) {
       try {
         // Resend the update to set correct display names
@@ -318,7 +216,7 @@ const updateList = async ({
     }
 
     // Return result
-    return { ...res, data: undefined };
+    return { ...res, data: { success: true } };
   } catch (error: any) {
     throw new SpwsError(error);
   }
