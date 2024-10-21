@@ -39,4 +39,4 @@ const res = await getGroupCollectionFromSite({ webURL: "/sites/other" })
 
 ## Defined in
 
-[services/userGroup/getGroupCollectionFromSite.ts:33](https://github.com/rlking1985/spws/blob/eac8675429b3cb92c57fd641d54e84f4ab439754/src/services/userGroup/getGroupCollectionFromSite.ts#L33)
+[services/userGroup/getGroupCollectionFromSite.ts:33](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/userGroup/getGroupCollectionFromSite.ts#L33)

@@ -38,8 +38,11 @@ type Params = {
  */
 const addList = async (
   listName: string,
-  { webURL = defaults.webURL, templateId = 100, description = "" }: Params = {}
+  options: Params = {}
 ): Promise<Operation> => {
+  // Deconstruct options
+  const { webURL = defaults.webURL, templateId = 100, description = "" } = options;
+  
   // Create request object
   const req = new SpwsRequest({
     webService: WebServices.Lists,

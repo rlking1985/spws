@@ -34,4 +34,4 @@ const res = await getListCollection({ webURL: "/sites/other" })
 
 ## Defined in
 
-[services/lists/deleteAttachment.ts:41](https://github.com/rlking1985/spws/blob/eac8675429b3cb92c57fd641d54e84f4ab439754/src/services/lists/deleteAttachment.ts#L41)
+[services/lists/deleteAttachment.ts:41](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/lists/deleteAttachment.ts#L41)

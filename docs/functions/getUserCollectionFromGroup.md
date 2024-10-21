@@ -41,4 +41,4 @@ const res = await getUserCollectionFromSite("Site Owners", { webURL: "/sites/oth
 
 ## Defined in
 
-[services/userGroup/getUserCollectionFromGroup.ts:33](https://github.com/rlking1985/spws/blob/eac8675429b3cb92c57fd641d54e84f4ab439754/src/services/userGroup/getUserCollectionFromGroup.ts#L33)
+[services/userGroup/getUserCollectionFromGroup.ts:33](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/userGroup/getUserCollectionFromGroup.ts#L33)
