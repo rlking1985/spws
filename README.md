@@ -4,4 +4,4 @@ This package is a wrapper around the SharePoint 2010 SOAP Web Services.
 
 # Table of Contents
 
-1.  [Documentation](./docs/modules.md)
+1.  [Documentation](./docs/globals.md)
