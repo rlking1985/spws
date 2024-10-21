@@ -1,4 +1,6 @@
-spws / [Exports](modules.md)
+**spws** • [**Docs**](globals.md)
+
+***
 
 # SharePoint Web Services (SPWS)
 
