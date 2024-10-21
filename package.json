@@ -1,5 +1,5 @@
 {
-  "name": "spws",
+  "name": "@objectpoint/spws",
   "version": "1.8.3",
   "description": "SharePoint Web Services Wrapper",
   "main": "lib/index.js",

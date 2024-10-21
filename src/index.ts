@@ -3,6 +3,8 @@ export * from "./services/people";
 export * from "./services/userGroup";
 export * from "./services/views";
 export * from "./services/webParts";
+export * from "./types";
+
 declare global {
   interface Window {
     readonly adminWebURL: string;
