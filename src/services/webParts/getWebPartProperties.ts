@@ -63,43 +63,55 @@ const getWebPartProperties = async ({
     // Parse each WebPart node and map to WebPartProperties
     const webPartProperties: WebPartProperties[] = Array.from(allNodes).map(
       (node: Element) => {
+        // Function to get text content of child node or attribute
+        const getChildNodeText = (parent: Element, tagName: string) => {
+          const child = parent.querySelector(tagName);
+          return child ? child.textContent || "" : "";
+        };
+
         return {
           webPartXml: new XMLSerializer().serializeToString(node), // The full XML for the WebPart
+
+          // Attributes (these are still fetched as attributes)
           xmlns_xsi: node.getAttribute("xmlns:xsi") || "",
           xmlns_xsd: node.getAttribute("xmlns:xsd") || "",
           xmlns: node.getAttribute("xmlns") || "",
           ID: node.getAttribute("ID") || "",
-          Title: node.getAttribute("Title") || "",
-          FrameType: node.getAttribute("FrameType") || "",
-          Description: node.getAttribute("Description") || "",
-          IsIncluded: node.getAttribute("IsIncluded") === "TRUE",
-          ZoneID: node.getAttribute("ZoneID") || "",
-          PartOrder: parseInt(node.getAttribute("PartOrder") || "0"),
-          FrameState: node.getAttribute("FrameState") || "",
-          Height: node.getAttribute("Height") || undefined,
-          Width: node.getAttribute("Width") || undefined,
-          AllowRemove: node.getAttribute("AllowRemove") === "TRUE",
-          AllowZoneChange: node.getAttribute("AllowZoneChange") === "TRUE",
-          AllowMinimize: node.getAttribute("AllowMinimize") === "TRUE",
-          AllowConnect: node.getAttribute("AllowConnect") === "TRUE",
-          AllowEdit: node.getAttribute("AllowEdit") === "TRUE",
-          AllowHide: node.getAttribute("AllowHide") === "TRUE",
-          IsVisible: node.getAttribute("IsVisible") === "TRUE",
-          DetailLink: node.getAttribute("DetailLink") || undefined,
-          HelpLink: node.getAttribute("HelpLink") || undefined,
-          HelpMode: node.getAttribute("HelpMode") || "",
-          Dir: node.getAttribute("Dir") || "",
-          PartImageSmall: node.getAttribute("PartImageSmall") || undefined,
-          MissingAssembly: node.getAttribute("MissingAssembly") || undefined,
-          PartImageLarge: node.getAttribute("PartImageLarge") || undefined,
-          IsIncludedFilter: node.getAttribute("IsIncludedFilter") || undefined,
+
+          // Child nodes (these are fetched as XML elements)
+          Title: getChildNodeText(node, "Title"),
+          FrameType: getChildNodeText(node, "FrameType"),
+          Description: getChildNodeText(node, "Description"),
+          IsIncluded: getChildNodeText(node, "IsIncluded") === "TRUE",
+          ZoneID: getChildNodeText(node, "ZoneID"),
+          PartOrder: parseInt(getChildNodeText(node, "PartOrder") || "0"),
+          FrameState: getChildNodeText(node, "FrameState"),
+          Height: getChildNodeText(node, "Height") || undefined,
+          Width: getChildNodeText(node, "Width") || undefined,
+          AllowRemove: getChildNodeText(node, "AllowRemove") === "TRUE",
+          AllowZoneChange: getChildNodeText(node, "AllowZoneChange") === "TRUE",
+          AllowMinimize: getChildNodeText(node, "AllowMinimize") === "TRUE",
+          AllowConnect: getChildNodeText(node, "AllowConnect") === "TRUE",
+          AllowEdit: getChildNodeText(node, "AllowEdit") === "TRUE",
+          AllowHide: getChildNodeText(node, "AllowHide") === "TRUE",
+          IsVisible: getChildNodeText(node, "IsVisible") === "TRUE",
+          DetailLink: getChildNodeText(node, "DetailLink") || undefined,
+          HelpLink: getChildNodeText(node, "HelpLink") || undefined,
+          HelpMode: getChildNodeText(node, "HelpMode") || "",
+          Dir: getChildNodeText(node, "Dir") || "",
+          PartImageSmall: getChildNodeText(node, "PartImageSmall") || undefined,
+          MissingAssembly:
+            getChildNodeText(node, "MissingAssembly") || undefined,
+          PartImageLarge: getChildNodeText(node, "PartImageLarge") || undefined,
+          IsIncludedFilter:
+            getChildNodeText(node, "IsIncludedFilter") || undefined,
           ExportControlledProperties:
-            node.getAttribute("ExportControlledProperties") === "TRUE",
-          ConnectionID: node.getAttribute("ConnectionID") || "",
-          ID_: node.getAttribute("ID_") || "",
-          Assembly: node.getAttribute("Assembly") || "",
-          TypeName: node.getAttribute("TypeName") || "",
-          HeaderTitle: node.getAttribute("HeaderTitle") || undefined,
+            getChildNodeText(node, "ExportControlledProperties") === "TRUE",
+          ConnectionID: getChildNodeText(node, "ConnectionID") || "",
+          ID_: getChildNodeText(node, "ID_") || "",
+          Assembly: getChildNodeText(node, "Assembly") || "",
+          TypeName: getChildNodeText(node, "TypeName") || "",
+          HeaderTitle: getChildNodeText(node, "HeaderTitle") || undefined,
         };
       }
     );
