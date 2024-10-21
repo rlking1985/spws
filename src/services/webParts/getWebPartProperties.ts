@@ -82,19 +82,27 @@ const getWebPartProperties = async ({
           Title: getChildNodeText(node, "Title"),
           FrameType: getChildNodeText(node, "FrameType"),
           Description: getChildNodeText(node, "Description"),
-          IsIncluded: getChildNodeText(node, "IsIncluded") === "TRUE",
+          IsIncluded:
+            getChildNodeText(node, "IsIncluded").toUpperCase() === "TRUE",
           ZoneID: getChildNodeText(node, "ZoneID"),
           PartOrder: parseInt(getChildNodeText(node, "PartOrder") || "0"),
           FrameState: getChildNodeText(node, "FrameState"),
           Height: getChildNodeText(node, "Height") || undefined,
           Width: getChildNodeText(node, "Width") || undefined,
-          AllowRemove: getChildNodeText(node, "AllowRemove") === "TRUE",
-          AllowZoneChange: getChildNodeText(node, "AllowZoneChange") === "TRUE",
-          AllowMinimize: getChildNodeText(node, "AllowMinimize") === "TRUE",
-          AllowConnect: getChildNodeText(node, "AllowConnect") === "TRUE",
-          AllowEdit: getChildNodeText(node, "AllowEdit") === "TRUE",
-          AllowHide: getChildNodeText(node, "AllowHide") === "TRUE",
-          IsVisible: getChildNodeText(node, "IsVisible") === "TRUE",
+          AllowRemove:
+            getChildNodeText(node, "AllowRemove").toUpperCase() === "TRUE",
+          AllowZoneChange:
+            getChildNodeText(node, "AllowZoneChange").toUpperCase() === "TRUE",
+          AllowMinimize:
+            getChildNodeText(node, "AllowMinimize").toUpperCase() === "TRUE",
+          AllowConnect:
+            getChildNodeText(node, "AllowConnect").toUpperCase() === "TRUE",
+          AllowEdit:
+            getChildNodeText(node, "AllowEdit").toUpperCase() === "TRUE",
+          AllowHide:
+            getChildNodeText(node, "AllowHide").toUpperCase() === "TRUE",
+          IsVisible:
+            getChildNodeText(node, "IsVisible").toUpperCase() === "TRUE",
           DetailLink: getChildNodeText(node, "DetailLink") || undefined,
           HelpLink: getChildNodeText(node, "HelpLink") || undefined,
           HelpMode: getChildNodeText(node, "HelpMode") || "",
@@ -106,7 +114,10 @@ const getWebPartProperties = async ({
           IsIncludedFilter:
             getChildNodeText(node, "IsIncludedFilter") || undefined,
           ExportControlledProperties:
-            getChildNodeText(node, "ExportControlledProperties") === "TRUE",
+            getChildNodeText(
+              node,
+              "ExportControlledProperties"
+            ).toUpperCase() === "TRUE",
           ConnectionID: getChildNodeText(node, "ConnectionID") || "",
           ID_: getChildNodeText(node, "ID_") || "",
           Assembly: getChildNodeText(node, "Assembly") || "",
