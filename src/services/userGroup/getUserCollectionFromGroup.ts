@@ -19,7 +19,7 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns information about the collection of users in the specified group.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772554(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772554(v=office.12)
  * @example
  * ```
  * // Get users from the group named Site Owners

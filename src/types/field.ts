@@ -37,7 +37,7 @@ export type FieldType =
  * Defines the internal data types used in the list infrastructure of a SharePoint Web site.
  * A field is a column or attribute of information that a user can add to a list.
  *
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms437580(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms437580(v=office.12)
  */
 type Field = {
   [key: string]: string | boolean | number | unknown;

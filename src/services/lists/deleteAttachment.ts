@@ -28,7 +28,7 @@ type Params = {
 /**
  * Removes the attachment from the specified list item.
  *
- * @link https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774770(v=office.12)
+ * https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774770(v=office.12)
  * @example
  * ```
  * // Get list collection for current site

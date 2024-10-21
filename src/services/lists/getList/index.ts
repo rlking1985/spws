@@ -24,7 +24,7 @@ interface Operation extends SpwsResponse {
  * Returns a schema for the specified list.
  *
  * @param listName The list display name or GUID
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772709(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772709(v=office.12)
  * @example
  * ```
  * // Get list using default parameters

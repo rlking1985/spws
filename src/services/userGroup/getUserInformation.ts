@@ -19,7 +19,7 @@ interface Operation extends SpwsResponse {
 /**
  * Returns information about the specified user from the User Information List
  * @param ID The user ID
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ff521587(v=office.14)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ff521587(v=office.14)
  * @example
  * ```
  * // Get user from the current site

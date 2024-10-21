@@ -19,7 +19,7 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns information about the collection of users for the current site collection.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772702(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772702(v=office.12)
  * @example
  * ```
  * // Get users from the current site

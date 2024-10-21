@@ -46,7 +46,7 @@ export interface Operation extends SpwsResponse {
  * Adds, deletes, or updates the specified items in a list on the current site.
  * @param listName A string that contains the name of the list. It is recommended that you use the list GUID
  * @param methods An array that contains one or more methods for adding, modifying, or deleting items
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772668(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772668(v=office.12)
  * @example
  * ```
  * // Create, update and delete

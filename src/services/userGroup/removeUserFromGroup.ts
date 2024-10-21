@@ -24,7 +24,7 @@ interface Operation extends SpwsResponse {
  * Removes the specified user from the specified group.
  * @param userLoginName A string that contains the user name (DOMAIN\User_Alias) of the user.
  * @param groupName A string that contains the name of the group.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774499(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774499(v=office.12)
  * @example
  * ```
  * const res = await removeUserFromGroup("dev\\john.smith", "Site Owners")

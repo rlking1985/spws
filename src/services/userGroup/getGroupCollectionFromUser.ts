@@ -22,7 +22,7 @@ interface Operation extends SpwsResponse {
 /**
  * Returns information about the collection of groups of which the specified user is a member
  * @param userLoginName The user login name including the domain
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772552(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772552(v=office.12)
  * @example
  * ```
  * // Get groups for current site

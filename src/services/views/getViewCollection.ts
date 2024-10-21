@@ -16,7 +16,7 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns the display names, internal names, and URLs for the collection of views of the specified list.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772703(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772703(v=office.12)
  * @param listName A string that contains the internal name of the list.
  * @example
  * ```

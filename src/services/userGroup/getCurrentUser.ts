@@ -22,7 +22,7 @@ export const cache: { currentUser?: UserInformation } = { currentUser: undefined
 
 /**
  * Gets the current authenticated user.
- * @remark Authentication can be changed using a proxy server and supplying a username and password. This is not recommended and should be used for testing purposes only.
+ * Authentication can be changed using a proxy server and supplying a username and password. This is not recommended and should be used for testing purposes only.
  */
 const getCurrentUser = ({
   webURL = defaults.webURL,

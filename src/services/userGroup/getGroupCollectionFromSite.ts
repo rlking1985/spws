@@ -19,7 +19,7 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns information about the collection of groups for the current site collection.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774594(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774594(v=office.12)
  * @example
  * ```
  * // Get groups from the current site

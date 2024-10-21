@@ -110,8 +110,8 @@ export type GetListItemsOptions<T> = {
 /**
  * Adds the user to the specified group
  * @param listName A string that contains either the display name or the GUID for the list
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772599(v=office.12)
- * @link https://docs.microsoft.com/en-us/openspecs/sharepoint_protocols/ms-listsws/fa650bde-c79b-4a2a-bb5d-c43e74166322?redirectedfrom=MSDN
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772599(v=office.12)
+ * https://docs.microsoft.com/en-us/openspecs/sharepoint_protocols/ms-listsws/fa650bde-c79b-4a2a-bb5d-c43e74166322?redirectedfrom=MSDN
  * @example
  * ```
  * const res = await getListItems("Task Tracker")

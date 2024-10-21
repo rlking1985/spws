@@ -18,7 +18,7 @@ interface Operation extends SpwsResponse {
 /**
  * Returns the names and GUIDs for all lists in the site.
  *
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774663(v=office.12)?redirectedfrom=MSDN
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774663(v=office.12)?redirectedfrom=MSDN
  * @example
  * ```
  * // Get list collection for current site

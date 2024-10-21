@@ -25,7 +25,7 @@ type Params = {
 
 /**
  * @name GetWorkflowDataForItem
- * @link https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2007/aa980940(v=office.12)
+ * https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2007/aa980940(v=office.12)
  */
 const GetWorkflowDataForItem = async ({
   webURL = defaults.webURL,

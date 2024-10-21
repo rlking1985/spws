@@ -22,7 +22,7 @@ type Params = {
 /**
  * Deletes the list.
  *
- * @link https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms773418(v=office.12)
+ * https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms773418(v=office.12)
  * @example
  * ```
  * // Get list collection for current site

@@ -127,8 +127,8 @@ type UpdateListParams = {
 /**
  * Updates a list based on the specified field definitions and list properties.
  *
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774660(v=office.12)
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ms437580(v=office.14)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774660(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ms437580(v=office.14)
  * @example
  * ```
  * // Update list

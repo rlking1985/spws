@@ -24,7 +24,7 @@ interface Operation extends SpwsResponse {
  * @param ownerIdentifier A string that contains the user name (DOMAIN\User_Alias) for the owner of the group.
  * @param ownerType A string that specifies the type of owner, which can be either user or group.
  * @param description A string that contains the description for the group.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774703(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774703(v=office.12)
  * @example
  * ```
  * const res = await removeUserFromGroup("dev\\john.smith", "Site Owners")

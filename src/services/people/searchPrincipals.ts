@@ -19,7 +19,7 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns an array of PrincipalInfo objects from the SPUserCollection for the Web site. All instances have the principal logon name specified in searchText. Only the maxResults objects can be added to the array.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774790(v=office.12)
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms774790(v=office.12)
  * @param searchText Principal logon name.
  * @param maxResults Unless otherwise specified, the maximum number of principals that can be returned from a provider is 10.
  * @param principalType SPPrincipalType object that specifies user scope and other information.

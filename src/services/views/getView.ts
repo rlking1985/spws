@@ -19,7 +19,7 @@ interface Operation extends SpwsResponse {
 
 /**
  * Returns the schema of the specified view for the specified list.
- * @link https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772612(v=office.12)?redirectedfrom=MSDN
+ * https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-services/ms772612(v=office.12)?redirectedfrom=MSDN
  * @param {string} listName A string that contains the internal name of the list.
  * @param {string} [viewName=""] A string that contains the GUID for the view. If the view name is blank, the default view is returned.
  * @example
