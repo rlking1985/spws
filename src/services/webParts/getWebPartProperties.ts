@@ -119,7 +119,7 @@ const getWebPartProperties = async ({
               "ExportControlledProperties"
             ).toUpperCase() === "TRUE",
           ConnectionID: getChildNodeText(node, "ConnectionID") || "",
-          ID_: getChildNodeText(node, "ID_") || "",
+          ID_: getChildNodeText(node, "ID") || "",
           Assembly: getChildNodeText(node, "Assembly") || "",
           TypeName: getChildNodeText(node, "TypeName") || "",
           HeaderTitle: getChildNodeText(node, "HeaderTitle") || undefined,
