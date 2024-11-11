@@ -33,7 +33,7 @@ type Params = {
  * @example
  * ```
  * // Get list collection for current site
- * const res = await deleteList("Announcements", { webURL: "/sites/other" })
+ * const res = await addList("Announcements", { webURL: "/sites/other", templateId: 100, description: "Demo List" })
  * ```
  */
 const addList = async (

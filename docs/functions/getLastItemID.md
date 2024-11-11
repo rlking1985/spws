@@ -22,4 +22,4 @@
 
 ## Defined in
 
-[services/lists/getLastItemID.ts:23](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/lists/getLastItemID.ts#L23)
+[services/lists/getLastItemID.ts:23](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/lists/getLastItemID.ts#L23)

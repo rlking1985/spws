@@ -48,4 +48,4 @@ const res = await updateList({
 
 ## Defined in
 
-[services/lists/updateList/index.ts:151](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/lists/updateList/index.ts#L151)
+[services/lists/updateList/index.ts:151](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/lists/updateList/index.ts#L151)

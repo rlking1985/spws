@@ -42,4 +42,4 @@ const res = await getUserInformation("1", { webURL: "/sites/other" });
 
 ## Defined in
 
-[services/userGroup/getUserInformation.ts:32](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/userGroup/getUserInformation.ts#L32)
+[services/userGroup/getUserInformation.ts:32](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/userGroup/getUserInformation.ts#L32)

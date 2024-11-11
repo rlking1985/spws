@@ -42,4 +42,4 @@ const res = await getView("Announcements", "{397586A7-1738-4837-9F5D-4F6D54B4FB3
 
 ## Defined in
 
-[services/views/getView.ts:30](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/views/getView.ts#L30)
+[services/views/getView.ts:30](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/views/getView.ts#L30)

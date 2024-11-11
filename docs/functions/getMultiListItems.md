@@ -18,4 +18,4 @@
 
 ## Defined in
 
-[services/lists/getMultiListItems.ts:35](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/lists/getMultiListItems.ts#L35)
+[services/lists/getMultiListItems.ts:35](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/lists/getMultiListItems.ts#L35)

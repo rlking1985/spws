@@ -40,4 +40,4 @@ const res = await getCurrentUserID({ getFromWindow: false });
 
 ## Defined in
 
-[services/userGroup/getCurrentUserID.ts:35](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/userGroup/getCurrentUserID.ts#L35)
+[services/userGroup/getCurrentUserID.ts:35](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/userGroup/getCurrentUserID.ts#L35)

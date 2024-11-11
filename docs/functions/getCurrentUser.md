@@ -37,4 +37,4 @@ Authentication can be changed using a proxy server and supplying a username and 
 
 ## Defined in
 
-[services/userGroup/getCurrentUser.ts:27](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/userGroup/getCurrentUser.ts#L27)
+[services/userGroup/getCurrentUser.ts:27](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/userGroup/getCurrentUser.ts#L27)

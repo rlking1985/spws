@@ -47,4 +47,4 @@ const list = await getList({ listName: "Title", attributes: ["Title", "Fields"] 
 
 ## Defined in
 
-[services/lists/getList/index.ts:38](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/lists/getList/index.ts#L38)
+[services/lists/getList/index.ts:38](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/lists/getList/index.ts#L38)

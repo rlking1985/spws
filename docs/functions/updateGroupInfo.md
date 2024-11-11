@@ -40,4 +40,4 @@ const res = await removeUserFromGroup("dev\\john.smith", "Site Owners")
 
 ## Defined in
 
-[services/userGroup/updateGroupInfo.ts:33](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/services/userGroup/updateGroupInfo.ts#L33)
+[services/userGroup/updateGroupInfo.ts:33](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/services/userGroup/updateGroupInfo.ts#L33)

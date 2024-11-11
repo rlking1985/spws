@@ -111,4 +111,4 @@ defaults.webURL = "/sites/my-site"
 
 ## Defined in
 
-[index.ts:26](https://github.com/rlking1985/spws/blob/96ed2330ff15e8f8eb88949aa126d8a29c8f97dc/src/index.ts#L26)
+[index.ts:27](https://github.com/rlking1985/spws/blob/963fffcfd1206fadbccbd348d3836bf3d546ecfe/src/index.ts#L27)
