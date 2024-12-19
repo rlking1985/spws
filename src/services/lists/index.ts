@@ -8,5 +8,6 @@ export { default as getListCollection } from "./getListCollection";
 export { default as getListItems } from "./getListItems";
 export { default as getListViewThreshold } from "./getListViewThreshold";
 export { default as getMultiListItems } from "./getMultiListItems";
+export { default as getVersionCollection } from "./getVersionCollection";
 export { default as updateList } from "./updateList";
 export { default as updateListItems } from "./updateListItems";
